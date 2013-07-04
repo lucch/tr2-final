@@ -8,33 +8,35 @@ import java.net.Socket;
 import tr2.client.util.SimpleHttpParser;
 
 public class Worker implements Runnable {
-		
+
 	private Socket socket;
-	
+
 	public Worker(final Socket socket) {
 		this.socket = socket;
 	}
-	
+
 	@Override
 	public void run() {
 		Proxy proxy = Proxy.instance();
 		String request = null, response;
-		//char[] buffer = new char[1024];
-		
+
 		try {
-			while(true) {
-				SimpleHttpParser parser = new SimpleHttpParser();
-				request = parser.parse(socket.getInputStream());
+			SimpleHttpParser parser = new SimpleHttpParser();
+			request = parser.parse(socket.getInputStream());			
+			response = proxy.request(request);
+			notify(response);
+		} catch (Exception e) {
+			try {
+				socket.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} finally {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-		
-		response = proxy.request(request.toString());
-		
-		notify(response);
 	}
-	
+
 	/**
 	 * Send response to the browser.
 	 * 

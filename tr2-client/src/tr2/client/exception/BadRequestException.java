@@ -1,8 +1,7 @@
 package tr2.client.exception;
 
-import java.io.IOException;
 
-public class BadRequestException extends IOException {
+public class BadRequestException extends Exception {
 
 	/**
 	 * 
