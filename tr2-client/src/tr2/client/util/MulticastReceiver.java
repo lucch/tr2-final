@@ -1,11 +1,11 @@
-package tr2.server;
+package tr2.client.util;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
-public class MulticastReceiver extends Multicast implements Runnable {
+public class MulticastReceiver extends NetworkConstants implements Runnable {
 
 	public void run() {
 		MulticastSocket socket = null;
@@ -13,8 +13,8 @@ public class MulticastReceiver extends Multicast implements Runnable {
 		byte[] inBuf = new byte[256];
 		try {
 			// Prepare to join multicast group
-			socket = new MulticastSocket(Multicast.multicastPort);
-			InetAddress address = InetAddress.getByName(Multicast.multicastAddress);
+			socket = new MulticastSocket(NetworkConstants.MULTICAST_PORT);
+			InetAddress address = InetAddress.getByName(NetworkConstants.MULTICAST_ADDRESS);
 
 			socket.joinGroup(address);
 			
