@@ -1,58 +1,59 @@
 package tr2.client;
 
-import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+import tr2.client.util.SimpleHttpParser;
+
 public class Worker implements Runnable {
-	
-	private Dispatcher dispatcher;
-	
+
 	private Socket socket;
-	
-	public Worker(final Dispatcher dispatcher, final Socket socket) {
-		this.dispatcher = dispatcher;
+
+	public Worker(final Socket socket) {
 		this.socket = socket;
 	}
-	
+
 	@Override
 	public void run() {
 		Proxy proxy = Proxy.instance();
-		BufferedReader reader;
-		StringBuilder request = new StringBuilder();
-		String response;
-		//char[] buffer = new char[1024];
-		
+		String request = null, response;
+
 		try {
-			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			int c, end = 0;
-			while(true) {
-				// TODO: This implementation is inefficient!!! Optimize!
-				c = reader.read();
-				request.append((char) c);
-				
-				if(c == '\r')
-					continue;
-				
-				if(c == '\n') {
-					if(end == 0) {
-						end = 1;
-					} else {
-						break;
-					}
-				} else {
-					end = 0;
-				}
+			SimpleHttpParser parser = new SimpleHttpParser();
+			request = parser.parse(socket.getInputStream());			
+			response = proxy.request(request);
+			notify(response);
+		} catch (Exception e) {
+			try {
+				socket.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} finally {
+				e.printStackTrace();
 			}
+		}
+	}
+
+	/**
+	 * Send response to the browser.
+	 * 
+	 * @param response Calculated response obtained from the server.
+	 */
+	public void notify(String response) {
+		try {
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			System.out.println("Writing to the browser:");
+			System.out.println(response);
+			writer.write(response);
+			writer.flush();
+			writer.close();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		response = proxy.request(request.toString());
-		
-		// Push notification
-		dispatcher.notify(socket, response);
 	}
 
 }
