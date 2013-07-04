@@ -24,12 +24,6 @@ public class MulticastReceiver extends Multicast implements Runnable {
 
 				if (inPacket.getAddress().getHostAddress()
 						.equals(InetAddress.getLocalHost().getHostAddress())) {
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
 					continue;
 				}
 
