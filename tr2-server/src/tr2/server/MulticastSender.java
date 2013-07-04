@@ -27,10 +27,6 @@ public class MulticastSender extends Multicast {
 			socket.send(outPacket);
 
 			System.out.println("You : " + message);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException ie) {
-			}
 		} catch (IOException ioe) {
 			System.out.println(ioe);
 		}

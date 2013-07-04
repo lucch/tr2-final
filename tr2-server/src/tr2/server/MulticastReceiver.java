@@ -17,12 +17,23 @@ public class MulticastReceiver extends Multicast implements Runnable {
 			InetAddress address = InetAddress.getByName(Multicast.multicastAddress);
 
 			socket.joinGroup(address);
-			
+
 			while (true) {
 				inPacket = new DatagramPacket(inBuf, inBuf.length);
 				socket.receive(inPacket);
+
+				if (inPacket.getAddress().getHostAddress()
+						.equals(InetAddress.getLocalHost().getHostAddress())) {
+					continue;
+				}
+
 				String message = new String(inBuf, 0, inPacket.getLength());
-				System.out.println("From " + inPacket.getAddress() + " : " + message);
+				MulticastSender multicastSender = new MulticastSender();
+
+				multicastSender.speak(Messages.parser(message));
+
+				System.out.println("Msg Rcvd From " + inPacket.getAddress()
+						+ " : " + message);
 			}
 		} catch (IOException ioe) {
 			System.out.println(ioe);
