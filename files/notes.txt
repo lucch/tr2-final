@@ -78,21 +78,21 @@ CLIENTES:
 
 - Protocolos:
 
-	- HTTP     : Comunicação com o browser local.
 	- A definir: Comunicação com o servidor.
 		* Opções: HTTP (REST), TCP Puro + XML (SOAP), RMI (pode?)...
 
-- O cliente atuará como um "Mediator" ou "Controller" em um arquitetura MVC, 
+- O cliente atuará como um "Controller" em um arquitetura MVC, 
 ou seja, o browser será a "VIEW", o cliente, o "CONTROLLER", e o servidor, o 
 "MODEL".
 
-- Basicamente, o cliente será responsável por receber uma requisição HTTP do 
-browser na porta 8080, fazer o "parsing", executar a query correspondente no 
-servidor, obter a resposta (JSON), fazer o "parsing" e, por fim, retornar 
-uma resposta HTTP para o browser.
+- O "Dispatcher" ("Controller") criará um novo "Worker" sempre que receber uma
+nova requisição HTTP pela porta 8080.
 
-- O cliente deverá utilizar também o padrão "Proxy", que será um objeto respon-
-sável por toda a comunicação com o servidor, provendo serviços como:
+- O "Worker" receberá o socket da conexão com o browser e fará a transmissão 
+das mensagens entre o browser e o "Proxy".
+
+- O "Proxy" será um objeto responsável por toda a comunicação com o servidor, 
+provendo serviços como:
 
 	- Descoberta e escolha de servidores;
 	- Estabelecimento da conexão;
