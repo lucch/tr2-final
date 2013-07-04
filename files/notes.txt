@@ -1,0 +1,122 @@
+-- Esse arquivo contém informações relevantes sobre o projeto!!!
+-- Provavelmente, partiremos dele para confeccionar o relatório.
+
+-- MANTENHAM-O ATUALIZADO! :)
+
+SERVIDORES:
+======================
+
+- Utilizar uma arquitetura Dispatcher/Worker ou o Design Pattern Delegate:
+	
+	- Seguindo o funcionamento do próprio TCP, o servidor terá uma Thread 
+	principal (dispatcher) responsável por receber as requisições de entrada 
+	e delegar a tarefa para o "worker" apropriado, possivelmente, instancian-
+	do uma nova thread.
+
+	- Essa arquitetura permite que o servidor atenda N clientes concorrente-
+	mente.
+
+	- EXTRA: Implementar um Pool de Threads, que utilize um número máximo de 
+	threads e cresça dinamicamente.
+
+- Utilizar replicação total dos dados em todos os servidores:
+
+	- EXTRA: Utilizar um arquivo ou banco de dados relacional (SQLite) para 
+	persistir os intervalos computados, permitindo que a série continue a ser 
+	calculada de onde parou quando todos os servidores caírem (bootstrapping).
+
+- Os servidores deverão adotar uma política de Publisher-Subscriber, ou padrão 
+"Observer" (conforme definido no GoF) para atualização dos demais servidores. 
+Basicamente, toda vez que o resultado de um subintervalo chegar a um servidor, 
+este deverá notificar os demais servidores. Essa notificação pode utilizar duas 
+estratégias:
+
+	- Push: O servidor já envia os dados na própria notificação, isto é, a 
+	tupla: (seq, valor).
+
+	- Pull: Ao receber uma notificação, um determinado servidor deve fazer uma 
+	nova requisição para o servidor que emitiu a notificação pedindo os dados.
+
+	* Como a aplicação é demasiadamente simples e o tamanho dos dados é extrema-
+	mente pequeno (uma tupla: (Int, Int)), a estratégia Push é mais adequada.
+
+	* EXTRA: Estabelecer uma espécie de cache/buffer nos servidores para que eles 
+	acumulem resultados e possam enviar vários de uma vez, ao invés de fazer uma 
+	requisição toda vez que chegar um resultado.
+
+- Comunicação servidor-servidor e cliente-servidor:
+		- HTTP (REST), TCP Puro + XML (SOAP)
+		- Formato dos dados JSON/XML/Serializable
+			* Deixar flexível na implementação: Padrão "Strategy".
+
+- Para sincronização entre os servidores:
+
+	- Ao iniciar, o servidor fica em um estado "SYNCHRONIZING", onde ele 
+	procurará por um servidor "UPDATED" e sincronizará a base de dados.
+
+	- Os servidores devem mandar um HashMap ou Array de tuplas (Int, Int) 
+	com os intervalos calculados e seus respectivos resultados:
+		* Indexar cada subintervalo com um valor inteiro da seguinte maneira:
+			0 -> [0..9999]
+			1 -> [10000..19999]
+			2 -> [20000..29999]
+			...
+			N -> [(N*10000)..(N*10000+9999)]
+
+		Dessa forma, temos nossa tupla (key, value), por exemplo, ao receber:
+
+			String: {"0":10,"1":12,"5":20}
+
+		O servidor deve marcar os subintervalos 0, 1 e 5 como calculados e armazenar 
+		o valor.
+
+	- Utilizar uma String JSON ou um HashMap serializado.
+			* JSON (JavaScript Object Notation) é preferível pela interoperabilidade.
+
+CLIENTES:
+======================
+
+- Protocolos:
+
+	- HTTP     : Comunicação com o browser local.
+	- A definir: Comunicação com o servidor.
+		* Opções: HTTP (REST), TCP Puro + XML (SOAP), RMI (pode?)...
+
+- O cliente atuará como um "Mediator" ou "Controller" em um arquitetura MVC, 
+ou seja, o browser será a "VIEW", o cliente, o "CONTROLLER", e o servidor, o 
+"MODEL".
+
+- Basicamente, o cliente será responsável por receber uma requisição HTTP do 
+browser na porta 8080, fazer o "parsing", executar a query correspondente no 
+servidor, obter a resposta (JSON), fazer o "parsing" e, por fim, retornar 
+uma resposta HTTP para o browser.
+
+- O cliente deverá utilizar também o padrão "Proxy", que será um objeto respon-
+sável por toda a comunicação com o servidor, provendo serviços como:
+
+	- Descoberta e escolha de servidores;
+	- Estabelecimento da conexão;
+	- Manutenção de cache (opcional);
+	- Transmissão e recebimento dos dados.
+
+ARQUITETURA:
+======================
+
+- Do ponto de vista arquitetural, temos os seguintes padrões de comunicação:
+
+	- Browser-Cliente  : Cliente-Servidor (mesmo ambos os processos sendo locais)
+	- Cliente-Servidor : Cliente-Servidor (com processo em diferentes máquinas)
+	- Servidor-Servidor: P2P (com exceções, ex.: Não temos uma DHT, etc)
+
+	* A API de Sockets provê uma camada de abstração que torna indiferente para o 
+	programador as máquinas onde os processos estão executando. Sendo assim, as 
+	comunicações Browser-Cliente e Cliente-Servidor são, basicamente, implementa-
+	das de forma idêntica.
+
+
+
+
+
+
+
+
