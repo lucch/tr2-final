@@ -19,7 +19,7 @@ public class Proxy implements ServerIPsListener  {
 	private static Map<String, Socket> remoteServerSockets;
 	
 	private Proxy() throws IOException {
-		Thread multicastListener = new Thread(new MulticastReceiver());
+		Thread multicastListener = new Thread(new MulticastReceiver(this));
 		multicastListener.start();
 	}
 	
