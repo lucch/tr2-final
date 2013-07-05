@@ -22,6 +22,7 @@ public class MulticastReceiver extends Multicast implements Runnable {
 				inPacket = new DatagramPacket(inBuf, inBuf.length);
 				socket.receive(inPacket);
 
+				// Verifica se o src address e o dst address s‹o iguais
 				if (inPacket.getAddress().getHostAddress()
 						.equals(InetAddress.getLocalHost().getHostAddress())) {
 					continue;
@@ -29,8 +30,12 @@ public class MulticastReceiver extends Multicast implements Runnable {
 
 				String message = new String(inBuf, 0, inPacket.getLength());
 				MulticastSender multicastSender = new MulticastSender();
-
-				multicastSender.speak(Messages.parser(message));
+				String response = Messages.parser(message);
+				
+				// Verifica se deve retornar algo para o sender
+				if (!response.equals(Messages.NoOperation)) {
+					multicastSender.speak(response);
+				}
 
 				System.out.println("Msg Rcvd From " + inPacket.getAddress()
 						+ " : " + message);

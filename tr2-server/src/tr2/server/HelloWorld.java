@@ -10,8 +10,8 @@ public class HelloWorld {
 		multicastListener.start();
 
 		MulticastSender multicastSender = new MulticastSender();
-		multicastSender.speak(Messages.serverHelloMessage);
-		multicastSender.speak(Messages.serverAliveMessage);
+		multicastSender.speak(Messages.Hello);
+		multicastSender.speak(Messages.Alive);
 
 	}
 
