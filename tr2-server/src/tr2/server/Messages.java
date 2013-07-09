@@ -1,14 +1,12 @@
 package tr2.server;
 
 public class Messages {
-	public final static String Hello = "WHAZZUP, SERVERS";
-	public final static String Alive = "I AM ALIVE, BABY";
-	public final static String NotRecognized = "SPEAK ENGLISH, FUCKER";
+	public final static String Hello = "HELLO";
+	public final static String Alive = "Alive.";
+	public final static String NotRecognized = ".";
+	public final static String HelloResponse = "HELLOACK";
 	
-	public final static String HelloResponse = "WELCOME, BROTHER";
-	public final static String AliveResponse = "I'M GLAD YOU ARE ALIVE";
-
-	public final static String NoOperation = "NO OPERATION";
+	public final static String NoOp = "NO OPERATION";
 	
 	public static String getServerHelloMessage() {
 		return Hello;
@@ -20,15 +18,14 @@ public class Messages {
 
 	public static String parser(String message) {
 		if (message.equals(Hello)) {
+			// Envia mensagem para que o servidor note que você está conectado
+			// Coloca ele na sua lista de conexões
 			return HelloResponse;
 		} else if (message.equals(Alive)) {
-			return AliveResponse;
-		} else if (message.equals(HelloResponse)) {
-			return NoOperation;
-		} else if (message.equals(AliveResponse)) {
-			return NoOperation;
+			// Anota que o servidor que mandou alive está vivo
+			return NoOp;
 		} else {
-			return NotRecognized;
+			return NoOp;
 		}
 	}
 }
