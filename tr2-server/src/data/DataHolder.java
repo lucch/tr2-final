@@ -34,6 +34,7 @@ public class DataHolder {
 			} while (!current.equals(last));
 
 			serversInfo.add(serverInfo);
+			System.out.printf("serverInfo: %s", serverInfo.getAddress());
 		}
 	}
 
