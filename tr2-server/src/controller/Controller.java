@@ -1,5 +1,6 @@
 package controller;
 
+import tr2.util.MulticastConstants;
 import multicast.Multicast;
 import data.DataHolder;
 
@@ -12,7 +13,15 @@ public class Controller {
 		multicast = new Multicast(this);
 	}
 
-	public void addServer(String address) {
+	public void addServer(String message, String address) {
 		data.addServerInfo(address);
+		if (message.equals(MulticastConstants.HELLO)) {
+			multicast.sendMessage(MulticastConstants.HELLO_RESPONSE);
+		}
 	}
+	
+	public void start() {
+		
+	}
+	
 }

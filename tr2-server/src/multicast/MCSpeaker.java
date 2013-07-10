@@ -5,7 +5,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-public class MCSpeaker {
+import tr2.util.MulticastConstants;
+
+public class MCSpeaker implements Runnable {
 	private String address;
 	private int port;
 
@@ -34,6 +36,18 @@ public class MCSpeaker {
 			System.out.println("You : " + message);
 		} catch (IOException ioe) {
 			System.out.println(ioe);
+		}
+	}
+
+	@Override
+	public void run() {
+		while(true) {
+			speak(MulticastConstants.HELLO);
+			try {
+				Thread.sleep(4513);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

@@ -6,12 +6,12 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 
 public class MCListener implements Runnable {
-	private Multicast controller;
+	private Multicast multicast;
 	private String address;
 	private int port;
 
-	public MCListener(Multicast controller, String address, int port) {
-		this.controller = controller;
+	public MCListener(Multicast multicast, String address, int port) {
+		this.multicast = multicast;
 		this.address = address;
 		this.port = port;
 	}
@@ -38,7 +38,7 @@ public class MCListener implements Runnable {
 				}
 
 				String message = new String(inBuf, 0, inPacket.getLength());
-				controller.parser(message, inPacket.getAddress()
+				multicast.parser(message, inPacket.getAddress()
 						.getHostAddress());
 
 				System.out.println("Msg Rcvd From " + inPacket.getAddress()
