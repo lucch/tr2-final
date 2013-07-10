@@ -17,10 +17,9 @@ public class Worker implements Runnable {
 
 	@Override
 	public void run() {
-		Proxy proxy = Proxy.instance();
-		String request = null, response;
-
 		try {
+			Proxy proxy = Proxy.instance();
+			String request = null, response;
 			SimpleHttpParser parser = new SimpleHttpParser();
 			request = parser.parse(socket.getInputStream());			
 			response = proxy.request(request);
@@ -29,7 +28,6 @@ public class Worker implements Runnable {
 			try {
 				socket.close();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} finally {
 				e.printStackTrace();
@@ -51,7 +49,6 @@ public class Worker implements Runnable {
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
