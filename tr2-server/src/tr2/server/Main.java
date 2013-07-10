@@ -1,18 +1,12 @@
 package tr2.server;
 
-import multicast.Multicast;
+import controller.Controller;
 
 public class Main {
 
 	public static void main(String[] args) {
 
-//		// Inicialização
-//		MCController multicast = new MCController(
-//				MCController.serversMulticastIP,
-//				MCController.serversMulticastPort);
-//
-//		// Pega lista de servidores
-//		multicast.speak(MCController.hello);
+		Controller controller = new Controller();
 
 	}
 

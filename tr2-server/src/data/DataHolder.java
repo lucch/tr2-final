@@ -12,7 +12,7 @@ public class DataHolder {
 	public DataHolder() {
 		serversInfo = new LinkedList<ServerInfo>();
 	}
-	
+
 	public void addServerInfo(String address) {
 		ServerInfo serverInfo = new ServerInfo(address);
 		if (serversInfo.isEmpty()) {
