@@ -6,8 +6,8 @@ public class Multicast {
 	private final String hello = "HELLO";
 	private final String helloResponse = "HELLOACK";
 
-	private final String serversMulticastIP = "224.2.2.4";
-	private final int serversMulticastPort = 8888;
+	private final String serversMulticastIP = "224.2.2.3";
+	private final int serversMulticastPort = 10000;
 
 	private Controller controller;
 

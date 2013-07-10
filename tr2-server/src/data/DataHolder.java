@@ -23,7 +23,7 @@ public class DataHolder {
 		}
 		
 		serversInfo.add(serverInfo);
-		System.out.println(serverInfo);
+		System.out.println("Added address: " + serverInfo);
 	}
 
 }
