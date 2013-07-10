@@ -15,4 +15,15 @@ public class ServerInfo {
 	public String getAddress() {
 		return address;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		ServerInfo serverInfo = (ServerInfo)obj;
+		return serverInfo.address.equals(this.address);
+	}
+	
+	@Override
+	public String toString() {
+		return address;
+	}
 }

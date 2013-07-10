@@ -4,38 +4,26 @@
 
 package data;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class DataHolder {
-	private LinkedList<ServerInfo> serversInfo;
+	private ArrayList<ServerInfo> serversInfo;
 
 	public DataHolder() {
-		serversInfo = new LinkedList<ServerInfo>();
+		serversInfo = new ArrayList<ServerInfo>();
 	}
 
 	public void addServerInfo(String address) {
 		ServerInfo serverInfo = new ServerInfo(address);
-		if (serversInfo.isEmpty()) {
-			serversInfo.add(serverInfo);
-		} else {
-			serversInfo.getLast();
-			ServerInfo last = serversInfo.getLast();
-
-			int index = 0;
-			ServerInfo current;
-
-			do {
-				current = serversInfo.get(index);
-				// verifies if server IP is present
-				if (current.getAddress().equals(serverInfo.getAddress()))
-					return;
-
-				index++;
-			} while (!current.equals(last));
-
-			serversInfo.add(serverInfo);
-			System.out.printf("serverInfo: %s", serverInfo.getAddress());
+		
+		for (int i = 0; i < serversInfo.size(); i++) {
+			if (serversInfo.get(i).equals(serverInfo)) {
+				return;
+			}
 		}
+		
+		serversInfo.add(serverInfo);
+		System.out.println(serverInfo);
 	}
 
 }
