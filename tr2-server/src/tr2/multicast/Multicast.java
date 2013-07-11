@@ -10,16 +10,12 @@ public class Multicast {
 	
 	private MCListener listener;
 	
-	private String address;
-	
-	private int port;
-	
 	public Multicast(Controller controller, String address, int port) {
 		this.controller = controller;
-		speaker = new MCSpeaker(this, this.address, this.port);
+		speaker = new MCSpeaker(this, address, port);
 		Thread speakerThread = new Thread(speaker);
 		speakerThread.start();
-		listener = new MCListener(this, this.address, this.port);
+		listener = new MCListener(this, address, port);
 		Thread listenerThread = new Thread(listener);
 		listenerThread.start();
 	}

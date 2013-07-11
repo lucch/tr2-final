@@ -47,11 +47,13 @@ public class HttpServerInstance implements Runnable {
 				msg = loginRequest.getMessage();
 			}
 			
+			msg += "\nEOF\n"; // Marks EOF. TODO: Extract to the messages file.
+			
 			System.out.print(msg);
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			writer.write(msg);
 			writer.flush();
-			writer.close();
+			//writer.close();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
@@ -62,16 +64,17 @@ public class HttpServerInstance implements Runnable {
 	
 	@Override
 	public void run() {
-		try {
-			selectPage();
-		} catch (Exception e) {
-			try {
-				socket.close();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			} finally {
-				e.printStackTrace();
-			}
-		}
+		selectPage();
+//		try {
+//			selectPage();
+//		} catch (Exception e) {
+//			try {
+//				socket.close();
+//			} catch (IOException e1) {
+//				e1.printStackTrace();
+//			} finally {
+//				e.printStackTrace();
+//			}
+//		}
 	}
 }
