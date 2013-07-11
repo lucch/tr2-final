@@ -7,22 +7,25 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import tr2.client.util.MulticastReceiver;
 import tr2.client.util.NetworkConstants;
 
 public class Proxy implements ServerIPsListener  {
-	
+
 	private static Proxy proxy;
-		
+
 	private static Map<String, Socket> remoteServerSockets;
-	
+
 	private Proxy() throws IOException {
+		remoteServerSockets = new HashMap<String, Socket>();
 		Thread multicastListener = new Thread(new MulticastReceiver(this));
 		multicastListener.start();
 	}
-	
+
 	public static Proxy instance() throws IOException {
 		if (proxy == null) {
 			proxy = new Proxy();
@@ -37,26 +40,37 @@ public class Proxy implements ServerIPsListener  {
 	 * @return Response from the remote server.
 	 */
 	public String request(String request) {
-		String response = null;
-		
+		StringBuilder response = new StringBuilder();
+
 		// Add a timeout!!!
-		while(remoteServerSockets == null);
-		
-		Socket socket = remoteServerSockets.get(0);
+		while(remoteServerSockets.size() == 0) {
+			System.out.print("");
+		}
+
+		Set<String> keys = remoteServerSockets.keySet();
+		Socket socket = remoteServerSockets.get(keys.iterator().next());
+		if(socket != null) {
+			System.out.println("Sending request to: " + socket.getRemoteSocketAddress());
+		}
+
 		try {
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			writer.write(request);
 			writer.flush();
-			writer.close();
+			//writer.close();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			// Temporary... Testing...
-			response = reader.readLine();
-			reader.close();
+			String s;
+			while((s = reader.readLine()) != null) {
+				if(s.equals("EOF")) break;
+				response.append(s + "\n");
+			}
+			//reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		return response;
+
+		return response.toString();
 	}
 
 	@Override
@@ -66,13 +80,15 @@ public class Proxy implements ServerIPsListener  {
 			if(!remoteServerSockets.containsKey(ip)) {
 				try {
 					remoteServerSockets.put(ip, new Socket(ip, NetworkConstants.REMOTE_SERVER_PORT));
+					System.out.println("New IP " + ip + ".");
+					System.out.println("Remote Servers Size: " + remoteServerSockets.size());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
 	}
-	
+
 }
 
 

@@ -42,7 +42,7 @@ public class MCSpeaker implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
-			multicast.getPeriodicMessage();
+			speak(multicast.getPeriodicMessage());
 			try {
 				Thread.sleep(multicast.getPeriodicTime());
 			} catch (InterruptedException e) {

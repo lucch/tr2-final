@@ -10,6 +10,6 @@ public class MulticastConstants {
 	
 	public static final int SERVERS_MULTICAST_PORT = 10000;
 	
-	public static final long PERIODIC_TIME = 30000;
+	public static final long PERIODIC_TIME = 2000;
 
 }

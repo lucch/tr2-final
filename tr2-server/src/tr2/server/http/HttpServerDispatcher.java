@@ -11,7 +11,7 @@ public class HttpServerDispatcher implements Runnable {
 	private ServerSocket incomingSocket;
 	
 	private HttpServerDispatcher() throws IOException {
-		incomingSocket = new ServerSocket(8080);
+		incomingSocket = new ServerSocket(8082);
 	}
 	
 	public static HttpServerDispatcher instance() throws IOException {
