@@ -4,6 +4,8 @@ public class NetworkConstants {
 
 	public final static int TCP_SERVER_TO_SERVER_PORT = 7000;
 	
+	public final static int TCP_TIMEOUT = 500;
+	
 	/* Multicast settings */
 	public final static String MULTICAST_ADDRESS = "224.2.2.3";
 
