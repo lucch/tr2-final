@@ -1,4 +1,4 @@
-package tr2.client;
+package tr2.client.http;
 
 import java.util.ArrayList;
 

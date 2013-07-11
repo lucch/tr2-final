@@ -1,4 +1,4 @@
-package tr2.client.util;
+package tr2.client.http.util;
 
 import java.io.*;
 import java.net.*;

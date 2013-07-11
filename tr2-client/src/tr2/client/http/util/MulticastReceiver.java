@@ -1,4 +1,4 @@
-package tr2.client.util;
+package tr2.client.http.util;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -6,7 +6,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.ArrayList;
 
-import tr2.client.ServerIPsListener;
+import tr2.client.http.ServerIPsListener;
 
 public class MulticastReceiver extends NetworkConstants implements Runnable {
 

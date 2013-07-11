@@ -1,10 +1,10 @@
-package tr2.client;
+package tr2.client.http;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import tr2.client.util.NetworkConstants;
+import tr2.client.http.util.NetworkConstants;
 
 public class Dispatcher implements Runnable {
 	

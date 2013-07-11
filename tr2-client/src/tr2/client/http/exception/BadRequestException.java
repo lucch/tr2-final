@@ -1,4 +1,4 @@
-package tr2.client.exception;
+package tr2.client.http.exception;
 
 
 public class BadRequestException extends Exception {

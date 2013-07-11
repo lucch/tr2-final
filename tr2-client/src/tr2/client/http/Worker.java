@@ -1,11 +1,12 @@
-package tr2.client;
+package tr2.client.http;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-import tr2.client.util.SimpleHttpParser;
+import tr2.client.http.exception.BadRequestException;
+import tr2.client.http.util.SimpleHttpParser;
 
 public class Worker implements Runnable {
 
@@ -24,17 +25,18 @@ public class Worker implements Runnable {
 			System.out.println("[WORKER] Parsing request...");
 			request = parser.parse(socket.getInputStream());
 			System.out.println("[WORKER] Sending request to server...");
-			response = proxy.request(request, RequestType.JACOPO);
+			response = proxy.request(request, RequestType.HTTP);
 			notify(response);
+		} catch (BadRequestException e) {
+			System.out.println("[WORKER] Bad request. Aborting...");
 		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
 			try {
 				socket.close();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			} finally {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
-//				e.printStackTrace();
 		}
 	}
 
@@ -46,7 +48,7 @@ public class Worker implements Runnable {
 	public void notify(String response) {
 		try {
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			System.out.println("Writing to the browser:");
+			System.out.println("[WORKER] Writing to the browser:");
 			System.out.println(response);
 			writer.write(response);
 			writer.flush();

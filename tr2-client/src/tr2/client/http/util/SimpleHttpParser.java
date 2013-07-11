@@ -1,10 +1,10 @@
-package tr2.client.util;
+package tr2.client.http.util;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import tr2.client.exception.BadRequestException;
+import tr2.client.http.exception.BadRequestException;
 
 public class SimpleHttpParser {
 

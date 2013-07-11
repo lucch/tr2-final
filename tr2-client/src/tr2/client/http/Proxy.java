@@ -1,4 +1,4 @@
-package tr2.client;
+package tr2.client.http;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,8 +12,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import tr2.client.util.MulticastReceiver;
-import tr2.client.util.NetworkConstants;
+import tr2.client.http.util.MulticastReceiver;
+import tr2.client.http.util.NetworkConstants;
 
 public class Proxy implements ServerIPsListener {
 

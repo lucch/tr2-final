@@ -1,4 +1,4 @@
-package tr2.client.util;
+package tr2.client.http.util;
 
 public class NetworkConstants {
 
