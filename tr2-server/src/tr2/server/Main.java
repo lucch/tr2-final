@@ -7,9 +7,8 @@ public class Main {
 
 	public static void main(String[] args) {
 
-//		Controller controller = new Controller();
-//		controller.start();
-		
+		Controller controller = new Controller();
+		controller.start();
 
 //		TCPConnectionsManager manager = new TCPConnectionsManager(9001);
 		
