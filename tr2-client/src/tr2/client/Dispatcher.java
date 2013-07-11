@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import tr2.client.util.NetworkConstants;
+
 public class Dispatcher implements Runnable {
 	
 	private static Dispatcher dispatcher;
@@ -11,7 +13,7 @@ public class Dispatcher implements Runnable {
 	private ServerSocket incomingSocket;
 	
 	private Dispatcher() throws IOException {
-		incomingSocket = new ServerSocket(8080);
+		incomingSocket = new ServerSocket(NetworkConstants.LOCAL_CLIENT_PORT);
 	}
 	
 	public static Dispatcher instance() throws IOException {

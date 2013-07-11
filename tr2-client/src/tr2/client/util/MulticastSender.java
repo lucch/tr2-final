@@ -1,4 +1,4 @@
-package tr2.server;
+package tr2.client.util;
 
 import java.io.*;
 import java.net.*;
@@ -6,7 +6,7 @@ import java.net.*;
 /**
  * @author lycog
  */
-public class MulticastSender extends Multicast {
+public class MulticastSender extends NetworkConstants {
 
 	public void speak(String message) {
 
@@ -20,13 +20,17 @@ public class MulticastSender extends Multicast {
 			outBuf = message.getBytes();
 
 			// Send to multicast IP address and port
-			InetAddress address = InetAddress.getByName(multicastAddress);
+			InetAddress address = InetAddress.getByName(MULTICAST_ADDRESS);
 			outPacket = new DatagramPacket(outBuf, outBuf.length, address,
-					multicastPort);
+					MULTICAST_PORT);
 
 			socket.send(outPacket);
 
 			System.out.println("You : " + message);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException ie) {
+			}
 		} catch (IOException ioe) {
 			System.out.println(ioe);
 		}
