@@ -24,7 +24,7 @@ public class Worker implements Runnable {
 			System.out.println("[WORKER] Parsing request...");
 			request = parser.parse(socket.getInputStream());
 			System.out.println("[WORKER] Sending request to server...");
-			response = proxy.request(request);
+			response = proxy.request(request, RequestType.JACOPO);
 			notify(response);
 		} catch (Exception e) {
 			try {
