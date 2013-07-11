@@ -66,15 +66,15 @@ public class TCPConnectionsManager {
 	public void requestConnection(String address) {
 		// TODO - ver caso onde a conex‹o n‹o ocorre (deleta a info do
 		// cliente/server relacionado?)
-		if (connector.connectTo(address))
-			;
+		if (!connector.connectTo(address))
+			System.out.println("(!) Connection to " + address + " failed");
 	}
 
 	public void requestConnection(String address, int port) {
 		// TODO - ver caso onde a conex‹o n‹o ocorre (deleta a info do
 		// cliente/server relacionado?)
-		if (connector.connectTo(address, port))
-			;
+		if (!connector.connectTo(address, port))
+			System.out.println("(!) Connection to " + address + " failed");
 	}
 
 	public void sendToAllConnections(String message) {

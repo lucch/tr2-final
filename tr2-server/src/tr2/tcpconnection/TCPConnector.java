@@ -45,10 +45,8 @@ public class TCPConnector implements Runnable {
 
 			return true;
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
 			return false;
 		} catch (IOException e) {
-			System.out.println("(!) Connection to " + address + " failed");
 			return false;
 		}
 	}
@@ -61,7 +59,6 @@ public class TCPConnector implements Runnable {
 
 				manager.newConnection(socket);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
