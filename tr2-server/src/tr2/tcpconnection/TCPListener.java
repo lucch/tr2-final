@@ -18,6 +18,7 @@ public class TCPListener implements Runnable {
 					.getSocket().getInputStream()));
 			while (true) {
 				String message = reader.readLine();
+				// indicates that server is down
 				if (message == null) {
 					connection.connectionDown();
 					break;
