@@ -4,16 +4,25 @@ import java.net.Socket;
 
 public class TCPConnection {
 
+	private TCPConnectionsManager manager;
 	private Socket socket;
 	private TCPListener listener;
-	Thread listenerThread;
 	private TCPSpeaker speaker;
+	private boolean connected;
 
-	public TCPConnection(Socket socket) {
+	public TCPConnection(TCPConnectionsManager manager, Socket socket) {
+		this.manager = manager;
 		this.socket = socket;
-		
+		connected = true;
+	}
+
+	public boolean isConnected() {
+		return connected;
+	}
+
+	public void start() {
 		listener = new TCPListener(this);
-		listenerThread = new Thread(listener);
+		Thread listenerThread = new Thread(listener);
 		listenerThread.start();
 
 		speaker = new TCPSpeaker(this);
@@ -24,12 +33,10 @@ public class TCPConnection {
 	}
 
 	public void connectionDown() {
-		// TODO
-		if (socket.isClosed())
-			System.out.println("(!) Socket is closed!");
-		System.out.println("(!) Connection is down!");
+		connected = false;
+		manager.connectionDown();
 	}
-	
+
 	public void parser(String message) {
 		// TODO
 		System.out.println("Received: " + message);
@@ -45,7 +52,7 @@ public class TCPConnection {
 		return this.socket.getInetAddress().getHostAddress()
 				.equals(connection.socket.getInetAddress().getHostAddress());
 	}
-	
+
 	@Override
 	public String toString() {
 		return socket.getInetAddress().getHostAddress();

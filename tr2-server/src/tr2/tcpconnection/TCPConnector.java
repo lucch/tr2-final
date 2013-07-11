@@ -5,6 +5,7 @@
 package tr2.tcpconnection;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -15,49 +16,41 @@ public class TCPConnector implements Runnable {
 
 	private TCPConnectionsManager manager;
 
+	private int timeout;
+
 	private int port;
 
-	public TCPConnector(TCPConnectionsManager manager, int port) {
+	public TCPConnector(TCPConnectionsManager manager, int port, int timeout) {
 		this.port = port;
 		this.manager = manager;
 		try {
 			incomingRequest = new ServerSocket(port);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		this.timeout = timeout;
 	}
 
-	public void connectTo(String address) {
+	public boolean connectTo(String address) {
+		return connectTo(address, port);
+	}
+
+	public boolean connectTo(String address, int port) {
 		Socket socket;
 		try {
-			socket = new Socket(address, port);
+			socket = new Socket();
+			socket.connect(new InetSocketAddress(address, port), timeout);
 
 			manager.newConnection(socket);
+
+			return true;
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return false;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return false;
 		}
 	}
 
-	public void connectTo(String address, int port) {
-		Socket socket;
-		try {
-			socket = new Socket(address, port);
-
-			manager.newConnection(socket);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	public void run() {
 		while (true) {
 			Socket socket;
@@ -66,7 +59,6 @@ public class TCPConnector implements Runnable {
 
 				manager.newConnection(socket);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
