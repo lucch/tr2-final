@@ -15,16 +15,16 @@ public class TCPConnection {
 		this.socket = socket;
 		connected = true;
 	}
-	
+
 	public boolean isConnected() {
 		return connected;
 	}
-	
+
 	public void start() {
 		listener = new TCPListener(this);
 		Thread listenerThread = new Thread(listener);
 		listenerThread.start();
-		
+
 		speaker = new TCPSpeaker(this);
 	}
 
@@ -36,12 +36,12 @@ public class TCPConnection {
 		connected = false;
 		manager.connectionDown();
 	}
-	
+
 	public void parser(String message) {
 		// TODO
 		System.out.println("Received: " + message);
 	}
-	
+
 	public Socket getSocket() {
 		return socket;
 	}

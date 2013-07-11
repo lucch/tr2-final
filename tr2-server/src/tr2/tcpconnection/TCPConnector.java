@@ -10,8 +10,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import tr2.util.NetworkConstants;
-
 public class TCPConnector implements Runnable {
 
 	private ServerSocket incomingRequest;
