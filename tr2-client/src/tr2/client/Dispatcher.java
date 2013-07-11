@@ -30,6 +30,7 @@ public class Dispatcher implements Runnable {
 			try {
 				// Gets an incomming connection
 				socket = incomingSocket.accept();
+				System.out.println("[DISPATCHER] New incomming connection: " + socket.getInetAddress());
 				// Delegates it to a worker
 				Thread worker = new Thread(new Worker(socket));
 				worker.start();

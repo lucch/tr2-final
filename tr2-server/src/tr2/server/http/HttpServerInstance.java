@@ -47,8 +47,8 @@ public class HttpServerInstance implements Runnable {
 				msg = loginRequest.getMessage();
 			}
 			
-			msg += "\nEOF\n"; // Marks EOF. TODO: Extract to the messages file.
-			
+			msg += "\n" + HttpRequestParser.EOF + "\n";
+						
 			System.out.print(msg);
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			writer.write(msg);
@@ -58,13 +58,13 @@ public class HttpServerInstance implements Runnable {
 			ioe.printStackTrace();
 		}
 
-	
-		
 	}
 	
 	@Override
 	public void run() {
-		selectPage();
+		while(true) {
+			selectPage();
+		}
 //		try {
 //			selectPage();
 //		} catch (Exception e) {

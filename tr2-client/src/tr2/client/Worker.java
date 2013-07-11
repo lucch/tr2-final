@@ -21,7 +21,9 @@ public class Worker implements Runnable {
 			Proxy proxy = Proxy.instance();
 			String request = null, response;
 			SimpleHttpParser parser = new SimpleHttpParser();
-			request = parser.parse(socket.getInputStream());			
+			System.out.println("[WORKER] Parsing request...");
+			request = parser.parse(socket.getInputStream());
+			System.out.println("[WORKER] Sending request to server...");
 			response = proxy.request(request);
 			notify(response);
 		} catch (Exception e) {
@@ -32,6 +34,7 @@ public class Worker implements Runnable {
 			} finally {
 				e.printStackTrace();
 			}
+//				e.printStackTrace();
 		}
 	}
 

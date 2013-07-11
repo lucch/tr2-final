@@ -47,25 +47,38 @@ public class Proxy implements ServerIPsListener  {
 			System.out.print("");
 		}
 
+		int found = 0;
 		Set<String> keys = remoteServerSockets.keySet();
-		Socket socket = remoteServerSockets.get(keys.iterator().next());
-		if(socket != null) {
-			System.out.println("Sending request to: " + socket.getRemoteSocketAddress());
+		Socket socket = null;
+		while(keys.iterator().hasNext()) {
+			socket = remoteServerSockets.get(keys.iterator().next());
+			if(socket != null && socket.isBound()) {
+				System.out.println("[PROXY] Sending request to: " + socket.getRemoteSocketAddress());
+				found = 1;
+				break;
+			} else {
+				System.out.println("[PROXY] Server " + socket.getRemoteSocketAddress() + " is not bound");
+			}
 		}
+		
+		if(found == 0)
+			return null;
 
 		try {
+			System.out.println("[PROXY] Writing request to remote server...");
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			writer.write(request);
 			writer.flush();
-			//writer.close();
+//			writer.close();
+			
+			System.out.println("[PROXY] Waiting for response from remote server...");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			// Temporary... Testing...
 			String s;
 			while((s = reader.readLine()) != null) {
 				if(s.equals("EOF")) break;
 				response.append(s + "\n");
 			}
-			//reader.close();
+//			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
