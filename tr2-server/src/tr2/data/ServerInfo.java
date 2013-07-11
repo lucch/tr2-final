@@ -2,11 +2,10 @@
  * Armazena informações sobre um servidor
  */
 
-package data;
+package tr2.data;
 
 public class ServerInfo {
 	private String address;
-	private int port;
 
 	public ServerInfo(String address) {
 		this.address = address;

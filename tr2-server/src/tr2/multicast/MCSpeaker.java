@@ -1,17 +1,17 @@
-package multicast;
+package tr2.multicast;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-import tr2.util.MulticastConstants;
-
 public class MCSpeaker implements Runnable {
 	private String address;
 	private int port;
+	private Multicast multicast;
 
-	public MCSpeaker(String address, int port) {
+	public MCSpeaker(Multicast multicast, String address, int port) {
+		this.multicast = multicast;
 		this.address = address;
 		this.port = port;
 	}
@@ -41,10 +41,10 @@ public class MCSpeaker implements Runnable {
 
 	@Override
 	public void run() {
-		while(true) {
-			speak(MulticastConstants.HELLO);
+		while (true) {
+			multicast.getPeriodicMessage();
 			try {
-				Thread.sleep(4513);
+				Thread.sleep(multicast.getPeriodicTime());
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

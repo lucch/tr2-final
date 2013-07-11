@@ -1,7 +1,6 @@
-package multicast;
+package tr2.multicast;
 
-import tr2.util.MulticastConstants;
-import controller.Controller;
+import tr2.controller.Controller;
 
 public class Multicast {
 
@@ -10,13 +9,17 @@ public class Multicast {
 	private MCSpeaker speaker;
 	
 	private MCListener listener;
-
-	public Multicast(Controller controller) {
+	
+	private String address;
+	
+	private int port;
+	
+	public Multicast(Controller controller, String address, int port) {
 		this.controller = controller;
-		speaker = new MCSpeaker(MulticastConstants.SERVERS_MULTICAST_IP, MulticastConstants.SERVERS_MULTICAST_PORT);
+		speaker = new MCSpeaker(this, this.address, this.port);
 		Thread speakerThread = new Thread(speaker);
 		speakerThread.start();
-		listener = new MCListener(this, MulticastConstants.SERVERS_MULTICAST_IP, MulticastConstants.SERVERS_MULTICAST_PORT);
+		listener = new MCListener(this, this.address, this.port);
 		Thread listenerThread = new Thread(listener);
 		listenerThread.start();
 	}
@@ -28,4 +31,13 @@ public class Multicast {
 	public void parser(String message, String sourceAddress) {
 		controller.addServer(message, sourceAddress);
 	}
+	
+	public String getPeriodicMessage() {
+		return controller.getPeriodicMessage();
+	}
+	
+	public long getPeriodicTime() {
+		return controller.getPeriodicTime();
+	}
+	
 }
