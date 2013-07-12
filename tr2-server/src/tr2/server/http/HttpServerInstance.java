@@ -62,19 +62,19 @@ public class HttpServerInstance implements Runnable {
 	
 	@Override
 	public void run() {
-		while(true) {
-			selectPage();
-		}
-//		try {
+//		while(true) {
 //			selectPage();
-//		} catch (Exception e) {
-//			try {
-//				socket.close();
-//			} catch (IOException e1) {
-//				e1.printStackTrace();
-//			} finally {
-//				e.printStackTrace();
-//			}
 //		}
+		try {
+			selectPage();
+		} catch (Exception e) {
+			try {
+				socket.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} finally {
+				e.printStackTrace();
+			}
+		}
 	}
 }

@@ -1,14 +1,10 @@
 package tr2.server;
 
-import tr2.controller.Controller;
 import tr2.tcpconnection.TCPConnectionsManager;
 
 public class Main {
 
 	public static void main(String[] args) {
-
-		Controller controller = new Controller();
-		controller.start();
 
 //		TCPConnectionsManager manager = new TCPConnectionsManager(9001);
 		

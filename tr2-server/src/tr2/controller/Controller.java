@@ -34,8 +34,4 @@ public class Controller {
 		return MulticastConstants.PERIODIC_TIME;
 	}
 
-	public void start() {
-
-	}
-
 }

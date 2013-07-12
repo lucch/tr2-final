@@ -19,7 +19,7 @@ public class Proxy implements ServerIPsListener {
 
 	private static Proxy proxy;
 
-	private static Map<String, Socket> remoteServerSockets;
+	private static volatile Map<String, Socket> remoteServerSockets;
 
 	private Proxy() throws IOException {
 		remoteServerSockets = new HashMap<String, Socket>();
@@ -86,8 +86,9 @@ public class Proxy implements ServerIPsListener {
 		do {
 			// Waits until a server is found!
 			// TODO: Add a timeout!!!
-			while (remoteServerSockets.size() == 0) {
-				System.out.print(""); // This line IS necessary (believe...).
+			for (int i=0; remoteServerSockets.size() == 0; i++) {
+				if(i == 0)
+					System.out.println("[PROXY] Waiting for a server...");
 			}
 
 			keys = remoteServerSockets.keySet();
@@ -127,13 +128,15 @@ public class Proxy implements ServerIPsListener {
 	public void onIPListChangedListener(ArrayList<String> ipList) {
 		for (int i = 0; i < ipList.size(); i++) {
 			String ip = ipList.get(i);
+			//System.out.println("IP is: " + ip);
 			if (!remoteServerSockets.containsKey(ip)) {
 				try {
 					remoteServerSockets.put(ip, new Socket(ip,
 							NetworkConstants.REMOTE_JACOPO_SERVER_PORT));
-					System.out.println("New IP " + ip + ".");
-					System.out.println("Remote Servers Size: "
-							+ remoteServerSockets.size());
+					System.out.println("[PROXY] Added new server: " + ip);
+					//System.out.println("New IP " + ip + ".");
+					//System.out.println("Remote Servers Size: "
+					//		+ remoteServerSockets.size());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
