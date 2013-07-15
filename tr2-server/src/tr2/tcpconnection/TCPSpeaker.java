@@ -4,11 +4,9 @@ import java.io.*;
 
 public class TCPSpeaker {
 
-	private TCPConnection connection;
 	private BufferedWriter writer;
 
 	public TCPSpeaker(TCPConnection connection) {
-		this.connection = connection;
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(connection
 					.getSocket().getOutputStream()));

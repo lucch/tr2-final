@@ -2,28 +2,43 @@ package tr2.controller;
 
 import tr2.data.DataHolder;
 import tr2.multicast.Multicast;
+import tr2.tcpconnection.TCPConnectionsManager;
 import tr2.util.MulticastConstants;
 
 public class Controller {
 	private DataHolder data;
 	private Multicast multicast;
+	private TCPConnectionsManager p2p;
 
 	public Controller() {
+		p2p = new TCPConnectionsManager(this);
 		data = new DataHolder();
 		multicast = new Multicast(this,
 				MulticastConstants.SERVERS_MULTICAST_IP,
 				MulticastConstants.SERVERS_MULTICAST_PORT);
-		;
 	}
 
-	public void addServer(String message, String address) {
-		if (data.addServerInfo(address) != null) {
-			// estabelece conex‹o
-		}
+	public void notifyServerFound(String message, String address) {
+		addServer(address);
 
 		if (message.equals(MulticastConstants.HELLO)) {
 			multicast.sendMessage(MulticastConstants.HELLO_RESPONSE);
 		}
+	}
+
+	private void addServer(String address) {
+		if (data.addServerInfo(address)) {
+			// tries to connect to server
+			if (!p2p.requestConnection(address)) {
+				// if the connection was unsuccessful
+				data.removeServerInfo(address);
+			}
+
+		}
+	}
+
+	public void notifyDisconnected(String address) {
+		data.removeServerInfo(address);
 	}
 
 	public String getPeriodicMessage() {
@@ -34,4 +49,23 @@ public class Controller {
 		return MulticastConstants.PERIODIC_TIME;
 	}
 
+	// synchronization
+	public void sendServersInfoUpdate() {
+		String message = data.serversInfoToString();
+		p2p.sendToAllConnections("SRV/" + message);
+	}
+
+	public void notifyUpdateReceived(String message) {
+
+		if (message.startsWith("SRV/")) {
+			String servers[];
+			// it's a serversInfo update message
+			message.replace("SRV/", ""); // erases "header"
+			servers = message.split("/");
+
+			for (int i = 0; i < servers.length; i++) {
+				addServer(servers[i]);
+			}
+		}
+	}
 }

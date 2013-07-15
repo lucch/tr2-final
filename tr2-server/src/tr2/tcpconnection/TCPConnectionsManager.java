@@ -3,6 +3,7 @@ package tr2.tcpconnection;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import tr2.controller.Controller;
 import tr2.util.NetworkConstants;
 
 public class TCPConnectionsManager {
@@ -11,7 +12,10 @@ public class TCPConnectionsManager {
 
 	private ArrayList<TCPConnection> connections;
 
-	public TCPConnectionsManager() {
+	private Controller controller;
+
+	public TCPConnectionsManager(Controller controller) {
+		this.controller = controller;
 		connector = new TCPConnector(this,
 				NetworkConstants.TCP_SERVER_TO_SERVER_PORT,
 				NetworkConstants.TCP_TIMEOUT);
@@ -48,33 +52,50 @@ public class TCPConnectionsManager {
 		System.out.println("(!) Connection made to: " + connection);
 	}
 
-	public void removeObsoleteConnections() {
+	public int findConnection(Socket socket) {
+		TCPConnection conn = new TCPConnection(this, socket);
+
+		int i;
+		for (i = 0; i < connections.size(); i++) {
+			if (connections.get(i).equals(conn)) {
+				break;
+			}
+		}
+
+		return i;
+	}
+
+	public void removeDisconnected() {
 		for (int i = 0; i < connections.size(); i++) {
 			if (!connections.get(i).isConnected()) {
 				System.out.println("(!) Connection to " + connections.get(i)
 						+ " removed");
 				connections.remove(i);
+				controller.notifyDisconnected(connections.get(i).getAddress());
+
 			}
 		}
 	}
 
 	public void connectionDown() {
 		System.out.println("(!) Connection is down!");
-		removeObsoleteConnections();
+		removeDisconnected();
 	}
 
-	public void requestConnection(String address) {
-		// TODO - ver caso onde a conex‹o n‹o ocorre (deleta a info do
-		// cliente/server relacionado?)
-		if (!connector.connectTo(address))
+	public boolean requestConnection(String address) {
+		boolean connected = connector.connectTo(address);
+		if (!connected)
 			System.out.println("(!) Connection to " + address + " failed");
+
+		return connected;
 	}
 
-	public void requestConnection(String address, int port) {
-		// TODO - ver caso onde a conex‹o n‹o ocorre (deleta a info do
-		// cliente/server relacionado?)
-		if (!connector.connectTo(address, port))
+	public boolean requestConnection(String address, int port) {
+		boolean connected = connector.connectTo(address, port);
+		if (!connected)
 			System.out.println("(!) Connection to " + address + " failed");
+
+		return connected;
 	}
 
 	public void sendToAllConnections(String message) {
@@ -82,5 +103,10 @@ public class TCPConnectionsManager {
 			TCPConnection connection = connections.get(i);
 			connection.speak(message);
 		}
+	}
+	
+	public void parser(String message) {
+		System.out.println("Received: " + message);
+		controller.notifyUpdateReceived(message);
 	}
 }

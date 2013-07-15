@@ -25,7 +25,7 @@ public class Multicast {
 	}
 
 	public void parser(String message, String sourceAddress) {
-		controller.addServer(message, sourceAddress);
+		controller.notifyServerFound(message, sourceAddress);
 	}
 	
 	public String getPeriodicMessage() {

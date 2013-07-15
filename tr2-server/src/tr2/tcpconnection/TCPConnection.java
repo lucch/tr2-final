@@ -38,12 +38,15 @@ public class TCPConnection {
 	}
 
 	public void parser(String message) {
-		// TODO
-		System.out.println("Received: " + message);
+		manager.parser(message);
 	}
 
 	public Socket getSocket() {
 		return socket;
+	}
+	
+	public String getAddress() {
+		return socket.getInetAddress().getHostAddress();
 	}
 
 	@Override
