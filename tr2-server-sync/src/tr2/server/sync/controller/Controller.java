@@ -2,7 +2,7 @@ package tr2.server.sync.controller;
 
 import java.io.IOException;
 
-import tr2.server.common.data.DataHolder;
+import tr2.server.common.data.Data;
 import tr2.server.common.multicast.Multicast;
 import tr2.server.common.multicast.MulticastController;
 import tr2.server.common.tcp.ConnectionsManager;
@@ -11,7 +11,7 @@ import tr2.server.common.util.MulticastConstants;
 
 public class Controller implements MulticastController, TCPController {
 	
-	private DataHolder data;
+	private Data data;
 	
 	private Multicast multicast;
 	
@@ -19,15 +19,20 @@ public class Controller implements MulticastController, TCPController {
 
 	public Controller(int portTCP) throws IOException {
 		p2p = new ConnectionsManager(this, portTCP);
-		data = new DataHolder();
+		data = new Data();
 	}
-
+	
 	public void startMulticast() {
 		multicast = new Multicast(this,
 				MulticastConstants.SERVERS_MULTICAST_IP,
 				MulticastConstants.SERVERS_MULTICAST_PORT);
 	}
 
+	public void start() {
+		data.setPassive();
+		
+	}
+	
 	private void addServer(String address) {
 		if (data.addServerInfo(address)) {
 			// tries to connect to server
