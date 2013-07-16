@@ -2,27 +2,27 @@ package tr2.server.sync.controller;
 
 import java.io.IOException;
 
-import tr2.server.common.data.Data;
+import tr2.server.common.data.ServerData;
 import tr2.server.common.multicast.Multicast;
 import tr2.server.common.multicast.MulticastController;
 import tr2.server.common.tcp.ConnectionsManager;
 import tr2.server.common.tcp.TCPController;
 import tr2.server.common.util.NetworkConstants;
 
-public class Controller implements MulticastController, TCPController,
+public class P2PController implements MulticastController, TCPController,
 		TimerController {
 
-	private Data data;
+	private ServerData serverData;
 
 	private Multicast multicast;
 
 	private ConnectionsManager p2p;
+	
+	private String label = "[P2P CONTROLLER]";
 
-	private String label = "[CONTROLLER]";
-
-	public Controller(int portTCP) throws IOException {
-		p2p = new ConnectionsManager(this, portTCP);
-		data = new Data();
+	public P2PController(int serversPort, int clientsPort) throws IOException {
+		p2p = new ConnectionsManager(this, serversPort);
+		serverData = new ServerData();
 	}
 
 	public void startMulticast() {
@@ -32,7 +32,7 @@ public class Controller implements MulticastController, TCPController,
 	}
 
 	public void start() {
-		data.setPassive();
+		serverData.setPassive();
 
 		startMulticast();
 
@@ -40,7 +40,7 @@ public class Controller implements MulticastController, TCPController,
 	}
 
 	private void setActive() {
-		data.setActive();
+		serverData.setActive();
 
 		startMulticast();
 
@@ -49,16 +49,16 @@ public class Controller implements MulticastController, TCPController,
 	}
 
 	private void connectAndAddServer(String address) {
-		if (data.addServerInfo(address)) {
+		if (serverData.addServerInfo(address)) {
 			// tries to connect to server
 			if (p2p.requestConnection(address)) {
-				if (p2p.getNumberOfConnections() == 1 && !data.isManager()) {
+				if (p2p.getNumberOfConnections() == 1 && !serverData.isActive()) {
 					// it is the manager
-					data.setServerActive(address);
+					serverData.setServerActive(address);
 				}
 			} else {
 				// if the connection was unsuccessful
-				data.removeServerInfo(address);
+				serverData.removeServerInfo(address);
 			}
 		}
 	}
@@ -86,7 +86,7 @@ public class Controller implements MulticastController, TCPController,
 
 	// tcp
 	public void sendServersInfoUpdate() {
-		String message = data.serversInfoToString();
+		String message = serverData.serversInfoToString();
 		try {
 			p2p.sendToAllConnections(NetworkConstants.SERVER_PREFIX + message);
 		} catch (IOException e) {
@@ -96,14 +96,37 @@ public class Controller implements MulticastController, TCPController,
 	}
 
 	public void notifyDisconnected(String address) {
-		data.removeServerInfo(address);
+		// disconnected after being connected
+		// the disconnected server can be the manager
+		if (!serverData.removeServerInfo(address)) {
+			try {
+				Thread.sleep((long)(Math.random() * (NetworkConstants.TCP_TIMEOUT * 20)));
+				if (serverData.getActiveIndex() == -1) {
+					// delegates this server the manager
+					serverData.setActive();
+					p2p.sendToAllConnections(NetworkConstants.MANAGER_STATEMENT);
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 	}
 
+	// connection made notification
+	// adds it to data and sends update to all connected
 	public void notifyConnected(String address) {
-		data.addServerInfo(address);
+		// is connected
+		serverData.addServerInfo(address);
+		if (serverData.isActive()) {
+			// send all data
+			sendServersInfoUpdate();
+		}
 	}
-
-	// TODO mandar sincronizacao
 
 	public void notifyMessageReceived(String message, String localAddress,
 			String address) {
@@ -122,7 +145,7 @@ public class Controller implements MulticastController, TCPController,
 			}
 		} else if (message.startsWith(NetworkConstants.MANAGER_PREFIX)) {
 			if (message.equals(NetworkConstants.MANAGER_REQUEST)) {
-				if (data.isManager()) {
+				if (serverData.isActive()) {
 					// send manager_response
 				}
 			} else if (message.equals(NetworkConstants.MANAGER_RESPONSE)) {

@@ -5,13 +5,30 @@
 package tr2.server.common.data;
 
 import java.util.ArrayList;
+import java.util.Date;
 
-public class Data {
+public class ServerData {
+	
 	private ArrayList<ServerInfo> serversInfo;
+	
 	private boolean active;
 	
-	public Data() {
-		serversInfo = new ArrayList<ServerInfo>();
+	private int activeIndex;
+	
+	private Date startTime;
+
+	public ServerData() {
+		serversInfo = new ArrayList<ServerInfo>();		
+		activeIndex = -1;
+		startTime = new Date();
+	}
+	
+	public long getTime() {
+		return startTime.getTime();
+	}
+	
+	public int getActiveIndex() {
+		return activeIndex;
 	}
 	
 	public void setActive() {
@@ -22,7 +39,7 @@ public class Data {
 		active = false;
 	}
 
-	public boolean isManager() {
+	public boolean isActive() {
 		return active;
 	}
 	
@@ -59,23 +76,33 @@ public class Data {
 
 	public void setServerActive(String address) {
 		int serverIndex = findServerInfo(address);
-		
-		serversInfo.get(serverIndex).setActive();
+
+		activeIndex = serverIndex;
 	}
 	
-	public void removeServerInfo(String address) {
+	// returns false if the manager was lost
+	public boolean removeServerInfo(String address) {
 		int serverIndex = findServerInfo(address);
 
 		if (serverIndex < serversInfo.size())
 			serversInfo.remove(serverIndex);
 		
 		printServersInfo();
+
+		if (activeIndex == serverIndex) {
+			// TODO manager has dropped
+			activeIndex = -1;
+			return false;
+		}
+		
+		return true;
+		
 	}
 
 	public void printServersInfo() {
-		System.out.println("@ Servers Info:");
+		System.out.println("[DATA] Servers Info:");
 		for (int i = 0; i < serversInfo.size(); i++) {
-			System.out.println(serversInfo.get(i));
+			System.out.println("[DATA] " + serversInfo.get(i));
 		}
 	}
 	

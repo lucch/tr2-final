@@ -104,6 +104,10 @@ public class ConnectionsManager {
 		}
 	}
 
+	public ArrayList<Connection> getConnections() {
+		return connections;
+	}
+	
 	private String getLocalAddress() {
 		return localAddress;
 	}
