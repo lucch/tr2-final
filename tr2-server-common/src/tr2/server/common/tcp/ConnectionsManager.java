@@ -107,8 +107,12 @@ public class ConnectionsManager {
 		return localAddress;
 	}
 
-	public void parser(String message) {
-		System.out.println("Received: " + message);
-		controller.notifyMessageReceived(message, getLocalAddress());
+	public void parser(String message, String address) {
+		System.out.println("Received: " + message + "from " + address);
+		controller.notifyMessageReceived(message, getLocalAddress(), address);
+	}
+	
+	public int getNumberOfConnections() {
+		return connections.size();
 	}
 }

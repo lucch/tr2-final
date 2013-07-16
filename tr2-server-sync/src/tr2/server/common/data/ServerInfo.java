@@ -6,11 +6,16 @@ package tr2.server.common.data;
 
 public class ServerInfo {
 	private String address;
+	private boolean active;
 
 	public ServerInfo(String address) {
 		this.address = address;
 	}
 
+	public boolean isActive() {
+		return active;
+	}
+	
 	public String getAddress() {
 		return address;
 	}

@@ -32,8 +32,9 @@ public class Speaker implements Runnable {
 					this.port);
 
 			socket.send(outPacket);
-
-			System.out.println("You : " + message);
+			
+			multicast.notifyMessageSpoken(message);
+			
 		} catch (IOException ioe) {
 			System.out.println(ioe);
 		}

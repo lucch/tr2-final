@@ -6,13 +6,26 @@ package tr2.server.common.data;
 
 import java.util.ArrayList;
 
-public class DataHolder {
-	private volatile ArrayList<ServerInfo> serversInfo;
-
-	public DataHolder() {
+public class Data {
+	private ArrayList<ServerInfo> serversInfo;
+	private boolean active;
+	
+	public Data() {
 		serversInfo = new ArrayList<ServerInfo>();
 	}
+	
+	public void setActive() {
+		active = true;
+	}
+	
+	public void setPassive() {
+		active = false;
+	}
 
+	public boolean isActive() {
+		return active;
+	}
+	
 	public boolean addServerInfo(String address) {
 		int serverIndex = findServerInfo(address);
 
