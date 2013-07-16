@@ -12,10 +12,8 @@ public class Main {
 		try {
 			Controller servers = new Controller(
 					NetworkConstants.TCP_SERVER_TO_SERVER_PORT);
-			servers.startMulticast();
+			servers.start();
 
-			Controller clients = new Controller(
-					NetworkConstants.REMOTE_SERIES_SERVER_PORT);
 
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block

@@ -18,6 +18,14 @@ public class NetworkConstants {
 	/* Sync messages */
 	public static final String HELLO = "HELLO";
 	
+	public static final String MANAGER_PREFIX = "MNG/";
+	
+	public static final String MANAGER_REQUEST = "MNG/REQUEST";
+	
+	public static final String MANAGER_RESPONSE = "MNG/YES";
+	
+	public static final String MANAGER_STATEMENT = "MNG/STATEMENT";
+	
 	public static final String HELLO_RESPONSE = "HELLOACK";
 	
 	public static final long PERIODIC_TIME = 2000;

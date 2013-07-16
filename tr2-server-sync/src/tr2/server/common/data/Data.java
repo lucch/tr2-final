@@ -22,6 +22,10 @@ public class Data {
 		active = false;
 	}
 
+	public boolean isActive() {
+		return active;
+	}
+	
 	public boolean addServerInfo(String address) {
 		int serverIndex = findServerInfo(address);
 

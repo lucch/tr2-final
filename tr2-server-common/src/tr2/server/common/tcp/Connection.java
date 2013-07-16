@@ -43,7 +43,7 @@ public class Connection {
 	}
 
 	public void parser(String message) {
-		manager.parser(message);
+		manager.parser(message, getAddress());
 	}
 
 	public Socket getSocket() {
