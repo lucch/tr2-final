@@ -3,7 +3,7 @@ package tr2.server.sync;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import tr2.server.common.tcp.TCPController;
+import tr2.server.common.util.NetworkConstants;
 import tr2.server.sync.controller.Controller;
 
 
@@ -12,7 +12,11 @@ public class Main {
 	public static void main(String[] args) {
 
 		try {
-			new Controller();
+			Controller server = new Controller(NetworkConstants.TCP_SERVER_TO_SERVER_PORT);
+			server.startMulticast();
+			
+			new Controller(1020);
+			
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

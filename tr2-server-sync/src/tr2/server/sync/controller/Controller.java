@@ -8,17 +8,21 @@ import tr2.server.common.multicast.MulticastController;
 import tr2.server.common.tcp.ConnectionsManager;
 import tr2.server.common.tcp.TCPController;
 import tr2.server.common.util.MulticastConstants;
-import tr2.server.common.util.NetworkConstants;
 
 public class Controller implements MulticastController, TCPController {
+	
 	private DataHolder data;
+	
 	private Multicast multicast;
+	
 	private ConnectionsManager p2p;
 
-	public Controller() throws IOException {
-		p2p = new ConnectionsManager(this,
-				NetworkConstants.TCP_SERVER_TO_SERVER_PORT);
+	public Controller(int portTCP) throws IOException {
+		p2p = new ConnectionsManager(this, portTCP);
 		data = new DataHolder();
+	}
+
+	public void startMulticast() {
 		multicast = new Multicast(this,
 				MulticastConstants.SERVERS_MULTICAST_IP,
 				MulticastConstants.SERVERS_MULTICAST_PORT);
@@ -51,7 +55,7 @@ public class Controller implements MulticastController, TCPController {
 			multicast.sendMessage(MulticastConstants.HELLO_RESPONSE);
 		}
 	}
-	
+
 	// tcp
 	public void sendServersInfoUpdate() {
 		String message = data.serversInfoToString();
@@ -66,7 +70,9 @@ public class Controller implements MulticastController, TCPController {
 	public void notifyDisconnected(String address) {
 		data.removeServerInfo(address);
 	}
-	
+
+	// TODO mandar sincronizacao
+
 	public void notifyMessageReceived(String message, String localAddress) {
 
 		if (message.startsWith("SRV/")) {
