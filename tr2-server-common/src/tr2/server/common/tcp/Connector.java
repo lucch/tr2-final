@@ -20,14 +20,10 @@ public class Connector implements Runnable {
 
 	private int port;
 
-	public Connector(ConnectionsManager manager, int port, int timeout) {
+	public Connector(ConnectionsManager manager, int port, int timeout) throws IOException {
 		this.port = port;
 		this.manager = manager;
-		try {
-			incomingRequest = new ServerSocket(port);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		incomingRequest = new ServerSocket(port);
 		this.timeout = timeout;
 	}
 

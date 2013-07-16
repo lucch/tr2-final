@@ -1,5 +1,6 @@
 package tr2.server.sync;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 
 import tr2.server.common.tcp.TCPController;
@@ -13,6 +14,9 @@ public class Main {
 		try {
 			new Controller();
 		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

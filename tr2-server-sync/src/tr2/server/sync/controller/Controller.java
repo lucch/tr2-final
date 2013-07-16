@@ -1,5 +1,6 @@
 package tr2.server.sync.controller;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 
 import tr2.server.common.data.DataHolder;
@@ -15,7 +16,7 @@ public class Controller implements MulticastController, TCPController {
 	private Multicast multicast;
 	private ConnectionsManager p2p;
 
-	public Controller() throws UnknownHostException {
+	public Controller() throws IOException {
 		p2p = new ConnectionsManager(this,
 				NetworkConstants.TCP_SERVER_TO_SERVER_PORT);
 		data = new DataHolder();
@@ -55,7 +56,12 @@ public class Controller implements MulticastController, TCPController {
 	// tcp
 	public void sendServersInfoUpdate() {
 		String message = data.serversInfoToString();
-		p2p.sendToAllConnections("SRV/" + message);
+		try {
+			p2p.sendToAllConnections("SRV/" + message);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void notifyDisconnected(String address) {
