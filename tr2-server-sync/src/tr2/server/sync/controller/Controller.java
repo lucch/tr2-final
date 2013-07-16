@@ -5,10 +5,10 @@ import java.io.IOException;
 import tr2.server.common.data.DataHolder;
 import tr2.server.common.multicast.Multicast;
 import tr2.server.common.multicast.MulticastController;
+import tr2.server.common.tcp.ConnectionsManager;
+import tr2.server.common.tcp.TCPController;
 import tr2.server.common.util.MulticastConstants;
 import tr2.server.common.util.NetworkConstants;
-import tr2.server.sync.tcp.ConnectionsManager;
-import tr2.server.sync.tcp.TCPController;
 
 public class Controller implements MulticastController, TCPController {
 	private DataHolder data;

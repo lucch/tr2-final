@@ -2,7 +2,7 @@
  * Faz o papel do Dispatcher.
  */
 
-package tr2.server.sync.tcp;
+package tr2.server.common.tcp;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

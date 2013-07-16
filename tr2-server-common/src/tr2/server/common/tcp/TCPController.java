@@ -1,4 +1,4 @@
-package tr2.server.sync.tcp;
+package tr2.server.common.tcp;
 
 public interface TCPController {
 	
