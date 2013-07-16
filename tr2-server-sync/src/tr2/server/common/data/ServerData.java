@@ -49,15 +49,16 @@ public class ServerData {
 		if (serverIndex == serversInfo.size()) {
 			// if server isn't found
 			ServerInfo serverInfo = new ServerInfo(address);
-			serversInfo.add(new ServerInfo(address));
-			System.out.println("Added address: " + serverInfo);
-			// returns server added right now
+			
+			serversInfo.add(serverInfo);
+						
+			printServersInfo();
+			
 			return true;
+			// returns server added true
 		}
-
-		printServersInfo();
 		
-		// if server was already here, returns null 
+		// if server was already here, returns false
 		return false;
 	}
 
@@ -90,7 +91,6 @@ public class ServerData {
 		printServersInfo();
 
 		if (activeIndex == serverIndex) {
-			// TODO manager has dropped
 			activeIndex = -1;
 			return false;
 		}
@@ -104,6 +104,7 @@ public class ServerData {
 		for (int i = 0; i < serversInfo.size(); i++) {
 			System.out.println("[DATA] " + serversInfo.get(i));
 		}
+		System.out.println("[DATA] Servers Info Size: " + serversInfo.size());
 	}
 	
 	public ArrayList<ServerInfo> getServersInfo() {
