@@ -99,6 +99,8 @@ public class P2PController implements MulticastController, TCPController,
 		// disconnected after being connected
 		// the disconnected server can be the manager
 		if (!serverData.removeServerInfo(address)) {
+			System.out.println(label + "I detected that the manager dropped...");
+			System.out.println(label + "Initializing recovery routine...");
 			try {
 				Thread.sleep((long)(Math.random() * (NetworkConstants.TCP_TIMEOUT * 20)));
 				if (serverData.getActiveIndex() == -1) {
