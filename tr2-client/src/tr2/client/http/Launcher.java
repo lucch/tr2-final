@@ -17,6 +17,9 @@ public class Launcher {
 			System.out.println("[CLIENT] HTTP handler started successfully!");
 			
 			// TODO: Write the code which is going to connect to the remote server to series-related stuff!
+			
+			
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
