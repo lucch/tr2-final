@@ -2,16 +2,21 @@ package tr2.server.sync;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-
+import tr2.server.common.util.NetworkConstants;
 import tr2.server.sync.controller.Controller;
-
 
 public class Main {
 
 	public static void main(String[] args) {
 
 		try {
-			new Controller();
+			Controller servers = new Controller(
+					NetworkConstants.TCP_SERVER_TO_SERVER_PORT);
+			servers.startMulticast();
+
+			Controller clients = new Controller(
+					NetworkConstants.REMOTE_SERIES_SERVER_PORT);
+
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -20,14 +25,14 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		//		TCPConnectionsManager manager = new TCPConnectionsManager(9001);
+		// TCPConnectionsManager manager = new TCPConnectionsManager(9001);
 
-		//		TCPConnectionsManager manager = new TCPConnectionsManager(9002);
-		//		manager.requestConnection("192.168.0.1", 9001);
-		//		manager.requestConnection("localhost", 9001);
-		//		manager.requestConnection("localhost", 9001);
-		//		manager.requestConnection("localhost", 9001);
-		//		manager.sendToAllConnections("teste");
+		// TCPConnectionsManager manager = new TCPConnectionsManager(9002);
+		// manager.requestConnection("192.168.0.1", 9001);
+		// manager.requestConnection("localhost", 9001);
+		// manager.requestConnection("localhost", 9001);
+		// manager.requestConnection("localhost", 9001);
+		// manager.sendToAllConnections("teste");
 
 	}
 
