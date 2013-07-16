@@ -3,6 +3,7 @@ package tr2.client.http;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
@@ -44,8 +45,8 @@ public class Proxy implements ServerIPsListener {
 	 * @return Response from the remote server.
 	 */
 	public String request(String request, RequestType type) {
-		StringBuilder response = new StringBuilder();
-
+		String response = null;
+		
 		Socket socket = getSocket(type);
 
 		System.out.println("[PROXY] Sending request to: "
@@ -61,29 +62,29 @@ public class Proxy implements ServerIPsListener {
 
 			System.out
 					.println("[PROXY] Waiting for response from remote server...");
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					socket.getInputStream()));
-			String s;
+			response = getServerResponse(socket.getInputStream(), type);
 			
-			while ((s = reader.readLine()) != null) {
-				if (s.equals("EOF"))
-					break;
-				response.append(s + "\n");
-			}
 			// reader.close();
 			// socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		return response.toString();
+		return response;
 	}
 	
-//	private String getServerResponse(InputStreamReader inputStream) {
-//		StringBuilder response = new StringBuilder();
-//		
-//		
-//	}
+	private String getServerResponse(InputStream inputStream, RequestType type) throws IOException {
+		StringBuilder response = new StringBuilder();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+		String s;
+		// TODO: Switch case HTTP/Series Server
+		while ((s = reader.readLine()) != null) {
+			if (s.equals("EOF"))
+				break;
+			response.append(s + "\n");
+		}
+		return response.toString();
+	}
 
 	private Socket getSocket(RequestType type) {
 		int found = 0;
