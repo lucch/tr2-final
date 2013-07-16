@@ -1,7 +1,6 @@
 package tr2.server.sync.controller;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 
 import tr2.server.common.data.DataHolder;
 import tr2.server.common.multicast.Multicast;
