@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import tr2.server.common.util.NetworkConstants;
+
 public class HttpServerDispatcher implements Runnable {
 
 	private static HttpServerDispatcher httpserver;
@@ -11,7 +13,7 @@ public class HttpServerDispatcher implements Runnable {
 	private ServerSocket incomingSocket;
 	
 	private HttpServerDispatcher() throws IOException {
-		incomingSocket = new ServerSocket(8082);
+		incomingSocket = new ServerSocket(NetworkConstants.HTTP_PORT);
 	}
 	
 	public static HttpServerDispatcher instance() throws IOException {

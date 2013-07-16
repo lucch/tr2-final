@@ -17,5 +17,7 @@ public class NetworkConstants {
 	public final static int REMOTE_SERVER_PORT = 6543;
 
 	public static final int LOCAL_CLIENT_PORT = 8080;
+	
+	public static final int HTTP_PORT = 8082;
 
 }

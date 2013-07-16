@@ -5,6 +5,7 @@ public class HttpHtmlTemplates {
 	static public String add_user = path + "add_user.html";
 	static public String admin_menu = path + "admin_menu.html";
 	static public String edit_user = path + "edit_user.html";
+	static public String edit_user_admin = path + "edit_user_admin.html";
 	static public String edit_users = path + "edit_users.html";
 	static public String edit_users_footer = path + "edit_users_footer.html";
 	static public String edit_users_row = path + "edit_users_row.html";

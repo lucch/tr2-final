@@ -5,16 +5,16 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-import tr2.server.http.exception.BadRequestException;
+import tr2.server.http.exception.*;
 import tr2.server.http.util.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 //import tr2.server.exception.BadRequestException;
 
 
 public class HttpServerInstance implements Runnable {
-
 	private Socket socket;
 
 	public HttpServerInstance(final Socket socket) {
@@ -25,34 +25,82 @@ public class HttpServerInstance implements Runnable {
 		try {
 			HttpHeaderParser header = new HttpHeaderParser(socket.getInputStream());
 			HashMap <String,String> data = header.getData();
-			String page = header.getPage();
+			ArrayList<String> pages = header.getPages();
 			String msg = null;
 			
-			if (page.equals("index")) {
-				HttpRequestParser loginRequest;
-				loginRequest = new HttpRequestLogin();
-				msg = loginRequest.getMessage();
-			} else if (page.equals("add_user")) {
-				
-			} else if (page.equals("remove_user")) {
-				
-			} else if (page.equals("user_view")) {
-			} else if (page.equals("remove_data")) {
-				
-			} else if (page.equals("error")) {
-			} else if (page.equals("login")) {
-				HttpRequestParser loginRequest;
-				if (data.containsKey("nome")) {
-					loginRequest = new HttpRequestLogin(data.get("nome"));
-				} else {
-					loginRequest = new HttpRequestLogin();
+			try {
+				if (pages.get(0).equals("index")) {
+					msg = HttpRequestParser.index();
+				} else if (pages.get(0).equals("logout")) {
+					msg = HttpRequestParser.logout();
+				} else if (pages.get(0).equals("login")) {
+					if (!data.containsKey("nome")) {
+						throw new BadRequestException();
+					}
+					msg = HttpRequestParser.login(data.get("nome"));
+				} else if (pages.get(0).equals("admin")) {
+					if(pages.size() == 1) {
+						msg = HttpRequestParser.admin();
+					} else if (pages.get(1).equals("add_user")) {
+						if (data.containsKey("name") && data.containsKey("type")) {
+							//TODO: add user
+							System.out.print(data.get("name") + "\n----------");
+							msg = HttpRequestParser.editUsers();
+						} else {
+							msg = HttpRequestParser.addUser();
+						}
+					} else if (pages.get(1).equals("edit_user")) {
+						if (data.containsKey("name") && data.containsKey("type")) {
+							//TODO: edit user
+							msg = HttpRequestParser.editUsers();
+						} else {
+							msg = HttpRequestParser.editUserAdmin(data.get("name"),data.get("type"));
+						}
+					} else if (pages.get(1).equals("edit_users")) {
+						msg = HttpRequestParser.editUsers();
+					} else if (pages.get(1).equals("intervals")) {
+						msg = HttpRequestParser.intervals("admin");
+					} else if (pages.get(1).equals("remove_seq")) {
+						//TODO: remove sequence
+					} else if (pages.get(1).equals("servers")) {
+						msg = HttpRequestParser.servers("admin");
+					} else if (pages.get(1).equals("result")) {
+						msg = HttpRequestParser.result("admin");
+					}
+				} else if (pages.get(0).equals("user")) {
+					if(pages.size() == 1) {
+						msg = HttpRequestParser.user();
+					} else if (pages.get(1).equals("edit_user")) {
+						if (data.containsKey("name")) {
+							//TODO: send IP
+							//msg = HttpRequestParser.editUser(user.getUserIP(),data.containsKey("name"));
+						} else {
+							msg = HttpRequestParser.editUser();
+						}
+					} else if (pages.get(1).equals("intervals")) {
+						msg = HttpRequestParser.intervals("user");
+					} else if (pages.get(1).equals("remove_seq")) {
+						//TODO: remove sequence
+					} else if (pages.get(1).equals("servers")) {
+						msg = HttpRequestParser.servers("user");
+					} else if (pages.get(1).equals("result")) {
+						msg = HttpRequestParser.result("user");
+					}
 				}
-				msg = loginRequest.getMessage();
+			} catch (BadRequestException bre) {
+				msg = HttpServerUtil.getHttpBadRequest();
 			}
 			
-			msg += "\n" + HttpRequestParser.EOF + "\n";
-						
-			System.out.print(msg);
+			if (msg == null){
+				//msg = HttpServerUtil.getHttpBadRequest();
+				socket.close();
+				return;
+			}
+			
+			msg += "\n";
+			//msg += "\n" + HttpRequestParser.EOF + "\n";
+			
+			System.out.print(msg + "\n");
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			writer.write(msg);
 			writer.flush();
