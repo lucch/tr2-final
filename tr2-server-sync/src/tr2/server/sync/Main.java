@@ -1,12 +1,20 @@
 package tr2.server.sync;
 
+import java.net.UnknownHostException;
+
 import tr2.server.sync.controller.Controller;
-import tr2.server.sync.tcp.TCPConnectionsManager;
 
 
 public class Main {
 
 	public static void main(String[] args) {
+		
+		try {
+			new Controller();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 //		TCPConnectionsManager manager = new TCPConnectionsManager(9001);
 		

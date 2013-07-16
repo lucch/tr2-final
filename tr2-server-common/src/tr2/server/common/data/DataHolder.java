@@ -7,7 +7,7 @@ package tr2.server.common.data;
 import java.util.ArrayList;
 
 public class DataHolder {
-	private ArrayList<ServerInfo> serversInfo;
+	private volatile ArrayList<ServerInfo> serversInfo;
 
 	public DataHolder() {
 		serversInfo = new ArrayList<ServerInfo>();
