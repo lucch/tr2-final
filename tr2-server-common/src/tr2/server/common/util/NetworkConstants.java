@@ -7,9 +7,20 @@ public class NetworkConstants {
 	public final static int TCP_TIMEOUT = 500;
 	
 	/* Multicast settings */
-	public final static String MULTICAST_ADDRESS = "224.2.2.3";
+	public final static String CLIENT_MULTICAST_ADDRESS = "224.2.2.3";
 
-	public final static int MULTICAST_PORT = 9000;
+	public final static int CLIENT_MULTICAST_PORT = 9000;
+	
+	public static final String SERVERS_MULTICAST_IP = "224.2.2.4";
+	
+	public static final int SERVERS_MULTICAST_PORT = 10000;
+	
+	/* Sync messages */
+	public static final String HELLO = "HELLO";
+	
+	public static final String HELLO_RESPONSE = "HELLOACK";
+	
+	public static final long PERIODIC_TIME = 2000;
 
 	/* Proxy/Remote Servers settings */
 	public final static int PROXY_PORT = 8081;

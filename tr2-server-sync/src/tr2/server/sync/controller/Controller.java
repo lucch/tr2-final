@@ -7,7 +7,6 @@ import tr2.server.common.multicast.Multicast;
 import tr2.server.common.multicast.MulticastController;
 import tr2.server.common.tcp.ConnectionsManager;
 import tr2.server.common.tcp.TCPController;
-import tr2.server.common.util.MulticastConstants;
 import tr2.server.common.util.NetworkConstants;
 
 public class Controller implements MulticastController, TCPController {
@@ -20,8 +19,8 @@ public class Controller implements MulticastController, TCPController {
 				NetworkConstants.TCP_SERVER_TO_SERVER_PORT);
 		data = new DataHolder();
 		multicast = new Multicast(this,
-				MulticastConstants.SERVERS_MULTICAST_IP,
-				MulticastConstants.SERVERS_MULTICAST_PORT);
+				NetworkConstants.SERVERS_MULTICAST_IP,
+				NetworkConstants.SERVERS_MULTICAST_PORT);
 	}
 
 	private void addServer(String address) {
@@ -37,18 +36,18 @@ public class Controller implements MulticastController, TCPController {
 
 	// multicast
 	public String getPeriodicMessage() {
-		return MulticastConstants.HELLO;
+		return NetworkConstants.HELLO;
 	}
 
 	public long getPeriodicTime() {
-		return MulticastConstants.PERIODIC_TIME;
+		return NetworkConstants.PERIODIC_TIME;
 	}
 
 	public void notifyServerFound(String message, String address) {
 		addServer(address);
 
-		if (message.equals(MulticastConstants.HELLO)) {
-			multicast.sendMessage(MulticastConstants.HELLO_RESPONSE);
+		if (message.equals(NetworkConstants.HELLO)) {
+			multicast.sendMessage(NetworkConstants.HELLO_RESPONSE);
 		}
 	}
 	

@@ -25,8 +25,8 @@ public class MulticastReceiver implements Runnable {
 			byte[] inBuf = new byte[256];
 			try {
 				// Prepare to join multicast group
-				socket = new MulticastSocket(NetworkConstants.MULTICAST_PORT);
-				InetAddress address = InetAddress.getByName(NetworkConstants.MULTICAST_ADDRESS);
+				socket = new MulticastSocket(NetworkConstants.CLIENT_MULTICAST_PORT);
+				InetAddress address = InetAddress.getByName(NetworkConstants.CLIENT_MULTICAST_ADDRESS);
 
 				socket.joinGroup(address);
 
