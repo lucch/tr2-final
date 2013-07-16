@@ -39,6 +39,6 @@ public class NetworkConstants {
 	
 	public static final int REMOTE_HTTP_SERVER_PORT = 8082;
 
-	public static final int REMOTE_SERIES_SERVER_PORT = 8083; // To define...
+	public static final int REMOTE_SERIES_SERVER_PORT = 8083;
 
 }
