@@ -2,18 +2,18 @@ package tr2.server.common.multicast;
 
 public class Multicast {
 
-	private MulticastListener multicastListener;
+	private MulticastController multicastListener;
 
-	private MCSpeaker speaker;
+	private Speaker speaker;
 	
-	private MCListener listener;
+	private Listener listener;
 	
-	public Multicast(MulticastListener controller, String address, int port) {
+	public Multicast(MulticastController controller, String address, int port) {
 		this.multicastListener = controller;
-		speaker = new MCSpeaker(this, address, port);
+		speaker = new Speaker(this, address, port);
 		Thread speakerThread = new Thread(speaker);
 		speakerThread.start();
-		listener = new MCListener(this, address, port);
+		listener = new Listener(this, address, port);
 		Thread listenerThread = new Thread(listener);
 		listenerThread.start();
 	}

@@ -4,29 +4,24 @@ import java.net.UnknownHostException;
 
 import tr2.server.common.data.DataHolder;
 import tr2.server.common.multicast.Multicast;
-import tr2.server.common.multicast.MulticastListener;
+import tr2.server.common.multicast.MulticastController;
 import tr2.server.common.util.MulticastConstants;
-import tr2.server.sync.tcp.TCPConnectionsManager;
+import tr2.server.common.util.NetworkConstants;
+import tr2.server.sync.tcp.ConnectionsManager;
+import tr2.server.sync.tcp.TCPController;
 
-public class Controller implements MulticastListener {
+public class Controller implements MulticastController, TCPController {
 	private DataHolder data;
 	private Multicast multicast;
-	private TCPConnectionsManager p2p;
+	private ConnectionsManager p2p;
 
 	public Controller() throws UnknownHostException {
-		p2p = new TCPConnectionsManager(this);
+		p2p = new ConnectionsManager(this,
+				NetworkConstants.TCP_SERVER_TO_SERVER_PORT);
 		data = new DataHolder();
 		multicast = new Multicast(this,
 				MulticastConstants.SERVERS_MULTICAST_IP,
 				MulticastConstants.SERVERS_MULTICAST_PORT);
-	}
-
-	public void notifyServerFound(String message, String address) {
-		addServer(address);
-
-		if (message.equals(MulticastConstants.HELLO)) {
-			multicast.sendMessage(MulticastConstants.HELLO_RESPONSE);
-		}
 	}
 
 	private void addServer(String address) {
@@ -40,10 +35,7 @@ public class Controller implements MulticastListener {
 		}
 	}
 
-	public void notifyDisconnected(String address) {
-		data.removeServerInfo(address);
-	}
-
+	// multicast
 	public String getPeriodicMessage() {
 		return MulticastConstants.HELLO;
 	}
@@ -52,13 +44,25 @@ public class Controller implements MulticastListener {
 		return MulticastConstants.PERIODIC_TIME;
 	}
 
-	// synchronization
+	public void notifyServerFound(String message, String address) {
+		addServer(address);
+
+		if (message.equals(MulticastConstants.HELLO)) {
+			multicast.sendMessage(MulticastConstants.HELLO_RESPONSE);
+		}
+	}
+	
+	// tcp
 	public void sendServersInfoUpdate() {
 		String message = data.serversInfoToString();
 		p2p.sendToAllConnections("SRV/" + message);
 	}
 
-	public void notifyUpdateReceived(String message, String localAddress) {
+	public void notifyDisconnected(String address) {
+		data.removeServerInfo(address);
+	}
+	
+	public void notifyMessageReceived(String message, String localAddress) {
 
 		if (message.startsWith("SRV/")) {
 			String servers[];

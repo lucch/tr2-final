@@ -10,17 +10,17 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class TCPConnector implements Runnable {
+public class Connector implements Runnable {
 
 	private ServerSocket incomingRequest;
 
-	private TCPConnectionsManager manager;
+	private ConnectionsManager manager;
 
 	private int timeout;
 
 	private int port;
 
-	public TCPConnector(TCPConnectionsManager manager, int port, int timeout) {
+	public Connector(ConnectionsManager manager, int port, int timeout) {
 		this.port = port;
 		this.manager = manager;
 		try {

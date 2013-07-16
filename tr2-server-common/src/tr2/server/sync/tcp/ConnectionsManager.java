@@ -6,41 +6,32 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import tr2.server.common.util.NetworkConstants;
-import tr2.server.sync.controller.Controller;
 
-public class TCPConnectionsManager {
+public class ConnectionsManager {
 
-	private TCPConnector connector;
+	private Connector connector;
 
-	private ArrayList<TCPConnection> connections;
+	private ArrayList<Connection> connections;
 
-	private Controller controller;
+	private TCPController controller;
 
 	private String localAddress;
-	
-	public TCPConnectionsManager(Controller controller) throws UnknownHostException {
+
+	public ConnectionsManager(TCPController controller, int port)
+			throws UnknownHostException {
+
 		localAddress = InetAddress.getLocalHost().getHostAddress();
+
 		this.controller = controller;
-		connector = new TCPConnector(this,
-				NetworkConstants.TCP_SERVER_TO_SERVER_PORT,
-				NetworkConstants.TCP_TIMEOUT);
+		connector = new Connector(this, port, NetworkConstants.TCP_TIMEOUT);
 		Thread connectorThread = new Thread(connector);
 		connectorThread.start();
 
-		connections = new ArrayList<TCPConnection>();
-	}
-
-	public TCPConnectionsManager(int serverPort) {
-		connector = new TCPConnector(this, serverPort,
-				NetworkConstants.TCP_TIMEOUT);
-		Thread connectorThread = new Thread(connector);
-		connectorThread.start();
-
-		connections = new ArrayList<TCPConnection>();
+		connections = new ArrayList<Connection>();
 	}
 
 	public void newConnection(Socket socket) {
-		TCPConnection connection = new TCPConnection(this, socket);
+		Connection connection = new Connection(this, socket);
 
 		// checks if connection already exists
 		for (int i = 0; i < connections.size(); i++) {
@@ -51,14 +42,14 @@ public class TCPConnectionsManager {
 			}
 		}
 
-		// initiates connection
+		// if connection doesn't exists, initiates connection
 		connection.start();
 		connections.add(connection);
 		System.out.println("(!) Connection made to: " + connection);
 	}
 
 	public int findConnection(Socket socket) {
-		TCPConnection conn = new TCPConnection(this, socket);
+		Connection conn = new Connection(this, socket);
 
 		int i;
 		for (i = 0; i < connections.size(); i++) {
@@ -70,7 +61,7 @@ public class TCPConnectionsManager {
 		return i;
 	}
 
-	public void removeDisconnected() {
+	private void removeDisconnected() {
 		for (int i = 0; i < connections.size(); i++) {
 			if (!connections.get(i).isConnected()) {
 				System.out.println("(!) Connection to " + connections.get(i)
@@ -105,17 +96,17 @@ public class TCPConnectionsManager {
 
 	public void sendToAllConnections(String message) {
 		for (int i = 0; i < connections.size(); i++) {
-			TCPConnection connection = connections.get(i);
+			Connection connection = connections.get(i);
 			connection.speak(message);
 		}
 	}
-	
-	public String getAddress() {
+
+	private String getLocalAddress() {
 		return localAddress;
 	}
-	
+
 	public void parser(String message) {
 		System.out.println("Received: " + message);
-		controller.notifyUpdateReceived(message, getAddress());
+		controller.notifyMessageReceived(message, getLocalAddress());
 	}
 }

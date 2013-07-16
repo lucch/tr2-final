@@ -5,12 +5,12 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
-public class MCListener implements Runnable {
+public class Listener implements Runnable {
 	private Multicast multicast;
 	private String address;
 	private int port;
 
-	public MCListener(Multicast multicast, String address, int port) {
+	public Listener(Multicast multicast, String address, int port) {
 		this.multicast = multicast;
 		this.address = address;
 		this.port = port;

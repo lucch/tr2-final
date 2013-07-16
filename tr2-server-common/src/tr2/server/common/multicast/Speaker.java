@@ -5,12 +5,12 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-public class MCSpeaker implements Runnable {
+public class Speaker implements Runnable {
 	private String address;
 	private int port;
 	private Multicast multicast;
 
-	public MCSpeaker(Multicast multicast, String address, int port) {
+	public Speaker(Multicast multicast, String address, int port) {
 		this.multicast = multicast;
 		this.address = address;
 		this.port = port;

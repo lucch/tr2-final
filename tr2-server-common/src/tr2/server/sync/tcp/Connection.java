@@ -2,15 +2,19 @@ package tr2.server.sync.tcp;
 
 import java.net.Socket;
 
-public class TCPConnection {
+public class Connection {
 
-	private TCPConnectionsManager manager;
+	private ConnectionsManager manager;
+	
 	private Socket socket;
-	private TCPListener listener;
-	private TCPSpeaker speaker;
+	
+	private Listener listener;
+	
+	private Speaker speaker;
+	
 	private boolean connected;
 
-	public TCPConnection(TCPConnectionsManager manager, Socket socket) {
+	public Connection(ConnectionsManager manager, Socket socket) {
 		this.manager = manager;
 		this.socket = socket;
 		connected = true;
@@ -21,11 +25,11 @@ public class TCPConnection {
 	}
 
 	public void start() {
-		listener = new TCPListener(this);
+		listener = new Listener(this);
 		Thread listenerThread = new Thread(listener);
 		listenerThread.start();
 
-		speaker = new TCPSpeaker(this);
+		speaker = new Speaker(this);
 	}
 
 	public void speak(String message) {
@@ -51,13 +55,13 @@ public class TCPConnection {
 
 	@Override
 	public boolean equals(Object obj) {
-		TCPConnection connection = (TCPConnection) obj;
+		Connection connection = (Connection) obj;
 		return this.socket.getInetAddress().getHostAddress()
 				.equals(connection.socket.getInetAddress().getHostAddress());
 	}
 
 	@Override
 	public String toString() {
-		return socket.getInetAddress().getHostAddress();
+		return getAddress();
 	}
 }

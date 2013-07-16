@@ -2,13 +2,13 @@ package tr2.server.sync.tcp;
 
 import java.io.*;
 
-public class TCPListener implements Runnable {
+public class Listener implements Runnable {
 
-	private TCPConnection connection;
+	private Connection connection;
 
 	private BufferedReader reader;
 
-	public TCPListener(TCPConnection connection) {
+	public Listener(Connection connection) {
 		this.connection = connection;
 	}
 

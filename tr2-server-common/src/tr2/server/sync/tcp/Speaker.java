@@ -2,11 +2,11 @@ package tr2.server.sync.tcp;
 
 import java.io.*;
 
-public class TCPSpeaker {
+public class Speaker {
 
 	private BufferedWriter writer;
 
-	public TCPSpeaker(TCPConnection connection) {
+	public Speaker(Connection connection) {
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(connection
 					.getSocket().getOutputStream()));

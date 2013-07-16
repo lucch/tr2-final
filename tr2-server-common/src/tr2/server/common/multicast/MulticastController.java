@@ -1,6 +1,6 @@
 package tr2.server.common.multicast;
 
-public interface MulticastListener {
+public interface MulticastController {
 
 	public void notifyServerFound(String message, String address);
 
