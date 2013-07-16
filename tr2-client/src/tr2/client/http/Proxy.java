@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import tr2.client.http.util.MulticastReceiver;
-import tr2.client.http.util.NetworkConstants;
+import tr2.server.common.util.NetworkConstants;
 
 public class Proxy implements ServerIPsListener {
 
@@ -64,6 +64,7 @@ public class Proxy implements ServerIPsListener {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			String s;
+			
 			while ((s = reader.readLine()) != null) {
 				if (s.equals("EOF"))
 					break;
@@ -77,6 +78,12 @@ public class Proxy implements ServerIPsListener {
 
 		return response.toString();
 	}
+	
+//	private String getServerResponse(InputStreamReader inputStream) {
+//		StringBuilder response = new StringBuilder();
+//		
+//		
+//	}
 
 	private Socket getSocket(RequestType type) {
 		int found = 0;
@@ -133,7 +140,7 @@ public class Proxy implements ServerIPsListener {
 			if (!remoteServerSockets.containsKey(ip)) {
 				try {
 					remoteServerSockets.put(ip, new Socket(ip,
-							NetworkConstants.REMOTE_JACOPO_SERVER_PORT));
+							NetworkConstants.REMOTE_SERIES_SERVER_PORT));
 					System.out.println("[PROXY] Added new server: " + ip);
 					//System.out.println("New IP " + ip + ".");
 					//System.out.println("Remote Servers Size: "

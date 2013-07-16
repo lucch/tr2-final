@@ -2,6 +2,6 @@ package tr2.client.http;
 
 public enum RequestType {
 	
-	HTTP, JACOPO;
+	HTTP, SERIES;
 
 }
