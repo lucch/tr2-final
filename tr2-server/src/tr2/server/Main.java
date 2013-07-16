@@ -1,12 +1,19 @@
 package tr2.server;
 
-import tr2.controller.Controller;
-import tr2.tcpconnection.TCPConnectionsManager;
+import java.net.UnknownHostException;
 
+import tr2.controller.Controller;
 
 public class Main {
 
 	public static void main(String[] args) {
+		
+		try {
+			new Controller();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 //		TCPConnectionsManager manager = new TCPConnectionsManager(9001);
 		

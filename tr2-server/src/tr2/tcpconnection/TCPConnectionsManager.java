@@ -1,6 +1,8 @@
 package tr2.tcpconnection;
 
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import tr2.controller.Controller;
@@ -14,7 +16,10 @@ public class TCPConnectionsManager {
 
 	private Controller controller;
 
-	public TCPConnectionsManager(Controller controller) {
+	private String localAddress;
+	
+	public TCPConnectionsManager(Controller controller) throws UnknownHostException {
+		localAddress = InetAddress.getLocalHost().getHostAddress();
 		this.controller = controller;
 		connector = new TCPConnector(this,
 				NetworkConstants.TCP_SERVER_TO_SERVER_PORT,
@@ -105,8 +110,12 @@ public class TCPConnectionsManager {
 		}
 	}
 	
+	public String getAddress() {
+		return localAddress;
+	}
+	
 	public void parser(String message) {
 		System.out.println("Received: " + message);
-		controller.notifyUpdateReceived(message);
+		controller.notifyUpdateReceived(message, getAddress());
 	}
 }

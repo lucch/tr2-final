@@ -1,5 +1,7 @@
 package tr2.controller;
 
+import java.net.UnknownHostException;
+
 import tr2.data.DataHolder;
 import tr2.multicast.Multicast;
 import tr2.tcpconnection.TCPConnectionsManager;
@@ -10,7 +12,7 @@ public class Controller {
 	private Multicast multicast;
 	private TCPConnectionsManager p2p;
 
-	public Controller() {
+	public Controller() throws UnknownHostException {
 		p2p = new TCPConnectionsManager(this);
 		data = new DataHolder();
 		multicast = new Multicast(this,
@@ -55,7 +57,7 @@ public class Controller {
 		p2p.sendToAllConnections("SRV/" + message);
 	}
 
-	public void notifyUpdateReceived(String message) {
+	public void notifyUpdateReceived(String message, String localAddress) {
 
 		if (message.startsWith("SRV/")) {
 			String servers[];
@@ -64,7 +66,9 @@ public class Controller {
 			servers = message.split("/");
 
 			for (int i = 0; i < servers.length; i++) {
-				addServer(servers[i]);
+				if (!servers[i].equals(localAddress)) {
+					addServer(servers[i]);
+				}
 			}
 		}
 	}
