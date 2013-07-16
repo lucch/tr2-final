@@ -1,4 +1,4 @@
-package tr2.multicast;
+package tr2.server.common.multicast;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

@@ -1,4 +1,4 @@
-package tr2.util;
+package tr2.server.common.util;
 
 public class MulticastConstants {
 	

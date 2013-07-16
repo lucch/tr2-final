@@ -70,6 +70,7 @@ public class Proxy implements ServerIPsListener {
 				response.append(s + "\n");
 			}
 			// reader.close();
+			// socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

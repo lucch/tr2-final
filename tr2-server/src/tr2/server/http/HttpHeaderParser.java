@@ -5,24 +5,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-//import tr2.server.exception.BadRequestException;
+
+import tr2.server.http.exception.BadRequestException;
 
 public class HttpHeaderParser {
 	private String page;
 	private HashMap<String, String> data = new HashMap<String, String>();
 	
 	
-	public HttpHeaderParser(InputStream stream) {
+	public HttpHeaderParser(InputStream stream) throws BadRequestException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 		
 		try {
 			String linha = reader.readLine();
-			//String method = linha.substring(0,3);
-			//if (!method.equals("GET")) {
-				//throw new BadRequestException();
-			//}
+			String method = linha.substring(0,3);
+			if (!method.equals("GET")) {
+				throw new BadRequestException();
+			}
 			
-			//index
 			if (linha.length() == 14) {
 				this.page = "index";
 				return ;

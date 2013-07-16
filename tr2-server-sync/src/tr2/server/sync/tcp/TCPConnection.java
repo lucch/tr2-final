@@ -1,4 +1,4 @@
-package tr2.tcpconnection;
+package tr2.server.sync.tcp;
 
 import java.net.Socket;
 

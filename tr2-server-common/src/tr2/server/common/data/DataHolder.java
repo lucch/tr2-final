@@ -2,7 +2,7 @@
  * Controla a aplica‹o
  */
 
-package tr2.data;
+package tr2.server.common.data;
 
 import java.util.ArrayList;
 

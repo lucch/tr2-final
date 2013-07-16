@@ -1,10 +1,10 @@
-package tr2.tcpconnection;
+package tr2.server.sync.tcp;
 
 import java.net.Socket;
 import java.util.ArrayList;
 
-import tr2.controller.Controller;
-import tr2.util.NetworkConstants;
+import tr2.server.common.util.NetworkConstants;
+import tr2.server.sync.controller.Controller;
 
 public class TCPConnectionsManager {
 

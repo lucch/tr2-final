@@ -1,11 +1,12 @@
-package tr2.controller;
+package tr2.server.sync.controller;
 
-import tr2.data.DataHolder;
-import tr2.multicast.Multicast;
-import tr2.tcpconnection.TCPConnectionsManager;
-import tr2.util.MulticastConstants;
+import tr2.server.common.data.DataHolder;
+import tr2.server.common.multicast.Multicast;
+import tr2.server.common.multicast.MulticastListener;
+import tr2.server.common.util.MulticastConstants;
+import tr2.server.sync.tcp.TCPConnectionsManager;
 
-public class Controller {
+public class Controller implements MulticastListener {
 	private DataHolder data;
 	private Multicast multicast;
 	private TCPConnectionsManager p2p;

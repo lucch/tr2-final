@@ -2,7 +2,7 @@
  * Armazena informações sobre um servidor
  */
 
-package tr2.data;
+package tr2.server.common.data;
 
 public class ServerInfo {
 	private String address;

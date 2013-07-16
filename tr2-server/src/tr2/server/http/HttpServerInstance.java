@@ -4,7 +4,10 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+
+import tr2.server.http.exception.BadRequestException;
 import tr2.server.http.util.*;
+
 import java.util.HashMap;
 
 //import tr2.server.exception.BadRequestException;
@@ -53,7 +56,10 @@ public class HttpServerInstance implements Runnable {
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			writer.write(msg);
 			writer.flush();
+			socket.close();
 			//writer.close();
+		} catch (BadRequestException e) {
+			e.printStackTrace();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}

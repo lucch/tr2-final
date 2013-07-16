@@ -1,17 +1,15 @@
-package tr2.multicast;
-
-import tr2.controller.Controller;
+package tr2.server.common.multicast;
 
 public class Multicast {
 
-	private Controller controller;
+	private MulticastListener multicastListener;
 
 	private MCSpeaker speaker;
 	
 	private MCListener listener;
 	
-	public Multicast(Controller controller, String address, int port) {
-		this.controller = controller;
+	public Multicast(MulticastListener controller, String address, int port) {
+		this.multicastListener = controller;
 		speaker = new MCSpeaker(this, address, port);
 		Thread speakerThread = new Thread(speaker);
 		speakerThread.start();
@@ -25,15 +23,15 @@ public class Multicast {
 	}
 
 	public void parser(String message, String sourceAddress) {
-		controller.notifyServerFound(message, sourceAddress);
+		multicastListener.notifyServerFound(message, sourceAddress);
 	}
 	
 	public String getPeriodicMessage() {
-		return controller.getPeriodicMessage();
+		return multicastListener.getPeriodicMessage();
 	}
 	
 	public long getPeriodicTime() {
-		return controller.getPeriodicTime();
+		return multicastListener.getPeriodicTime();
 	}
 	
 }

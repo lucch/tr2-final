@@ -1,7 +1,7 @@
-package tr2.server;
+package tr2.server.sync;
 
-import tr2.controller.Controller;
-import tr2.tcpconnection.TCPConnectionsManager;
+import tr2.server.sync.controller.Controller;
+import tr2.server.sync.tcp.TCPConnectionsManager;
 
 
 public class Main {
