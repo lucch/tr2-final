@@ -24,9 +24,9 @@ public class MulticastSender {
 			outBuf = message.getBytes();
 
 			// Send to multicast IP address and port
-			InetAddress address = InetAddress.getByName(NetworkConstants.MULTICAST_ADDRESS);
+			InetAddress address = InetAddress.getByName(NetworkConstants.CLIENT_MULTICAST_ADDRESS);
 			outPacket = new DatagramPacket(outBuf, outBuf.length, address,
-					NetworkConstants.MULTICAST_PORT);
+					NetworkConstants.CLIENT_MULTICAST_PORT);
 
 			socket.send(outPacket);
 
