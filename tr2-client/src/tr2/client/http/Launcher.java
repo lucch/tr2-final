@@ -2,9 +2,7 @@ package tr2.client.http;
 
 import java.io.IOException;
 
-import tr2.server.common.entity.Interval;
-import tr2.server.common.series.protocol.Messages;
-import tr2.server.common.util.JSONHelper;
+import tr2.client.series.CalculatorManager;
 
 public class Launcher {
 
@@ -22,34 +20,14 @@ public class Launcher {
 
 			// TODO: Write the code which is going to connect to the remote
 			// server to series-related stuff!
-			Interval interval = getSeriesInterval();
-			calculate(interval);
-			System.out.println(interval);
+			System.out.println("[CLIENT] Starting calculator manager...");
+			Thread calculatorManager = new Thread(new CalculatorManager());
+			calculatorManager.start();
+			System.out.println("[CLIENT] Calculator manager started successfully!");
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private void calculate(Interval interval) {
-		if (interval == null)
-			return;
-
-		double sum = 0;
-		for (long i = interval.getFirstDenominator(); i < interval
-				.getLastDenominator(); i++) {
-			sum += 1.0d / i;
-		}
-		interval.setResult(sum);
-	}
-
-	private Interval getSeriesInterval() throws IOException {
-		Proxy proxy = Proxy.instance();
-		String response = proxy.request(Messages.GET_INTERVAL,
-				RequestType.SERIES);
-
-		/* Parses JSON String to Interval object. */
-		return JSONHelper.fromJSON(response, Interval.class);
 	}
 
 }
