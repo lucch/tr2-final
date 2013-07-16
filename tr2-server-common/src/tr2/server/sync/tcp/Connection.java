@@ -1,5 +1,6 @@
 package tr2.server.sync.tcp;
 
+import java.io.IOException;
 import java.net.Socket;
 
 public class Connection {
@@ -24,7 +25,7 @@ public class Connection {
 		return connected;
 	}
 
-	public void start() {
+	public void start() throws IOException {
 		listener = new Listener(this);
 		Thread listenerThread = new Thread(listener);
 		listenerThread.start();
@@ -32,7 +33,7 @@ public class Connection {
 		speaker = new Speaker(this);
 	}
 
-	public void speak(String message) {
+	public void speak(String message) throws IOException {
 		speaker.speak(message);
 	}
 
