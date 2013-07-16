@@ -7,8 +7,9 @@ import java.net.MulticastSocket;
 import java.util.ArrayList;
 
 import tr2.client.http.ServerIPsListener;
+import tr2.server.common.util.NetworkConstants;
 
-public class MulticastReceiver extends NetworkConstants implements Runnable {
+public class MulticastReceiver implements Runnable {
 
 	private ServerIPsListener listener;
 

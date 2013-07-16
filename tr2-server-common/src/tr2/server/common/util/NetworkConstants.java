@@ -14,8 +14,10 @@ public class NetworkConstants {
 	/* Proxy/Remote Servers settings */
 	public final static int PROXY_PORT = 8081;
 
-	public final static int REMOTE_SERVER_PORT = 6543;
-
 	public static final int LOCAL_CLIENT_PORT = 8080;
+	
+	public static final int REMOTE_HTTP_SERVER_PORT = 8082;
+
+	public static final int REMOTE_SERIES_SERVER_PORT = 8083; // To define...
 
 }

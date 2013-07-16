@@ -3,7 +3,6 @@ package tr2.server.sync;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import tr2.server.common.tcp.TCPController;
 import tr2.server.sync.controller.Controller;
 
 

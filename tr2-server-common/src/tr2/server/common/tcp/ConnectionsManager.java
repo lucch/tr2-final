@@ -68,8 +68,8 @@ public class ConnectionsManager {
 			if (!connections.get(i).isConnected()) {
 				System.out.println(label + " Connection to " + connections.get(i)
 						+ " removed");
-				connections.remove(i);
 				controller.notifyDisconnected(connections.get(i).getAddress());
+				connections.remove(i);
 
 			}
 		}
