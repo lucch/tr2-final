@@ -64,8 +64,10 @@ public class Proxy implements ServerIPsListener {
 					.println("[PROXY] Waiting for response from remote server...");
 			response = getServerResponse(socket.getInputStream(), type);
 			
-			// reader.close();
-			// socket.close();
+			/* We're making HTTP requests stateless, so we close the connection. */
+			if(type == RequestType.HTTP)
+				socket.close();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -76,12 +78,18 @@ public class Proxy implements ServerIPsListener {
 	private String getServerResponse(InputStream inputStream, RequestType type) throws IOException {
 		StringBuilder response = new StringBuilder();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-		String s;
-		// TODO: Switch case HTTP/Series Server
-		while ((s = reader.readLine()) != null) {
-			if (s.equals("EOF"))
-				break;
-			response.append(s + "\n");
+		
+		if(type == RequestType.HTTP) {
+			String s;
+			/* If it's a HTTP request, we have to read until the stream terminator "EOF", defined in the server. */
+			while ((s = reader.readLine()) != null) {
+				if (s.equals("EOF"))
+					break;
+				response.append(s + "\n");
+			}
+		} else {
+			/* If it's a SERIES request, the response must be one line length (a JSON string). */
+			response.append(reader.readLine());
 		}
 		return response.toString();
 	}
