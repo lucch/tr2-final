@@ -18,6 +18,8 @@ public class NetworkConstants {
 	/* Sync messages */
 	public static final String HELLO = "HELLO";
 	
+	public static final String SERVER_PREFIX = "SRV/";
+	
 	public static final String MANAGER_PREFIX = "MNG/";
 	
 	public static final String MANAGER_REQUEST = "MNG/REQUEST";

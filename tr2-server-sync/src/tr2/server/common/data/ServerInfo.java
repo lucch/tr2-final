@@ -10,10 +10,15 @@ public class ServerInfo {
 
 	public ServerInfo(String address) {
 		this.address = address;
+		this.active = false;
 	}
 
 	public boolean isActive() {
 		return active;
+	}
+	
+	public void setActive() {
+		active = true;
 	}
 	
 	public String getAddress() {

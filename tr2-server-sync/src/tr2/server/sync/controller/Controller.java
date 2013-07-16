@@ -25,30 +25,45 @@ public class Controller implements MulticastController, TCPController,
 		data = new Data();
 	}
 
-	public void startClientsMulticast() {
+	public void startMulticast() {
 		multicast = new Multicast(this,
 				NetworkConstants.CLIENT_MULTICAST_ADDRESS,
 				NetworkConstants.CLIENT_MULTICAST_PORT, "[MULTICAST_CLIENTS]");
-		
-		multicast.startSpeaker(NetworkConstants.HELLO, NetworkConstants.PERIODIC_TIME);
-	}
-
-	public void startServersMulticast() {
-		multicast = new Multicast(this, NetworkConstants.SERVERS_MULTICAST_IP,
-				NetworkConstants.SERVERS_MULTICAST_PORT, "[MULTICAST_SERVERS]");
-		
-		multicast.startSpeaker(NetworkConstants.HELLO, NetworkConstants.PERIODIC_TIME);
-
 	}
 
 	public void start() {
 		data.setPassive();
 
-		startServersMulticast();
+		startMulticast();
 
-		new Timer(this, NetworkConstants.PERIODIC_TIME * 4);
+		new Timer(this, NetworkConstants.PERIODIC_TIME * 5);
 	}
 
+	private void setActive() {
+		data.setActive();
+
+		startMulticast();
+
+		multicast.startSpeaker(NetworkConstants.HELLO,
+				NetworkConstants.PERIODIC_TIME);
+	}
+
+	private void connectAndAddServer(String address) {
+		if (data.addServerInfo(address)) {
+			// tries to connect to server
+			if (p2p.requestConnection(address)) {
+				if (p2p.getNumberOfConnections() == 1 && !data.isManager()) {
+					// it is the manager
+					data.setServerActive(address);
+				}
+			} else {
+				// if the connection was unsuccessful
+				data.removeServerInfo(address);
+			}
+		}
+	}
+
+	// multicast
 	public void notifyTimeIsOver() throws IOException {
 		// when time is over
 		// if no connection has been made
@@ -57,35 +72,12 @@ public class Controller implements MulticastController, TCPController,
 			setActive();
 			System.out.println(label + " I am the new manager");
 		} else {
-			// asks who is the manager
-			getManager();
-			System.out.println(label + " There's probably a new manager");
+			System.out.println(label + " There's a manager");
 		}
 	}
 
-	private void setActive() {
-		data.setActive();
-		startClientsMulticast();
-	}
-
-	public void getManager() throws IOException {
-		p2p.sendToAllConnections(NetworkConstants.MANAGER_REQUEST);
-	}
-
-	private void addServer(String address) {
-		if (data.addServerInfo(address)) {
-			// tries to connect to server
-			if (!p2p.requestConnection(address)) {
-				// if the connection was unsuccessful
-				data.removeServerInfo(address);
-			}
-
-		}
-	}
-
-	// multicast
 	public void notifyServerFound(String message, String address) {
-		addServer(address);
+		connectAndAddServer(address);
 
 		if (message.equals(NetworkConstants.HELLO)) {
 			multicast.sendMessage(NetworkConstants.HELLO_RESPONSE);
@@ -96,7 +88,7 @@ public class Controller implements MulticastController, TCPController,
 	public void sendServersInfoUpdate() {
 		String message = data.serversInfoToString();
 		try {
-			p2p.sendToAllConnections("SRV/" + message);
+			p2p.sendToAllConnections(NetworkConstants.SERVER_PREFIX + message);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -107,25 +99,30 @@ public class Controller implements MulticastController, TCPController,
 		data.removeServerInfo(address);
 	}
 
+	public void notifyConnected(String address) {
+		data.addServerInfo(address);
+	}
+
 	// TODO mandar sincronizacao
 
 	public void notifyMessageReceived(String message, String localAddress,
 			String address) {
 
-		if (message.startsWith("SRV/")) {
+		if (message.startsWith(NetworkConstants.SERVER_PREFIX)) {
 			String servers[];
 			// it's a serversInfo update message
-			message.replace("SRV/", ""); // erases "header"
+			message.replace(NetworkConstants.SERVER_PREFIX, ""); // erases
+																	// "header"
 			servers = message.split("/");
 
 			for (int i = 0; i < servers.length; i++) {
 				if (!servers[i].equals(localAddress)) {
-					addServer(servers[i]);
+					connectAndAddServer(servers[i]);
 				}
 			}
 		} else if (message.startsWith(NetworkConstants.MANAGER_PREFIX)) {
 			if (message.equals(NetworkConstants.MANAGER_REQUEST)) {
-				if (data.isActive()) {
+				if (data.isManager()) {
 					// send manager_response
 				}
 			} else if (message.equals(NetworkConstants.MANAGER_RESPONSE)) {

@@ -22,7 +22,7 @@ public class Data {
 		active = false;
 	}
 
-	public boolean isActive() {
+	public boolean isManager() {
 		return active;
 	}
 	
@@ -57,6 +57,12 @@ public class Data {
 		return i;
 	}
 
+	public void setServerActive(String address) {
+		int serverIndex = findServerInfo(address);
+		
+		serversInfo.get(serverIndex).setActive();
+	}
+	
 	public void removeServerInfo(String address) {
 		int serverIndex = findServerInfo(address);
 

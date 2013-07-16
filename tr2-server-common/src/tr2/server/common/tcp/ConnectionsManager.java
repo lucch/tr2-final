@@ -47,6 +47,7 @@ public class ConnectionsManager {
 		// if connection doesn't exists, initiates connection
 		connection.start();
 		connections.add(connection);
+		controller.notifyConnected(connection.getAddress());
 		System.out.println(label + " Connection made to: " + connection);
 	}
 
