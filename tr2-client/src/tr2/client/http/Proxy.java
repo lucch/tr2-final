@@ -21,7 +21,7 @@ public class Proxy implements ServerIPsListener {
 	private static Proxy proxy;
 
 	private static volatile Map<String, Socket> remoteServerSockets;
-
+	
 	private Proxy() throws IOException {
 		remoteServerSockets = new HashMap<String, Socket>();
 		Thread multicastListener = new Thread(new MulticastReceiver(this));

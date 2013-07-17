@@ -2,6 +2,8 @@ package tr2.server.http;
 
 import java.io.IOException;
 
+import tr2.server.http.util.MulticastSender;
+
 public class HttpServerLauncher {
 
 	public static void main(String[] args) {
@@ -18,6 +20,8 @@ public class HttpServerLauncher {
 			
 			// Starts the "Multicast", notifying interested listeners of this 
 			// HTTP Server's existence.
+			 Thread multicastSender = new Thread(new MulticastSender());
+			 multicastSender.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

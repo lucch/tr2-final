@@ -4,12 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import tr2.server.http.exception.BadRequestException;
 
 public class HttpHeaderParser {
-	private String page;
+	private ArrayList<String> pages = new ArrayList<String>();
 	private HashMap<String, String> data = new HashMap<String, String>();
 	
 	
@@ -18,36 +19,44 @@ public class HttpHeaderParser {
 		
 		try {
 			String linha = reader.readLine();
-			String method = linha.substring(0,3);
-			if (!method.equals("GET")) {
+			String[] headerStr = linha.split(" ");
+			if (!headerStr[0].equals("GET") || headerStr.length <= 2) {
 				throw new BadRequestException();
 			}
 			
-			if (linha.length() == 14) {
-				this.page = "index";
-				return ;
+			if (headerStr[1].equals("/")) {
+				pages.add("index");
+				return;
 			}
 			
-			linha = linha.substring(5, linha.length()-9);
-			Integer index = linha.indexOf("?");
+			linha = headerStr[1].substring(1, headerStr[1].length());
 			
-			if (index >= 0) {
-				this.page = linha.substring(0,index);
-			} else {
-				//Has no parameters
-				this.page = linha;
-				return ;
+			if(linha.indexOf("?") >= 0){
+				String[] params = linha.split("\\?");
+				linha = params[0];
+				params = params[1].split("&");
+				
+				for(int i = 0;i<params.length;i++) {
+					String[] new_params = params[i].split("=");
+					if (new_params.length < 2)
+						throw new BadRequestException();
+					
+					data.put(new_params[0], new_params[1]);
+				}
 			}
 			
-			linha = linha.substring(index+1,linha.length());
-			String[] params = linha.split("&");
+			String[] vecPages = linha.split("/");
 			
-			for(int i = 0;i<params.length;i++) {
-				String[] new_params = params[i].split("=");
-				data.put(new_params[0], new_params[1]);
+			
+			for(String page : vecPages)
+				pages.add(page);
+				
+			
+			if (headerStr.length > 1) {
+
 			}
 		} catch (IOException ioe) {
-			System.out.println(ioe);
+			throw new BadRequestException();
 		}
 
 	}
@@ -55,8 +64,8 @@ public class HttpHeaderParser {
 	public HashMap<String,String> getData() {
 		return data;
 	}
-	
-	public String getPage() {
-		return page;
+
+	public ArrayList<String> getPages() {
+		return pages;
 	}
 }
