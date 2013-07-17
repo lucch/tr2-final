@@ -47,7 +47,7 @@ public class P2PController implements MulticastController, TCPController,
 
 		startMulticast();
 
-		new Timer(this, NetworkConstants.PERIODIC_TIME * 5, timerWaitConnection);
+		new Timer(this, NetworkConstants.PERIODIC_TIME * 5, false, timerWaitConnection);
 	}
 	
 	private void setActive() {
@@ -55,7 +55,7 @@ public class P2PController implements MulticastController, TCPController,
 
 		startMulticast();
 		
-		new Timer(this, NetworkConstants.SYNC_TIME, timerSendUpdates);
+		new Timer(this, NetworkConstants.SYNC_TIME, true, timerSendUpdates);
 
 		multicast.startSpeaker(NetworkConstants.HELLO,
 				NetworkConstants.PERIODIC_TIME);
@@ -89,8 +89,10 @@ public class P2PController implements MulticastController, TCPController,
 				System.out.println(label + " There's a manager");
 			}
 		} else if (type == timerSendUpdates) {
-			System.out.println(label + " Sending updates to other servers");
-			sendCalculatedIntervals();
+			if (p2p.getNumberOfConnections() > 0) {
+				System.out.println(label + " Sending updates to other servers");
+				sendCalculatedIntervals();
+			}
 		}
 	}
 
