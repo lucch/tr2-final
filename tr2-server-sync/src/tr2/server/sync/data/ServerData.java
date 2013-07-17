@@ -2,7 +2,7 @@
  * Controla a aplica‹o
  */
 
-package tr2.server.common.data;
+package tr2.server.sync.data;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -100,16 +100,16 @@ public class ServerData {
 	}
 
 	public void printServersInfo() {
-		System.out.println("[DATA] Servers Info:");
+		System.out.println("[SERVER DATA] Servers Info:");
 		
 		if (serversInfo.size() > 0) {
 			for (int i = 0; i < serversInfo.size(); i++) {
-				System.out.println("[DATA] <" + serversInfo.get(i) + ">");
+				System.out.println("[SERVER DATA] <" + serversInfo.get(i) + ">");
 			}
 		} else {
-			System.out.println("[DATA] <empty>");
+			System.out.println("[SERVER DATA] <empty>");
 		}
-		System.out.println("[DATA] Servers Info Size: " + serversInfo.size());
+		System.out.println("[SERVER DATA] Servers Info Size: " + serversInfo.size());
 	}
 	
 	public ArrayList<ServerInfo> getServersInfo() {

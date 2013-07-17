@@ -63,6 +63,17 @@ public class ConnectionsManager {
 
 		return i;
 	}
+	
+	public int findConnection(String address) {
+		int i;
+		for (i = 0; i < connections.size(); i++) {
+			if (connections.get(i).getAddress().equals(address)) {
+				break;
+			}
+		}
+		
+		return i;
+	}
 
 	private void removeDisconnected() {
 		for (int i = 0; i < connections.size(); i++) {
@@ -100,9 +111,20 @@ public class ConnectionsManager {
 	public void sendToAllConnections(String message) throws IOException {
 		for (int i = 0; i < connections.size(); i++) {
 			Connection connection = connections.get(i);
-			// TODO FAZER O SPEAK DIRECIONADO!!!!
 			connection.speak(message);
 			System.out.println(label + " Sent to " + connection.getAddress() + ": " + message);
+		}
+	}
+	
+	public void sendTo(String message, String address) throws IOException {
+		int i = findConnection(address);
+		
+		if (i >= connections.size()) {
+			// address invalid
+			System.out.println(label + " Failed to send message");
+			System.out.println(label + " Invalid address");
+		} else {
+			connections.get(i).speak(message);
 		}
 	}
 	

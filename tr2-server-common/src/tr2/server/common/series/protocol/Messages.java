@@ -17,4 +17,6 @@ public class Messages {
 
 	public static final String INTERVAL_CALCULATED = "INTERVAL CALCULATED";
 
+	public static final String ACK = "ACK";
+
 }

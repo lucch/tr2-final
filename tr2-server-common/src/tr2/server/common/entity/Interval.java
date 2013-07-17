@@ -31,8 +31,6 @@ public class Interval implements JSONable {
 
 	private String clientIP;
 
-	private IntervalState intervalState;
-
 	public Interval() {
 
 	}
@@ -61,14 +59,6 @@ public class Interval implements JSONable {
 		this.clientIP = clientIP;
 	}
 
-	public IntervalState getIntervalState() {
-		return intervalState;
-	}
-
-	public void setIntervalState(IntervalState intervalState) {
-		this.intervalState = intervalState;
-	}
-
 	public long getFirstDenominator() {
 		return index * 10000l + 1l;
 	}
@@ -83,7 +73,6 @@ public class Interval implements JSONable {
 		obj.put("index", this.index);
 		obj.put("result", this.result);
 		obj.put("clientIP", this.clientIP);
-		obj.put("intervalState", this.intervalState == null ? 0 : this.intervalState.getCode());
 		return obj.toJSONString();
 	}
 	
@@ -97,12 +86,13 @@ public class Interval implements JSONable {
 			interval.setIndex((Long) obj.get("index"));
 			interval.setResult((Double) obj.get("result"));
 			interval.setClientIP((String) obj.get("clientIP"));
-			long code = (Long) obj.get("intervalState");
-			interval.setIntervalState(IntervalState.fromCode(code));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return interval;
 	}
 
+	public boolean equalAddress(Interval interval) {
+		return this.clientIP.equals(interval.getClientIP());
+	}
 }

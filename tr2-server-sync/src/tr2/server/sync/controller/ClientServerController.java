@@ -7,10 +7,11 @@ import tr2.server.common.series.protocol.Messages;
 import tr2.server.common.tcp.ConnectionsManager;
 import tr2.server.common.tcp.TCPController;
 import tr2.server.common.util.JSONHelper;
+import tr2.server.interval.data.Data;
 
 public class ClientServerController implements TCPController {
 	
-//	private ClientData clientData;
+	private Data data;
 	
 	private ConnectionsManager client;
 	
@@ -18,7 +19,7 @@ public class ClientServerController implements TCPController {
 
 	public ClientServerController(int clientsPort) throws IOException {
 		client = new ConnectionsManager(this, clientsPort);
-//		clientData = new ClientData();
+		data = new Data();
 	}
 
 
@@ -31,30 +32,29 @@ public class ClientServerController implements TCPController {
 	@Override
 	public void notifyMessageReceived(String message, String localAddress,
 			String address) {
-		// TODO Auto-generated method stub
 		
 		String response = null;
-		// somente para testar, MUDAR AQUI
+
 		if (message.equals(Messages.GET_INTERVAL)) {
-			Interval i = new Interval();
+			Interval i = data.getInterval(address);
 			response = i.toJSON();
 			try {
-				client.sendToAllConnections(response);
+				client.sendTo(response, address);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} else {
 			String[] req;
 			req = message.split(Messages.SEPARATOR);
-			if(req[0].equals(Messages.INTERVAL_CALCULATED)) {
+			if (req[0].equals(Messages.INTERVAL_CALCULATED)) {
 				Interval i = JSONHelper.fromJSON(req[1], Interval.class);
+				data.addCalculatedInterval(i);
 				try {
-					client.sendToAllConnections("ACK");
+					response = Messages.ACK;
+					client.sendTo(response, address);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				System.out.println(label + " Result: " + i.getResult());
 			}
 		}
 	}

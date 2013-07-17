@@ -2,12 +2,12 @@ package tr2.server.sync.controller;
 
 import java.io.IOException;
 
-import tr2.server.common.data.ServerData;
 import tr2.server.common.multicast.Multicast;
 import tr2.server.common.multicast.MulticastController;
 import tr2.server.common.tcp.ConnectionsManager;
 import tr2.server.common.tcp.TCPController;
 import tr2.server.common.util.NetworkConstants;
+import tr2.server.sync.data.ServerData;
 
 public class P2PController implements MulticastController, TCPController,
 		TimerController {
@@ -32,6 +32,9 @@ public class P2PController implements MulticastController, TCPController,
 	}
 
 	public void start() {
+		System.out.println(label + " Initializing server");
+		System.out.println(label + " Searching for manager...");
+		
 		serverData.setPassive();
 
 		startMulticast();
