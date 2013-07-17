@@ -14,10 +14,6 @@ public class Calculator {
 				.getLastDenominator(); i++) {
 			sum += 1.0 / (double) i;
 		}
-		System.out.println("Sum is: " + sum);
-		System.out.println("Last Denominator is: " + interval.getFirstDenominator());
-		System.out.println("First Denominator is: " + interval.getLastDenominator());
-		System.out.println("i: " + i);
 		interval.setResult(sum);
 		
 		return interval;

@@ -21,7 +21,7 @@ public class Proxy implements ServerIPsListener {
 	private static Proxy proxy;
 
 	private static volatile Map<String, Socket> remoteServerSockets;
-	
+
 	private Proxy() throws IOException {
 		remoteServerSockets = new HashMap<String, Socket>();
 		Thread multicastListener = new Thread(new MulticastReceiver(this));
@@ -46,39 +46,57 @@ public class Proxy implements ServerIPsListener {
 	 */
 	public String request(String request, RequestType type) {
 		String response = null;
-		
-		Socket socket = getSocket(type);
 
-		System.out.println("[PROXY] Sending request to: "
-				+ socket.getRemoteSocketAddress());
+		//do {
+			Socket socket = getSocket(type);
 
-		try {
-			System.out.println("[PROXY] Writing request to remote server...");
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-					socket.getOutputStream()));
-			writer.write(request);
-			writer.flush();
-			// writer.close();
+			System.out.println("[PROXY] Sending request to: "
+					+ socket.getRemoteSocketAddress());
 
-			System.out
-					.println("[PROXY] Waiting for response from remote server...");
-			response = getServerResponse(socket.getInputStream(), type);
-			
-			/* We're making HTTP requests stateless, so we close the connection. */
-			if(type == RequestType.HTTP)
-				socket.close();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			try {
+				System.out.println("[PROXY] Writing request to remote server...");
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+						socket.getOutputStream()));
+				writer.write(request);
+				writer.flush();
+				// writer.close();
+
+				System.out
+				.println("[PROXY] Waiting for response from remote server...");
+				response = getServerResponse(socket.getInputStream(), type);
+
+				/* We're making HTTP requests stateless, so we close the connection. */
+				if(type == RequestType.HTTP)
+					socket.close();
+
+			} catch (IOException e) {
+				if(remoteServerSockets.containsValue(socket)) {
+					String ip = null;
+					Iterator<String> it = remoteServerSockets.keySet().iterator();
+					while(it.hasNext()) {
+						ip = it.next();
+						Socket s = remoteServerSockets.get(ip);
+						if(s == socket) {
+							remoteServerSockets.remove(ip);
+							break;
+						}
+					}
+					//remoteServerSockets.values().remove(socket);
+					System.out.println("[PROXY] Server " + ip + " is down!");
+					System.out.println("[PROXY] " + ip + " removed from list.");
+				} else {
+					e.printStackTrace();
+				}
+			}
+		//} while (response != null);
 
 		return response;
 	}
-	
+
 	private String getServerResponse(InputStream inputStream, RequestType type) throws IOException {
 		StringBuilder response = new StringBuilder();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-		
+
 		if(type == RequestType.HTTP) {
 			String s;
 			/* If it's a HTTP request, we have to read until the stream terminator "EOF", defined in the server. */
@@ -89,7 +107,9 @@ public class Proxy implements ServerIPsListener {
 			}
 		} else {
 			/* If it's a SERIES request, the response must be one line length (a JSON string). */
+			//if (reader.ready()) {
 			response.append(reader.readLine());
+			//}
 		}
 		return response.toString();
 	}
@@ -126,7 +146,7 @@ public class Proxy implements ServerIPsListener {
 					}
 				} else {
 					socket = remoteServerSockets.get(ip);
-					if (socket == null || !socket.isBound()) {
+					if (socket == null || socket.isClosed()) {
 						remoteServerSockets.remove(ip);
 						System.out.println("[PROXY] Removed server: " + ip
 								+ " from list.");

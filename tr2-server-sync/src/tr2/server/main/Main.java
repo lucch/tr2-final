@@ -18,6 +18,7 @@ public class Main {
 
 			new ClientServerController(
 					NetworkConstants.REMOTE_SERIES_SERVER_PORT);
+			
 
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block

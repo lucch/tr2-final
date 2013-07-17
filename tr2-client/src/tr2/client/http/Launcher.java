@@ -24,7 +24,6 @@ public class Launcher {
 			Thread calculatorManager = new Thread(new CalculatorManager());
 			calculatorManager.start();
 			System.out.println("[CLIENT] Calculator manager started successfully!");
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
