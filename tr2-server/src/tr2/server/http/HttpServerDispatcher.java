@@ -13,7 +13,7 @@ public class HttpServerDispatcher implements Runnable {
 	private ServerSocket incomingSocket;
 	
 	private HttpServerDispatcher() throws IOException {
-		incomingSocket = new ServerSocket(NetworkConstants.REMOTE_HTTP_SERVER_PORT);
+		incomingSocket = new ServerSocket(NetworkConstants.LOCAL_CLIENT_PORT);
 	}
 	
 	public static HttpServerDispatcher instance() throws IOException {
