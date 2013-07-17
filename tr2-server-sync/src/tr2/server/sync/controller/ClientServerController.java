@@ -26,7 +26,7 @@ public class ClientServerController implements TCPController {
 	@Override
 	public void notifyDisconnected(String address) {
 		// TODO Auto-generated method stub
-		
+		data.removeClientDropInterval(address);
 	}
 
 	@Override

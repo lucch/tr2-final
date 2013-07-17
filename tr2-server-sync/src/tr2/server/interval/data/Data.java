@@ -55,7 +55,8 @@ public class Data {
 		} else {
 			runningIntervals.remove(interval);
 			pendingIntervals.add(interval);
-			System.out.println(label + " Interval is pending");
+			System.out.println(label + " Interval " + interval.getIndex()
+					+ " is pending");
 		}
 	}
 
@@ -69,9 +70,9 @@ public class Data {
 			// is designated to be calculated by another client
 		} else {
 			runningIntervals.remove(interval);
-			intervals.add(interval);
-			System.out.println(label + " Interval " + interval.getIndex()
-					+ " received with result " + interval.getResult());
+			intervals.add(calculated);
+			System.out.println(label + " Interval " + calculated.getIndex()
+					+ " received with result " + calculated.getResult());
 		}
 	}
 

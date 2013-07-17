@@ -16,7 +16,7 @@ public class ConnectionsManager {
 	private TCPController controller;
 
 	private String localAddress;
-	
+
 	private final String label = "[CONNECTIONS MANAGER]";
 
 	public ConnectionsManager(TCPController controller, int port)
@@ -63,7 +63,7 @@ public class ConnectionsManager {
 
 		return i;
 	}
-	
+
 	public int findConnection(String address) {
 		int i;
 		for (i = 0; i < connections.size(); i++) {
@@ -71,15 +71,15 @@ public class ConnectionsManager {
 				break;
 			}
 		}
-		
+
 		return i;
 	}
 
 	private void removeDisconnected() {
 		for (int i = 0; i < connections.size(); i++) {
 			if (!connections.get(i).isConnected()) {
-				System.out.println(label + " Connection to " + connections.get(i)
-						+ " removed");
+				System.out.println(label + " Connection to "
+						+ connections.get(i) + " removed");
 				controller.notifyDisconnected(connections.get(i).getAddress());
 				connections.remove(i);
 
@@ -112,36 +112,40 @@ public class ConnectionsManager {
 		for (int i = 0; i < connections.size(); i++) {
 			Connection connection = connections.get(i);
 			connection.speak(message);
-			System.out.println(label + " Sent to " + connection.getAddress() + ": " + message);
+			System.out.println(label + " Sent to " + connection.getAddress()
+					+ ": " + message);
+
 		}
 	}
-	
+
 	public void sendTo(String message, String address) throws IOException {
 		int i = findConnection(address);
-		
+
 		if (i >= connections.size()) {
 			// address invalid
 			System.out.println(label + " Failed to send message");
 			System.out.println(label + " Invalid address");
 		} else {
 			connections.get(i).speak(message);
+			System.out.println(label + " Sent to " + address + ": " + message);
+
 		}
 	}
-	
 
 	public ArrayList<Connection> getConnections() {
 		return connections;
 	}
-	
+
 	private String getLocalAddress() {
 		return localAddress;
 	}
 
 	public void parser(String message, String address) {
-		System.out.println(label + " Received from " + address+ ": " + message);
+		System.out
+				.println(label + " Received from " + address + ": " + message);
 		controller.notifyMessageReceived(message, getLocalAddress(), address);
 	}
-	
+
 	public int getNumberOfConnections() {
 		return connections.size();
 	}

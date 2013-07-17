@@ -20,8 +20,8 @@ public class HttpServerLauncher {
 			
 			// Starts the "Multicast", notifying interested listeners of this 
 			// HTTP Server's existence.
-			 Thread multicastSender = new Thread(new MulticastSender());
-			 multicastSender.start();
+//			 Thread multicastSender = new Thread(new MulticastSender());
+//			 multicastSender.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
