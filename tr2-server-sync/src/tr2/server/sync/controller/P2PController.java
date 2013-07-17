@@ -23,7 +23,7 @@ public class P2PController implements MulticastController, TCPController,
 	private ConnectionsManager p2p;
 
 	private String label = "[P2P CONTROLLER]";
-	
+
 	private static final int timerWaitConnection = 0;
 	private static final int timerSendUpdates = 1;
 
@@ -47,14 +47,15 @@ public class P2PController implements MulticastController, TCPController,
 
 		startMulticast();
 
-		new Timer(this, NetworkConstants.PERIODIC_TIME * 5, false, timerWaitConnection);
+		new Timer(this, NetworkConstants.PERIODIC_TIME * 5, false,
+				timerWaitConnection);
 	}
-	
+
 	private void setActive() {
 		serverData.setActive();
 
 		startMulticast();
-		
+
 		new Timer(this, NetworkConstants.SYNC_TIME, true, timerSendUpdates);
 
 		multicast.startSpeaker(NetworkConstants.HELLO,
@@ -104,16 +105,18 @@ public class P2PController implements MulticastController, TCPController,
 	public void sendServersInfoUpdate() {
 		String message = serverData.serversInfoToString();
 		try {
-			p2p.sendToAllConnections(NetworkConstants.SERVER_UPDATE_PREFIX + message);
+			p2p.sendToAllConnections(NetworkConstants.SERVER_UPDATE_PREFIX
+					+ message);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void sendCalculatedIntervals() {
 		String message = data.intervalsToString();
 		try {
-			p2p.sendToAllConnections(NetworkConstants.INTERVALS_UPDATE_PREFIX + message);
+			p2p.sendToAllConnections(NetworkConstants.INTERVALS_UPDATE_PREFIX
+					+ message);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -154,15 +157,19 @@ public class P2PController implements MulticastController, TCPController,
 
 	public void notifyMessageReceived(String message, String localAddress,
 			String address) {
-		
+
 		if (message.startsWith(NetworkConstants.INTERVALS_UPDATE_PREFIX)) {
-			message.replace(NetworkConstants.INTERVALS_UPDATE_PREFIX, "");
+			message = message.replace(NetworkConstants.INTERVALS_UPDATE_PREFIX,
+					"");
 			data.stringToIntervals(message);
+
 		} else if (message.startsWith(NetworkConstants.SERVER_UPDATE_PREFIX)) {
 			String servers[];
 			// it's a serversInfo update message
-			message.replace(NetworkConstants.SERVER_UPDATE_PREFIX, ""); // erases
+			message = message
+					.replace(NetworkConstants.SERVER_UPDATE_PREFIX, ""); // erases
 			// "header"
+
 			servers = message.split(Messages.SEPARATOR);
 
 			for (int i = 0; i < servers.length; i++) {
@@ -170,18 +177,18 @@ public class P2PController implements MulticastController, TCPController,
 					connectAndAddServer(servers[i]);
 				}
 			}
-		} 
+		}
 		// not used...
-//		else if (message.startsWith(NetworkConstants.MANAGER_PREFIX)) {
-//			if (message.equals(NetworkConstants.MANAGER_REQUEST)) {
-//				if (serverData.isActive()) {
-//					// send manager_response
-//				}
-//			} else if (message.equals(NetworkConstants.MANAGER_RESPONSE)) {
-//				// puts sender as manager
-//			} else if (message.equals(NetworkConstants.MANAGER_STATEMENT)) {
-//				// puts sender as manager
-//			}
-//		}
+		// else if (message.startsWith(NetworkConstants.MANAGER_PREFIX)) {
+		// if (message.equals(NetworkConstants.MANAGER_REQUEST)) {
+		// if (serverData.isActive()) {
+		// // send manager_response
+		// }
+		// } else if (message.equals(NetworkConstants.MANAGER_RESPONSE)) {
+		// // puts sender as manager
+		// } else if (message.equals(NetworkConstants.MANAGER_STATEMENT)) {
+		// // puts sender as manager
+		// }
+		// }
 	}
 }

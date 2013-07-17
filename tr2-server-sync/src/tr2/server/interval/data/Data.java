@@ -94,6 +94,7 @@ public class Data {
 
 	public String intervalsToString() {
 		String str = "";
+		str += index + Messages.SEPARATOR;
 		for (int i = 0; i < intervals.size(); i++) {
 			// append all intervals
 			Interval interval = intervals.get(i);
@@ -109,23 +110,34 @@ public class Data {
 	}
 
 	public void stringToIntervals(String string) {
+					
 		ArrayList<Interval> newIntervals = new ArrayList<Interval>();
 		
 		String[] strIntervals;
 		
 		strIntervals = string.split(Messages.SEPARATOR);
 		
-		for (int i = 0; i < strIntervals.length; i++) {
+		long indexReceived = Long.parseLong(strIntervals[0]);
+		
+		if (indexReceived == 0) return;
+		
+		this.index = indexReceived;
+		
+		for (int i = 1; i < strIntervals.length; i++) {
 			String[] attributes = strIntervals[i].split(Messages.SUBSEPARATOR);
 			
 			Interval interval = new Interval();
 			interval.setIndex(Long.parseLong(attributes[0]));
 			interval.setResult(Double.parseDouble(attributes[1]));
-			interval.setClientIP(attributes[3]);
+			interval.setClientIP(attributes[2]);
 			
 			newIntervals.add(interval);
 		}
 		
+		System.out.println(label + "Old list size is " + intervals.size());
+		
 		this.intervals = newIntervals;
+		
+		System.out.println(label + "New list size is " + newIntervals.size());
 	}
 }
