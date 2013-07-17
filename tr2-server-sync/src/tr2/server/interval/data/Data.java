@@ -3,6 +3,8 @@ package tr2.server.interval.data;
 import java.util.ArrayList;
 
 import tr2.server.common.entity.Interval;
+import tr2.server.common.series.protocol.Messages;
+import tr2.server.common.util.NetworkConstants;
 
 public class Data {
 	private ArrayList<Interval> intervals;
@@ -88,5 +90,42 @@ public class Data {
 		}
 
 		return interval;
+	}
+
+	public String intervalsToString() {
+		String str = "";
+		for (int i = 0; i < intervals.size(); i++) {
+			// append all intervals
+			Interval interval = intervals.get(i);
+			str += interval.getIndex() 
+					+ Messages.SUBSEPARATOR
+					+ interval.getResult() 
+					+ Messages.SUBSEPARATOR
+					+ interval.getClientIP() 
+					+ Messages.SEPARATOR;
+		}
+		
+		return str;
+	}
+
+	public void stringToIntervals(String string) {
+		ArrayList<Interval> newIntervals = new ArrayList<Interval>();
+		
+		String[] strIntervals;
+		
+		strIntervals = string.split(Messages.SEPARATOR);
+		
+		for (int i = 0; i < strIntervals.length; i++) {
+			String[] attributes = strIntervals[i].split(Messages.SUBSEPARATOR);
+			
+			Interval interval = new Interval();
+			interval.setIndex(Long.parseLong(attributes[0]));
+			interval.setResult(Double.parseDouble(attributes[1]));
+			interval.setClientIP(attributes[3]);
+			
+			newIntervals.add(interval);
+		}
+		
+		this.intervals = newIntervals;
 	}
 }

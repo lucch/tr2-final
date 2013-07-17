@@ -17,15 +17,14 @@ public class ClientServerController implements TCPController {
 	
 	private String label = "[CLIENT CONTROLLER]";
 
-	public ClientServerController(int clientsPort) throws IOException {
+	public ClientServerController(Data data, int clientsPort) throws IOException {
+		this.data = data;
 		client = new ConnectionsManager(this, clientsPort);
-		data = new Data();
 	}
 
 
 	@Override
 	public void notifyDisconnected(String address) {
-		// TODO Auto-generated method stub
 		data.removeClientDropInterval(address);
 	}
 
@@ -61,7 +60,6 @@ public class ClientServerController implements TCPController {
 
 	@Override
 	public void notifyConnected(String address) {
-		// TODO Auto-generated method stub
 		
 	}
 

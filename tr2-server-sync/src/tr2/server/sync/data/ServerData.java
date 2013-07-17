@@ -7,6 +7,8 @@ package tr2.server.sync.data;
 import java.util.ArrayList;
 import java.util.Date;
 
+import tr2.server.common.series.protocol.Messages;
+
 public class ServerData {
 	
 	private ArrayList<ServerInfo> serversInfo;
@@ -121,7 +123,7 @@ public class ServerData {
 		for (int i = 0; i < serversInfo.size(); i++) {
 			str += serversInfo.get(i).getAddress();
 			if (i < serversInfo.size() - 1)
-				str += "/";
+				str += Messages.SEPARATOR;
 		}
 		
 		return str;

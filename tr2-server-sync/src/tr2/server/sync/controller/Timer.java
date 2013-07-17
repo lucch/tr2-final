@@ -8,7 +8,10 @@ public class Timer implements Runnable {
 	
 	private TimerController controller;
 	
-	public Timer(TimerController controller, long millis) {
+	private int type;
+	
+	public Timer(TimerController controller, long millis, int type) {
+		this.type = type;
 		this.controller = controller;
 		this.millis = millis;
 		
@@ -20,7 +23,7 @@ public class Timer implements Runnable {
 		try {
 			Thread.sleep(millis);
 			
-			controller.notifyTimeIsOver();
+			controller.notifyTimeIsOver(type);
 			
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block

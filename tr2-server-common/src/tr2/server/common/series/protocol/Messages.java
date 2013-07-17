@@ -9,7 +9,9 @@ package tr2.server.common.series.protocol;
  */
 public class Messages {
 
-	public static final String SEPARATOR = "=";
+	public static final String SEPARATOR = "/";
+	
+	public static final String SUBSEPARATOR = "=";
 			
 	public static final String END = "\n";
 
