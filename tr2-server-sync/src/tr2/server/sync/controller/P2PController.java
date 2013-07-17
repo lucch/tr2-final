@@ -20,7 +20,7 @@ public class P2PController implements MulticastController, TCPController,
 	
 	private String label = "[P2P CONTROLLER]";
 
-	public P2PController(int serversPort, int clientsPort) throws IOException {
+	public P2PController(int serversPort) throws IOException {
 		p2p = new ConnectionsManager(this, serversPort);
 		serverData = new ServerData();
 	}
@@ -28,7 +28,7 @@ public class P2PController implements MulticastController, TCPController,
 	public void startMulticast() {
 		multicast = new Multicast(this,
 				NetworkConstants.CLIENT_MULTICAST_ADDRESS,
-				NetworkConstants.CLIENT_MULTICAST_PORT, "[MULTICAST_MANAGER]");
+				NetworkConstants.CLIENT_MULTICAST_PORT, "[MULTICAST MANAGER]");
 	}
 
 	public void start() {
@@ -84,7 +84,7 @@ public class P2PController implements MulticastController, TCPController,
 	public void sendServersInfoUpdate() {
 		String message = serverData.serversInfoToString();
 		try {
-			p2p.sendToAllConnections(NetworkConstants.SERVER_PREFIX + message);
+			p2p.sendToAllConnections(message);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

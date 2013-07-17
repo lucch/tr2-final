@@ -14,7 +14,5 @@ public class Speaker {
 	public void speak(String message) throws IOException {
 		writer.write(message + "\n");
 		writer.flush();
-
-		System.out.println("You : " + message);
 	}
 }

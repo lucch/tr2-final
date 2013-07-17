@@ -17,7 +17,7 @@ public class ConnectionsManager {
 
 	private String localAddress;
 	
-	private final String label = "[MANAGER]";
+	private final String label = "[CONNECTIONS MANAGER]";
 
 	public ConnectionsManager(TCPController controller, int port)
 			throws IOException {
@@ -100,9 +100,12 @@ public class ConnectionsManager {
 	public void sendToAllConnections(String message) throws IOException {
 		for (int i = 0; i < connections.size(); i++) {
 			Connection connection = connections.get(i);
+			// TODO FAZER O SPEAK DIRECIONADO!!!!
 			connection.speak(message);
+			System.out.println(label + " Sent to " + connection.getAddress() + ": " + message);
 		}
 	}
+	
 
 	public ArrayList<Connection> getConnections() {
 		return connections;
@@ -113,7 +116,7 @@ public class ConnectionsManager {
 	}
 
 	public void parser(String message, String address) {
-		System.out.println("Received: " + message + "from " + address);
+		System.out.println(label + " Received from " + address+ ": " + message);
 		controller.notifyMessageReceived(message, getLocalAddress(), address);
 	}
 	

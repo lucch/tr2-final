@@ -2,7 +2,9 @@ package tr2.server.main;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+
 import tr2.server.common.util.NetworkConstants;
+import tr2.server.sync.controller.ClientServerController;
 import tr2.server.sync.controller.P2PController;
 
 public class Main {
@@ -11,9 +13,11 @@ public class Main {
 
 		try {
 			P2PController servers = new P2PController(
-					NetworkConstants.TCP_SERVER_TO_SERVER_PORT, 
-					NetworkConstants.REMOTE_SERIES_SERVER_PORT);
+					NetworkConstants.TCP_SERVER_TO_SERVER_PORT);
 			servers.start();
+
+			ClientServerController clients = new ClientServerController(
+					NetworkConstants.REMOTE_SERIES_SERVER_PORT);
 
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
