@@ -40,7 +40,7 @@ public class CalculatorManager implements Runnable {
 			proxy.request(request, RequestType.SERIES);
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
@@ -54,7 +54,7 @@ public class CalculatorManager implements Runnable {
 			response = proxy.request(request, RequestType.SERIES);
 			/* Parses JSON String to Interval object. */
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return JSONHelper.fromJSON(response, Interval.class);
 	}
