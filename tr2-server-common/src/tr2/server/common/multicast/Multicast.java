@@ -40,12 +40,13 @@ public class Multicast {
 
 	public void parser(String message, String sourceAddress) {
 		System.out.println(label + " RCVD FROM " + sourceAddress + ": " + message);
-		multicastListener.notifyServerFound(message, sourceAddress);
+		multicastListener.notifyMessageReceived(message, sourceAddress);
 	}
 	
 	public void notifyMessageSpoken(String message) {
 		System.out.println(label + " SENT: " + message);
 	}
+	
 	public String getPeriodicMessage() {
 		return periodicMessage;
 	}
