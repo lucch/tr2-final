@@ -15,7 +15,7 @@ public class ClientServerController implements TCPController {
 	
 	private ConnectionsManager client;
 	
-	private String label = "[CLIENT CONTROLLER]";
+//	private String label = "[CLIENT CONTROLLER]";
 
 	public ClientServerController(Data data, int clientsPort) throws IOException {
 		this.data = data;

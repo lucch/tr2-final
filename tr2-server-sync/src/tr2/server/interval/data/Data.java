@@ -3,8 +3,8 @@ package tr2.server.interval.data;
 import java.util.ArrayList;
 
 import tr2.server.common.entity.Interval;
+
 import tr2.server.common.series.protocol.Messages;
-import tr2.server.common.util.NetworkConstants;
 
 public class Data {
 	private ArrayList<Interval> intervals;
