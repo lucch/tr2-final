@@ -28,7 +28,7 @@ public class P2PController implements MulticastController, TCPController,
 	public void startMulticast() {
 		multicast = new Multicast(this,
 				NetworkConstants.CLIENT_MULTICAST_ADDRESS,
-				NetworkConstants.CLIENT_MULTICAST_PORT, "[MULTICAST_CLIENTS]");
+				NetworkConstants.CLIENT_MULTICAST_PORT, "[MULTICAST_MANAGER]");
 	}
 
 	public void start() {
@@ -76,12 +76,8 @@ public class P2PController implements MulticastController, TCPController,
 		}
 	}
 
-	public void notifyServerFound(String message, String address) {
+	public void notifyMessageReceived(String message, String address) {
 		connectAndAddServer(address);
-
-		if (message.equals(NetworkConstants.HELLO)) {
-			multicast.sendMessage(NetworkConstants.HELLO_RESPONSE);
-		}
 	}
 
 	// tcp

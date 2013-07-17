@@ -101,8 +101,13 @@ public class ServerData {
 
 	public void printServersInfo() {
 		System.out.println("[DATA] Servers Info:");
-		for (int i = 0; i < serversInfo.size(); i++) {
-			System.out.println("[DATA] " + serversInfo.get(i));
+		
+		if (serversInfo.size() > 0) {
+			for (int i = 0; i < serversInfo.size(); i++) {
+				System.out.println("[DATA] <" + serversInfo.get(i) + ">");
+			}
+		} else {
+			System.out.println("[DATA] <empty>");
 		}
 		System.out.println("[DATA] Servers Info Size: " + serversInfo.size());
 	}
