@@ -10,18 +10,18 @@ import tr2.server.common.util.JSONHelper;
 import tr2.server.interval.data.Data;
 
 public class ClientServerController implements TCPController {
-	
-	private Data data;
-	
-	private ConnectionsManager client;
-	
-//	private String label = "[CLIENT CONTROLLER]";
 
-	public ClientServerController(Data data, int clientsPort) throws IOException {
+	private Data data;
+
+	private ConnectionsManager client;
+
+	// private String label = "[CLIENT CONTROLLER]";
+
+	public ClientServerController(Data data, int clientsPort)
+			throws IOException {
 		this.data = data;
 		client = new ConnectionsManager(this, clientsPort);
 	}
-
 
 	@Override
 	public void notifyDisconnected(String address) {
@@ -31,7 +31,7 @@ public class ClientServerController implements TCPController {
 	@Override
 	public void notifyMessageReceived(String message, String localAddress,
 			String address) {
-		
+
 		String response = null;
 
 		if (message.equals(Messages.GET_INTERVAL)) {
@@ -60,7 +60,7 @@ public class ClientServerController implements TCPController {
 
 	@Override
 	public void notifyConnected(String address) {
-		
+
 	}
 
 }
