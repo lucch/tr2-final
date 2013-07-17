@@ -45,7 +45,7 @@ public class ClientServerController implements TCPController {
 			}
 		} else {
 			String[] req;
-			req = message.split("=");
+			req = message.split(Messages.SEPARATOR);
 			if(req[0].equals(Messages.INTERVAL_CALCULATED)) {
 				Interval i = JSONHelper.fromJSON(req[1], Interval.class);
 				try {
@@ -54,7 +54,7 @@ public class ClientServerController implements TCPController {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				System.out.println("Result: " + i.getResult());
+				System.out.println(label + "Result: " + i.getResult());
 			}
 		}
 	}

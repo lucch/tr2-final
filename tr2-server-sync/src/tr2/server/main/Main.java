@@ -16,7 +16,7 @@ public class Main {
 					NetworkConstants.TCP_SERVER_TO_SERVER_PORT);
 			servers.start();
 
-			ClientServerController clients = new ClientServerController(
+			new ClientServerController(
 					NetworkConstants.REMOTE_SERIES_SERVER_PORT);
 
 		} catch (UnknownHostException e) {
