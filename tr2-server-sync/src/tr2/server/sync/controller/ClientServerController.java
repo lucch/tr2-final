@@ -54,7 +54,7 @@ public class ClientServerController implements TCPController {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				System.out.println(label + "Result: " + i.getResult());
+				System.out.println(label + " Result: " + i.getResult());
 			}
 		}
 	}
