@@ -70,11 +70,11 @@ public class Interval implements JSONable {
 	}
 
 	public long getFirstDenominator() {
-		return index * 10000l;
+		return index * 10000l + 1l;
 	}
 
 	public long getLastDenominator() {
-		return index * 10000l + 9999l;
+		return index * 10000l + 10000l;
 	}
 	
 	@SuppressWarnings("unchecked")

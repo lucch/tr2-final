@@ -14,24 +14,29 @@ public class CalculatorManager implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
-			/* Here we're using just one thread to calculate, but it can be easily extended to use more */
+			/*
+			 * Here we're using just one thread to calculate, but it can be
+			 * easily extended to use more
+			 */
 			Calculator c = new Calculator();
 			Interval i = c.calculate(getSeriesInterval());
 			sendResultsToServer(i);
 		}
 	}
-	
+
 	private void sendResultsToServer(Interval interval) {
 		try {
 			Proxy proxy = Proxy.instance();
-			
+
 			SeriesRequest s = new SeriesRequest();
-			String request = s.prepare(Messages.INTERVAL_CALCULATED, interval.toJSON());
-			System.out.println("[CALCULATOR MANAGER] Sending request to server: ");
+			String request = s.prepare(Messages.INTERVAL_CALCULATED,
+					interval.toJSON());
+			System.out
+					.println("[CALCULATOR MANAGER] Sending request to server: ");
 			System.out.println("\t" + request);
 			proxy.request(request, RequestType.SERIES);
-			
-		} catch(IOException e) {
+
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -40,10 +45,11 @@ public class CalculatorManager implements Runnable {
 		Proxy proxy = null;
 		String response = null;
 		try {
+			SeriesRequest s = new SeriesRequest();
+			String request = s.prepare(Messages.GET_INTERVAL, null);
 			proxy = Proxy.instance();
-			response = proxy.request(Messages.GET_INTERVAL,
-					RequestType.SERIES);
-			
+			response = proxy.request(request, RequestType.SERIES);
+
 			/* Parses JSON String to Interval object. */
 		} catch (IOException e) {
 			e.printStackTrace();

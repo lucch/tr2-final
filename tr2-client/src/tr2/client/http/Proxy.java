@@ -149,7 +149,7 @@ public class Proxy implements ServerIPsListener {
 			if (!remoteServerSockets.containsKey(ip)) {
 				try {
 					remoteServerSockets.put(ip, new Socket(ip,
-							NetworkConstants.REMOTE_HTTP_SERVER_PORT));
+							NetworkConstants.REMOTE_SERIES_SERVER_PORT));
 					System.out.println("[PROXY] Added new server: " + ip);
 					//System.out.println("New IP " + ip + ".");
 					//System.out.println("Remote Servers Size: "

@@ -10,11 +10,13 @@ public class SeriesRequest {
 		StringBuilder request = new StringBuilder();
 
 		request.append(command);
-		request.append("\n");
-		if ((payload != null) && (!payload.equals("")))
+//		request.append("\n");
+		if ((payload != null) && (!payload.equals(""))) {
+			request.append(Messages.SEPARATOR);
 			request.append(payload);
+		}
 		request.append(Messages.END);
-		request.append("\n");
+//		request.append("\n");
 
 		return request.toString();
 	}
