@@ -89,6 +89,7 @@ public class P2PController implements MulticastController, TCPController,
 				System.out.println(label + " There's a manager");
 			}
 		} else if (type == timerSendUpdates) {
+			System.out.println(label + " Sending updates to other servers");
 			sendCalculatedIntervals();
 		}
 	}
