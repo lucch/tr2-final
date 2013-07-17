@@ -12,11 +12,11 @@ public class Launcher {
 	}
 
 	private void go() {
-		System.out.println("[CLIENT] Starting HTTP handler...");
-		try {
-			Thread dispatcher = new Thread(Dispatcher.instance());
-			dispatcher.start();
-			System.out.println("[CLIENT] HTTP handler started successfully!");
+//		System.out.println("[CLIENT] Starting HTTP handler...");
+//		try {
+//			Thread dispatcher = new Thread(Dispatcher.instance());
+//			dispatcher.start();
+//			System.out.println("[CLIENT] HTTP handler started successfully!");
 
 			// TODO: Write the code which is going to connect to the remote
 			// server to series-related stuff!
@@ -25,9 +25,9 @@ public class Launcher {
 			calculatorManager.start();
 			System.out.println("[CLIENT] Calculator manager started successfully!");
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 }

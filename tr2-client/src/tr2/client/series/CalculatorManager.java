@@ -26,6 +26,9 @@ public class CalculatorManager implements Runnable {
 
 	private void sendResultsToServer(Interval interval) {
 		try {
+			if (interval == null)
+				return;
+			
 			Proxy proxy = Proxy.instance();
 
 			SeriesRequest s = new SeriesRequest();
@@ -49,7 +52,6 @@ public class CalculatorManager implements Runnable {
 			String request = s.prepare(Messages.GET_INTERVAL, null);
 			proxy = Proxy.instance();
 			response = proxy.request(request, RequestType.SERIES);
-
 			/* Parses JSON String to Interval object. */
 		} catch (IOException e) {
 			e.printStackTrace();
