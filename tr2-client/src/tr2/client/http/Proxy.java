@@ -3,6 +3,7 @@ package tr2.client.http;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
@@ -13,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import tr2.client.http.util.MulticastReceiver;
-import tr2.client.http.util.NetworkConstants;
+import tr2.server.common.util.NetworkConstants;
 
 public class Proxy implements ServerIPsListener {
 
@@ -44,8 +45,8 @@ public class Proxy implements ServerIPsListener {
 	 * @return Response from the remote server.
 	 */
 	public String request(String request, RequestType type) {
-		StringBuilder response = new StringBuilder();
-
+		String response = null;
+		
 		Socket socket = getSocket(type);
 
 		System.out.println("[PROXY] Sending request to: "
@@ -61,20 +62,35 @@ public class Proxy implements ServerIPsListener {
 
 			System.out
 					.println("[PROXY] Waiting for response from remote server...");
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					socket.getInputStream()));
+			response = getServerResponse(socket.getInputStream(), type);
+			
+			/* We're making HTTP requests stateless, so we close the connection. */
+			if(type == RequestType.HTTP)
+				socket.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+	
+	private String getServerResponse(InputStream inputStream, RequestType type) throws IOException {
+		StringBuilder response = new StringBuilder();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+		
+		if(type == RequestType.HTTP) {
 			String s;
+			/* If it's a HTTP request, we have to read until the stream terminator "EOF", defined in the server. */
 			while ((s = reader.readLine()) != null) {
 				if (s.equals("EOF"))
 					break;
 				response.append(s + "\n");
 			}
-			// reader.close();
-			// socket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} else {
+			/* If it's a SERIES request, the response must be one line length (a JSON string). */
+			response.append(reader.readLine());
 		}
-
 		return response.toString();
 	}
 
@@ -133,7 +149,7 @@ public class Proxy implements ServerIPsListener {
 			if (!remoteServerSockets.containsKey(ip)) {
 				try {
 					remoteServerSockets.put(ip, new Socket(ip,
-							NetworkConstants.REMOTE_JACOPO_SERVER_PORT));
+							NetworkConstants.REMOTE_SERIES_SERVER_PORT));
 					System.out.println("[PROXY] Added new server: " + ip);
 					//System.out.println("New IP " + ip + ".");
 					//System.out.println("Remote Servers Size: "

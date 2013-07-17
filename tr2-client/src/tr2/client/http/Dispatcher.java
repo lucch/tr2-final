@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import tr2.client.http.util.NetworkConstants;
+import tr2.server.common.util.NetworkConstants;
 
 public class Dispatcher implements Runnable {
 	

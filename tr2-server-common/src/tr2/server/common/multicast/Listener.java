@@ -41,8 +41,6 @@ public class Listener implements Runnable {
 				multicast.parser(message, inPacket.getAddress()
 						.getHostAddress());
 
-				System.out.println("Msg Rcvd From " + inPacket.getAddress()
-						+ " : " + message);
 			}
 		} catch (IOException ioe) {
 			System.out.println(ioe);

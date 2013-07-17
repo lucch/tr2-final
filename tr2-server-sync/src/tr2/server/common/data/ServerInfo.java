@@ -10,7 +10,7 @@ public class ServerInfo {
 	public ServerInfo(String address) {
 		this.address = address;
 	}
-
+	
 	public String getAddress() {
 		return address;
 	}

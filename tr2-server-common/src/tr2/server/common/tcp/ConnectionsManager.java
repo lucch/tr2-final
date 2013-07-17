@@ -47,6 +47,7 @@ public class ConnectionsManager {
 		// if connection doesn't exists, initiates connection
 		connection.start();
 		connections.add(connection);
+		controller.notifyConnected(connection.getAddress());
 		System.out.println(label + " Connection made to: " + connection);
 	}
 
@@ -68,8 +69,8 @@ public class ConnectionsManager {
 			if (!connections.get(i).isConnected()) {
 				System.out.println(label + " Connection to " + connections.get(i)
 						+ " removed");
-				connections.remove(i);
 				controller.notifyDisconnected(connections.get(i).getAddress());
+				connections.remove(i);
 
 			}
 		}
@@ -103,12 +104,20 @@ public class ConnectionsManager {
 		}
 	}
 
+	public ArrayList<Connection> getConnections() {
+		return connections;
+	}
+	
 	private String getLocalAddress() {
 		return localAddress;
 	}
 
-	public void parser(String message) {
-		System.out.println("Received: " + message);
-		controller.notifyMessageReceived(message, getLocalAddress());
+	public void parser(String message, String address) {
+		System.out.println("Received: " + message + "from " + address);
+		controller.notifyMessageReceived(message, getLocalAddress(), address);
+	}
+	
+	public int getNumberOfConnections() {
+		return connections.size();
 	}
 }

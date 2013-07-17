@@ -7,8 +7,9 @@ import java.net.MulticastSocket;
 import java.util.ArrayList;
 
 import tr2.client.http.ServerIPsListener;
+import tr2.server.common.util.NetworkConstants;
 
-public class MulticastReceiver extends NetworkConstants implements Runnable {
+public class MulticastReceiver implements Runnable {
 
 	private ServerIPsListener listener;
 
@@ -24,8 +25,8 @@ public class MulticastReceiver extends NetworkConstants implements Runnable {
 			byte[] inBuf = new byte[256];
 			try {
 				// Prepare to join multicast group
-				socket = new MulticastSocket(NetworkConstants.MULTICAST_PORT);
-				InetAddress address = InetAddress.getByName(NetworkConstants.MULTICAST_ADDRESS);
+				socket = new MulticastSocket(NetworkConstants.CLIENT_MULTICAST_PORT);
+				InetAddress address = InetAddress.getByName(NetworkConstants.CLIENT_MULTICAST_ADDRESS);
 
 				socket.joinGroup(address);
 
