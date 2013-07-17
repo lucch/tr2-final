@@ -57,7 +57,7 @@ public class HttpRequestParser {
 		
 		HashMap<String,String> data = new HashMap<String,String>();
 		data.put("type", user.getUserType().toString().toLowerCase() + "/");
-		data.put("port",String.valueOf(NetworkConstants.REMOTE_HTTP_SERVER_PORT));
+		data.put("port",String.valueOf(NetworkConstants.LOCAL_CLIENT_PORT));
 		return HttpServerUtil.getTemplate(HttpHeaderTemplates.redirect,data);
 	}
 	
@@ -110,7 +110,7 @@ public class HttpRequestParser {
 	public static String logout() throws BadRequestException {
 		HashMap<String,String> data = new HashMap<String,String>();
 		data.put("type", "");
-		data.put("port",String.valueOf(NetworkConstants.REMOTE_HTTP_SERVER_PORT));
+		data.put("port",String.valueOf(NetworkConstants.LOCAL_CLIENT_PORT));
 		return HttpServerUtil.getTemplate(HttpHeaderTemplates.redirect,data);
 	}
 
@@ -151,7 +151,7 @@ public class HttpRequestParser {
 		//TODO: Add user
 		HashMap<String,String> data = new HashMap<String,String>();
 		data.put("type", "");
-		data.put("port",String.valueOf(NetworkConstants.REMOTE_HTTP_SERVER_PORT));
+		data.put("port",String.valueOf(NetworkConstants.LOCAL_CLIENT_PORT));
 		return HttpServerUtil.getTemplate(HttpHeaderTemplates.redirect,data);
 	}
 
