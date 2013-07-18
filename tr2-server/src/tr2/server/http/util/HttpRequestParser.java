@@ -1,6 +1,8 @@
 package tr2.server.http.util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import tr2.server.common.entity.Interval;
@@ -10,6 +12,7 @@ import tr2.server.common.util.NetworkConstants;
 import tr2.server.http.UserDB;
 import tr2.server.http.exception.BadRequestException;
 import tr2.server.interval.data.Data;
+import tr2.server.sync.data.*;
 
 public class HttpRequestParser {
 	public static final String EOF = "EOF";
@@ -258,15 +261,23 @@ public class HttpRequestParser {
 
 		msg += HttpServerUtil.getHeader("Servidores");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.servers);
-
-		/*
-		 * TODO: get servers for(Server server : servers) {
-		 * HashMap<String,String> data = new HashMap<String,String>();
-		 * data.put("server", server.getIndex().toString()); data.put("state",
-		 * server.getState().toString()); data.put("time",
-		 * server.getTime().toString()); msg +=
-		 * HttpServerUtil.getTemplate(HttpHtmlTemplates.servers_row,data); }
-		 */
+		
+		ArrayList<ServerInfo> servers = ServerData.getServers();
+		
+		for (int i = 0; i < servers.size(); i++) {
+			HashMap<String,String> data = new HashMap<String,String>();
+			data.put("server", servers.get(i).getAddress());
+			
+			String state;
+			if (i == servers.size()-1) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+				state = "MANAGER (" + dateFormat.format(ServerData.getStartTime()) + ")";
+			} else
+				state = "BACKUP";
+			
+			data.put("state",state);
+			msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.servers_row,data); 
+		}
 
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.servers_footer);
 		msg += HttpServerUtil.getFooter();
