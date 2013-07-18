@@ -1,5 +1,5 @@
 /*
- * Controla a aplicação
+ * Controla a aplicaÁ„o
  */
 
 package tr2.server.sync.data;
@@ -12,7 +12,7 @@ import tr2.server.common.series.protocol.Messages;
 public class ServerData {
 	
 	private ArrayList<ServerInfo> serversInfo;
-	
+
 	private boolean active;
 	
 	private int activeIndex;

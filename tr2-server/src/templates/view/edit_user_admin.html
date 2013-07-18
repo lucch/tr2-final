@@ -1,10 +1,14 @@
 <h2>Editar usuário</h2>
 
-<h3>{nome}</h3>
+<h3>{name}</h3>
 <p>
-<form action="edit_user" method="get">
+<form action="update_user" method="get">
 	Nome: <input type="text" name="name" value="{name}"><br />
-	Tipo: <input type="text" name="type" value="{type}"><br />
+	Tipo: <select name="type">
+			  <option value="USER">user</option>
+			  <option value="ADMIN">admin</option>
+			</select><br />
+	<input type="hidden" name="oldname" value="{name}">
 	<input type="submit" value="Enviar">
 </form>
 </p>
