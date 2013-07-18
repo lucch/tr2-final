@@ -2,10 +2,7 @@ package tr2.server.main;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 
-import tr2.server.common.entity.User;
-import tr2.server.common.entity.UserType;
 import tr2.server.http.HttpServerDispatcher;
 import tr2.server.http.UserDB;
 import tr2.server.sync.controller.Controller;
@@ -15,13 +12,13 @@ public class Main {
 	public static void main(String[] args) {
 		
 		try {
-			System.out.println("Starting server...");
+			System.out.println("[HTTP SERVER] Starting server...");
 			UserDB.instance();
 			new Controller();
 
 			Thread dispatcher = new Thread(HttpServerDispatcher.instance());
 			dispatcher.start();
-			System.out.println("Server started successfully!");
+			System.out.println("[HTTP SERVER] Server started successfully!");
 			
 //			try {
 //				Thread.sleep(50000);

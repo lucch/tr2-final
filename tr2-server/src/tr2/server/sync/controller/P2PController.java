@@ -91,6 +91,7 @@ TimerController {
 			// TODO send users
 			sendUsers();
 			sendCalculatedIntervals();
+			sendPendingIntervals();
 		}
 	}
 
@@ -129,7 +130,7 @@ TimerController {
 	}
 
 	public void sendCalculatedIntervals() {
-		String message = data.intervalsToString();
+		String message = data.intervalsToString(Data.TYPE_INTERVALS);
 		try {
 			p2p.sendToAllConnections(NetworkConstants.INTERVALS_UPDATE_PREFIX
 					+ message);
@@ -137,8 +138,16 @@ TimerController {
 			e.printStackTrace();
 		}
 	}
+	
+	public void sendPendingIntervals() {
+		String message = data.intervalsToString(Data.TYPE_PENDING_INTERVALS);
+		try {
+			p2p.sendToAllConnections(NetworkConstants.PENDING_INTERVALS_UPDATE_PREFIX + message);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-	@SuppressWarnings("null")
 	public void sendUsers() {
 		if (serverData.isActive()) {
 			// TODO
@@ -191,6 +200,7 @@ TimerController {
 		serverData.addServerInfo(address);
 		if (serverData.isActive()) {
 			sendUsers();
+			sendPendingIntervals();
 			sendCalculatedIntervals();
 			sendServersInfoUpdate();
 		}
@@ -202,7 +212,8 @@ TimerController {
 		
 		if (message.startsWith(NetworkConstants.PENDING_INTERVALS_UPDATE_PREFIX)) {
 			message = message.replace(NetworkConstants.PENDING_INTERVALS_UPDATE_PREFIX, "");
-			data.stringToIntervals(message, 1);
+			
+			data.stringToIntervals(message, Data.TYPE_PENDING_INTERVALS);
 			
 		} else if (message.startsWith(NetworkConstants.USERS_UPDATE_PREFIX)) {
 			message = message.replace(NetworkConstants.USERS_UPDATE_PREFIX, "");
@@ -230,7 +241,7 @@ TimerController {
 		} else if (message.startsWith(NetworkConstants.INTERVALS_UPDATE_PREFIX)) {
 			message = message.replace(NetworkConstants.INTERVALS_UPDATE_PREFIX,
 					"");
-			data.stringToIntervals(message, 0);
+			data.stringToIntervals(message, Data.TYPE_INTERVALS);
 
 		} else if (message.startsWith(NetworkConstants.SERVER_UPDATE_PREFIX)) {
 			String servers[];

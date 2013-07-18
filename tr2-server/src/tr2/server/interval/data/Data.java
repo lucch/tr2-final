@@ -13,8 +13,11 @@ public class Data {
 	private static ArrayList<Interval> pendingIntervals;
 
 	private long intervalIndex;
-	
-	private final String label = "[INTERVAL DATA]";
+
+	private static final String label = "[INTERVAL DATA]";
+
+	public static final int TYPE_INTERVALS = 0;
+	public static final int TYPE_PENDING_INTERVALS = 1;
 
 	public Data() {
 		intervalIndex = 0;
@@ -23,19 +26,40 @@ public class Data {
 		pendingIntervals = new ArrayList<Interval>();
 
 	}
-	
+
 	public static ArrayList<Interval> getCalculatedIntervals() {
 		return intervals;
 	}
-	
+
 	public static ArrayList<Interval> getRunningIntervals() {
 		return runningIntervals;
 	}
-	
+
 	public static ArrayList<Interval> getPendingIntervals() {
 		return pendingIntervals;
 	}
-	
+
+	public static void removeIntervals(ArrayList<Interval> intervalsToBeRemoved) {
+		if (intervalsToBeRemoved == null)
+			return;
+
+		for (int i = 0; i < intervalsToBeRemoved.size(); i++) {
+			for (int j = 0; j < intervals.size(); j++) {
+				Interval intervalAux = intervals.get(j);
+				if (intervalsToBeRemoved.get(i).getIndex() == intervalAux
+						.getIndex()) {
+					pendingIntervals.add(intervalAux);
+					intervals.remove(j);
+
+					System.out
+							.println(label
+									+ " Deleted (moved to Pending) interval with index "
+									+ intervalAux.getIndex());
+				}
+			}
+		}
+	}
+
 	public Interval getInterval(String address) {
 		Interval i = null;
 
@@ -103,62 +127,73 @@ public class Data {
 		return interval;
 	}
 
-	public String intervalsToString() {
+	public String intervalsToString(int type) {
+		ArrayList<Interval> intervals = null;
+
 		String str = "";
-		str += intervalIndex + Messages.SEPARATOR;
+		if (type == TYPE_INTERVALS) {
+			intervals = Data.intervals;
+			str += intervalIndex + Messages.SEPARATOR;
+		} else if (type == TYPE_PENDING_INTERVALS) {
+			intervals = Data.pendingIntervals;
+		}
+
 		for (int i = 0; i < intervals.size(); i++) {
 			// append all intervals
 			Interval interval = intervals.get(i);
-			str += interval.getIndex() 
-					+ Messages.SUBSEPARATOR
-					+ interval.getResult() 
-					+ Messages.SUBSEPARATOR
-					+ interval.getClientIP() 
-					+ Messages.SEPARATOR;
+			str += interval.getIndex() + Messages.SUBSEPARATOR
+					+ interval.getResult() + Messages.SUBSEPARATOR
+					+ interval.getClientIP() + Messages.SEPARATOR;
 		}
-		
+
 		return str;
 	}
 
 	public void stringToIntervals(String string, int type) {
-					
+
 		ArrayList<Interval> newIntervals = new ArrayList<Interval>();
-		
+
 		String[] strIntervals;
-		
+
 		strIntervals = string.split(Messages.SEPARATOR);
-		
-		long indexReceived = Long.parseLong(strIntervals[0]);
-		
-		if (indexReceived == 0) return;
-		
-		this.intervalIndex = indexReceived;
-		
+
+		if (type == Data.TYPE_INTERVALS) {
+			// if index is the only content
+			if (strIntervals.length == 1)
+				return;
+
+			long indexReceived = Long.parseLong(strIntervals[0]);
+
+			// if (indexReceived == 0) return;
+
+			this.intervalIndex = indexReceived;
+		}
+
 		for (int i = 1; i < strIntervals.length; i++) {
 			String[] attributes = strIntervals[i].split(Messages.SUBSEPARATOR);
-			
+
 			Interval interval = new Interval();
 			interval.setIndex(Long.parseLong(attributes[0]));
 			interval.setResult(Double.parseDouble(attributes[1]));
 			interval.setClientIP(attributes[2]);
-			
+
 			newIntervals.add(interval);
 		}
-				
-		if (type == 0) {
-			System.out.println(label + "Old intervals list size is " + intervals.size());
-			this.intervals = newIntervals;
-		} else if (type == 1) {
-			System.out.println(label + "Old pending intervals list size is " + pendingIntervals.size());
-			this.pendingIntervals = newIntervals;
+
+		if (type == TYPE_INTERVALS) {
+			System.out.println(label + "Old intervals list size is "
+					+ intervals.size());
+			Data.intervals = newIntervals;
+			System.out.println(label + "New intervals list size is "
+					+ newIntervals.size());
+		} else if (type == TYPE_PENDING_INTERVALS) {
+			System.out.println(label + "Old pending intervals list size is "
+					+ pendingIntervals.size());
+			Data.pendingIntervals = newIntervals;
+			System.out.println(label + "New pending intervals list size is "
+					+ newIntervals.size());
 		}
-		
-		System.out.println(label + "New list size is " + newIntervals.size());
+
 	}
 
-	public void stringToPendingIntervals(String message) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }
