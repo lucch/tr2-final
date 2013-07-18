@@ -145,7 +145,8 @@ TimerController {
 			System.out.println(label + " Sending Users...");
 			// pega data do servidor http
 			HashMap<String, User> users = UserDB.getUsers();
-			HashMap<String, String> usersJSON = null;
+			HashMap<String, String> usersJSON = new HashMap<String, String>();
+	
 			for (String key : users.keySet()) {
 				User u = users.get(key);
 				usersJSON.put(key, u.toJSON());
