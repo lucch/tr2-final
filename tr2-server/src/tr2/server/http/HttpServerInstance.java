@@ -26,7 +26,6 @@ public class HttpServerInstance implements Runnable {
 			HttpHeaderParser header = new HttpHeaderParser(socket.getInputStream());
 			HashMap <String,String> data = header.getData();
 			ArrayList<String> pages = header.getPages();
-			String ip = socket.getInetAddress().getHostAddress();
 			String msg = null;
 			
 			try {
@@ -38,13 +37,13 @@ public class HttpServerInstance implements Runnable {
 					if (!data.containsKey("nome")) {
 						throw new BadRequestException();
 					}
-					msg = HttpRequestParser.login(data.get("nome"), ip);
+					msg = HttpRequestParser.login(data.get("nome"));
 				} else if (pages.get(0).equals("admin")) {
 					if(pages.size() == 1) {
 						msg = HttpRequestParser.admin();
 					} else if (pages.get(1).equals("add_user")) {
 						if (data.containsKey("name") && data.containsKey("type")) {
-							msg = HttpRequestParser.addUser(data.get("name"), data.get("type"),ip);
+							//msg = HttpRequestParser.addUser(data.get("name"), data.get("type"),ip);
 						} else {
 							msg = HttpRequestParser.addUser();
 						}
@@ -74,11 +73,11 @@ public class HttpServerInstance implements Runnable {
 						msg = HttpRequestParser.result("admin");
 					}
 				} else if (pages.get(0).equals("user")) {
-					if(pages.size() == 1) {
+					if(pages.get(1).equals("user")) {
 						msg = HttpRequestParser.user();
 					} else if (pages.get(1).equals("edit_user")) {
 						if (data.containsKey("name")) {
-							msg = HttpRequestParser.editUser(ip,data.get("name"));
+							//msg = HttpRequestParser.editUser(ip,data.get("name"));
 						} else {
 							msg = HttpRequestParser.editUser();
 						}

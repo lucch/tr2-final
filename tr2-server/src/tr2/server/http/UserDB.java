@@ -62,14 +62,12 @@ public class UserDB {
 			User user = users.get(n);
 			String nip = user.getUserIP();
 			if (nip == null) continue;
-			if (nip.equals(ip)  ) {
-				System.out.print("\n achou \n");
+			if (nip.equals(ip)) {
 				user.setUsername(name);
 				updateUser(user);
 				return;
 			}
 		}
-		System.out.print("\n n�o achou \n");
 	}
 
 	public void addUser(User user) {

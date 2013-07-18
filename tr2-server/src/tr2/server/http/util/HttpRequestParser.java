@@ -43,16 +43,14 @@ public class HttpRequestParser {
 		return msg;
 	}
 	
-	public static String login(String name, String ip) throws BadRequestException {
+	public static String login(String name) throws BadRequestException {
 		UserDB userDB = UserDB.instance();
 		if (userDB.isUser(name)) {
 			User user = userDB.getUser(name);
-			
-			user.setUserIP(ip);
 			userDB.updateUser(user);
-			System.out.print(user.getUserIP());
+
 			HashMap<String,String> data = new HashMap<String,String>();
-			data.put("type", user.getUserType().toString().toLowerCase() + "/");
+			data.put("type", user.getUserType().toString().toLowerCase() + "?name=" + name);
 			data.put("port",String.valueOf(NetworkConstants.LOCAL_CLIENT_PORT));
 			return HttpServerUtil.getTemplate(HttpHeaderTemplates.redirect,data);
 		} else {
@@ -197,7 +195,6 @@ public class HttpRequestParser {
 		UserDB userDB = UserDB.instance();
 		userDB.updateNameByIp(ip, name);
 		User user = userDB.getUser(name);
-		System.out.print(user.getUserIP());
 
 		HashMap<String,String> data = new HashMap<String,String>();
 		data.put("type", "user/");
