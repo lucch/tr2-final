@@ -69,7 +69,7 @@ public class HttpServerInstance implements Runnable {
 					} else if (pages.get(1).equals("intervals")) {
 						msg = HttpRequestParser.intervals("admin",data.get("name"));
 					} else if (pages.get(1).equals("remove_seq")) {
-						//TODO: remove sequence
+						msg = HttpRequestParser.remove_seq(data.get("interval"),data.get("name"));
 					} else if (pages.get(1).equals("servers")) {
 						msg = HttpRequestParser.servers("admin",data.get("name"));
 					} else if (pages.get(1).equals("result")) {
@@ -121,9 +121,8 @@ public class HttpServerInstance implements Runnable {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
-
 	}
-	
+
 	@Override
 	public void run() {
 //		while(true) {

@@ -70,12 +70,12 @@ public class HttpRequestParser {
 		msg = HttpServerUtil.getHttpOK();
 		msg += HttpServerUtil.getHeader("Administra��o");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu,"name",name);
-		msg += getIntervalBody("admin");
+		msg += getIntervalBody("admin",name);
 		msg += HttpServerUtil.getFooter();
 		return msg;
 	}
 
-	private static String getIntervalBody(String type)
+	private static String getIntervalBody(String type,String name)
 			throws BadRequestException {
 		String msg = null;
 
@@ -84,16 +84,16 @@ public class HttpRequestParser {
 
 		ArrayList<Interval> intervals = Data.getCalculatedIntervals();
 		for (Interval in : intervals) {
-			msg += getIntervalRow(in, "CALCULATED", type);
+			msg += getIntervalRow(in, "CALCULATED", type,name);
 		}
 		ArrayList<Interval> runningIntervals = Data.getRunningIntervals();
 		for (Interval in : runningIntervals) {
-			msg += getIntervalRow(in, "RUNNING", type);
+			msg += getIntervalRow(in, "RUNNING", type,name);
 		}
 		
 		ArrayList<Interval> pendingIntervals = Data.getPendingIntervals();
 		for (Interval in : pendingIntervals) {
-			msg += getIntervalRow(in, "PENDING", type);
+			msg += getIntervalRow(in, "PENDING", type,name);
 		}
 
 		
@@ -102,11 +102,12 @@ public class HttpRequestParser {
 		return msg;
 	}
 	
-	private static String getIntervalRow(Interval in, String state, String type) throws BadRequestException {
+	private static String getIntervalRow(Interval in, String state, String type, String name) throws BadRequestException {
 		HashMap<String,String> data = new HashMap<String,String>();
 		data.put("interval", in.getFirstDenominator() + " - " + in.getLastDenominator()); 
 		data.put("state",state); 
 		data.put("client",in.getClientIP()); 
+		data.put("name",name);
 		if (state.equals("CALCULATED")) { 
 			data.put("result",String.valueOf(in.getResult())); 
 		} else { 
@@ -241,7 +242,7 @@ public class HttpRequestParser {
 			msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu,"name",name);
 		else
 			msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.user_menu,"name",name);
-		msg += getIntervalBody(type);
+		msg += getIntervalBody(type,name);
 		msg += HttpServerUtil.getFooter();
 		return msg;
 	}
@@ -282,10 +283,9 @@ public class HttpRequestParser {
 			msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu,"name",name);
 
 		msg += HttpServerUtil.getHeader("Resultado");
-		// TODO: get total result
-		// Double res = getResultado();
-		// msg +=
-		// HttpServerUtil.getTemplate(HttpHtmlTemplates.result,res.toString());
+		
+		Double res = Data.intervalsSum();
+		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.result,"result",res.toString());
 		msg += HttpServerUtil.getFooter();
 		return msg;
 	}
@@ -295,8 +295,24 @@ public class HttpRequestParser {
 		msg = HttpServerUtil.getHttpOK();
 		msg += HttpServerUtil.getHeader("Usu�rio");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.user_menu,"name",name);
-		msg += getIntervalBody("user");
+		msg += getIntervalBody("user",name);
 		msg += HttpServerUtil.getFooter();
 		return msg;
+	}
+
+	public static String remove_seq(String interval, String name) throws BadRequestException {
+		Interval inte = new Interval();
+		inte.setIndex(Integer.parseInt(interval));
+		
+		ArrayList<Interval> ar = new ArrayList<Interval>();
+		
+		ar.add(inte);
+		
+		Data.removeIntervals(ar);
+		
+		HashMap<String,String> data = new HashMap<String,String>();
+		data.put("type", "admin/?name=" + name);
+		data.put("port",String.valueOf(NetworkConstants.LOCAL_CLIENT_PORT));
+		return HttpServerUtil.getTemplate(HttpHeaderTemplates.redirect,data);
 	}
 }
