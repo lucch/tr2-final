@@ -46,18 +46,18 @@ public class UserDB {
 	}
 
 	public void updateNameByIp(String ip, String name) {
-		User user = new User();
 		for (String n : users.keySet()) {
-			user = users.get(n);
+			User user = users.get(n);
 			String nip = user.getUserIP();
-			if (nip.equals(ip)) {
+			if (nip == null) continue;
+			if (nip.equals(ip)  ) {
 				System.out.print("\n achou \n");
 				user.setUsername(name);
 				updateUser(user);
 				return;
 			}
 		}
-		System.out.print("\n não achou \n");
+		System.out.print("\n nï¿½o achou \n");
 	}
 
 	public void addUser(User user) {

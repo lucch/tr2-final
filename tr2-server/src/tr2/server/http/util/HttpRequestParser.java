@@ -15,12 +15,11 @@ public class HttpRequestParser {
 		String msg = null;
 
 		msg = HttpServerUtil.getHttpOK();
-		msg += HttpServerUtil.getHeader("Lista de usuários");
+		msg += HttpServerUtil.getHeader("Lista de usuï¿½rios");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu);
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.edit_users);
 		
-		UserDB userDB = UserDB.instance();
-		HashMap<String,User> users = userDB.getUsers();
+		HashMap<String,User> users = UserDB.getUsers();
 		
 		for (String name : users.keySet()) {
 			User user = users.get(name);
@@ -67,7 +66,7 @@ public class HttpRequestParser {
 	public static String admin() throws BadRequestException {
 		String msg = null;
 		msg = HttpServerUtil.getHttpOK();
-		msg += HttpServerUtil.getHeader("Administração");
+		msg += HttpServerUtil.getHeader("Administraï¿½ï¿½o");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu);
 		msg += getIntervalBody("admin");
 		msg += HttpServerUtil.getFooter();
@@ -117,19 +116,20 @@ public class HttpRequestParser {
 
 	public static String addUser() throws BadRequestException {
 		String msg = HttpServerUtil.getHttpOK();
-		msg += HttpServerUtil.getHeader("Adicionar usuário");
+		msg += HttpServerUtil.getHeader("Adicionar usuï¿½rio");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu);
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.add_user);
 		msg += HttpServerUtil.getFooter();
 		return msg;
 	}
 	
-	public static String addUser(String name, String type) throws BadRequestException  {
+	public static String addUser(String name, String type, String ip) throws BadRequestException  {
 		UserDB userDB = UserDB.instance();
 		User user = new User();
 		
 		user.setUsername(name);
 		user.setUserType(UserType.valueOf(type));
+		user.setUserIP(ip);
 		userDB.addUser(user);
 		
 		HashMap<String,String> data = new HashMap<String,String>();
@@ -142,7 +142,7 @@ public class HttpRequestParser {
 			throws BadRequestException {
 		String msg = null;
 		msg = HttpServerUtil.getHttpOK();
-		msg += HttpServerUtil.getHeader("Editar usuário");
+		msg += HttpServerUtil.getHeader("Editar usuï¿½rio");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu);
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put("name", name);
@@ -266,7 +266,7 @@ public class HttpRequestParser {
 	public static String user() throws BadRequestException {
 		String msg = null;
 		msg = HttpServerUtil.getHttpOK();
-		msg += HttpServerUtil.getHeader("Usuário");
+		msg += HttpServerUtil.getHeader("Usuï¿½rio");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.user_menu);
 		msg += getIntervalBody("user");
 		msg += HttpServerUtil.getFooter();

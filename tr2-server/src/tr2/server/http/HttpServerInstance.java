@@ -44,7 +44,7 @@ public class HttpServerInstance implements Runnable {
 						msg = HttpRequestParser.admin();
 					} else if (pages.get(1).equals("add_user")) {
 						if (data.containsKey("name") && data.containsKey("type")) {
-							msg = HttpRequestParser.addUser(data.get("name"), data.get("type"));
+							msg = HttpRequestParser.addUser(data.get("name"), data.get("type"),ip);
 						} else {
 							msg = HttpRequestParser.addUser();
 						}
