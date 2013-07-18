@@ -6,11 +6,11 @@ import tr2.server.common.entity.Interval;
 import tr2.server.common.series.protocol.Messages;
 
 public class Data {
-	private ArrayList<Interval> intervals;
+	private static ArrayList<Interval> intervals;
 
-	private ArrayList<Interval> runningIntervals;
+	private static ArrayList<Interval> runningIntervals;
 
-	private ArrayList<Interval> pendingIntervals;
+	private static ArrayList<Interval> pendingIntervals;
 
 	private long intervalIndex;
 	
@@ -22,6 +22,18 @@ public class Data {
 		runningIntervals = new ArrayList<Interval>();
 		pendingIntervals = new ArrayList<Interval>();
 
+	}
+	
+	public static ArrayList<Interval> getCalculatedIntervals() {
+		return intervals;
+	}
+	
+	public static ArrayList<Interval> getRunningIntervals() {
+		return runningIntervals;
+	}
+	
+	public static ArrayList<Interval> getPendingIntervals() {
+		return pendingIntervals;
 	}
 	
 	public Interval getInterval(String address) {
@@ -108,7 +120,7 @@ public class Data {
 		return str;
 	}
 
-	public void stringToIntervals(String string) {
+	public void stringToIntervals(String string, int type) {
 					
 		ArrayList<Interval> newIntervals = new ArrayList<Interval>();
 		
@@ -132,12 +144,21 @@ public class Data {
 			
 			newIntervals.add(interval);
 		}
-		
-		System.out.println(label + "Old list size is " + intervals.size());
-		
-		this.intervals = newIntervals;
+				
+		if (type == 0) {
+			System.out.println(label + "Old intervals list size is " + intervals.size());
+			this.intervals = newIntervals;
+		} else if (type == 1) {
+			System.out.println(label + "Old pending intervals list size is " + pendingIntervals.size());
+			this.pendingIntervals = newIntervals;
+		}
 		
 		System.out.println(label + "New list size is " + newIntervals.size());
+	}
+
+	public void stringToPendingIntervals(String message) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

@@ -200,7 +200,11 @@ TimerController {
 	public void notifyMessageReceived(String message, String localAddress,
 			String address) {
 		
-		if (message.startsWith(NetworkConstants.USERS_UPDATE_PREFIX)) {
+		if (message.startsWith(NetworkConstants.PENDING_INTERVALS_UPDATE_PREFIX)) {
+			message = message.replace(NetworkConstants.PENDING_INTERVALS_UPDATE_PREFIX, "");
+			data.stringToIntervals(message, 1);
+			
+		} else if (message.startsWith(NetworkConstants.USERS_UPDATE_PREFIX)) {
 			message = message.replace(NetworkConstants.USERS_UPDATE_PREFIX, "");
 
 			System.out.println(label + " Receiving Users...");
@@ -226,7 +230,7 @@ TimerController {
 		} else if (message.startsWith(NetworkConstants.INTERVALS_UPDATE_PREFIX)) {
 			message = message.replace(NetworkConstants.INTERVALS_UPDATE_PREFIX,
 					"");
-			data.stringToIntervals(message);
+			data.stringToIntervals(message, 0);
 
 		} else if (message.startsWith(NetworkConstants.SERVER_UPDATE_PREFIX)) {
 			String servers[];
