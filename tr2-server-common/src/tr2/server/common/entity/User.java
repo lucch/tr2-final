@@ -3,7 +3,7 @@ package tr2.server.common.entity;
 public class User {
 	
 	private String userName;
-	
+	private String userIP;
 	private UserType userType;
 	
 	public User() {}
@@ -27,6 +27,14 @@ public class User {
 
 	public void setUserType(UserType userType) {
 		this.userType = userType;
+	}
+	
+	public String getUserIP() {
+		return userIP;
+	}
+	
+	public void setUserIP(String ip) {
+		this.userIP = ip;
 	}
 
 }

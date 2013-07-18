@@ -5,6 +5,7 @@ import java.util.HashMap;
 import tr2.server.common.entity.User;
 import tr2.server.common.entity.UserType;
 import tr2.server.common.util.NetworkConstants;
+import tr2.server.http.UserDB;
 import tr2.server.http.exception.BadRequestException;
 
 public class HttpRequestParser {
@@ -17,16 +18,18 @@ public class HttpRequestParser {
 		msg += HttpServerUtil.getHeader("Lista de usuários");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu);
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.edit_users);
-
-		/*
-		 * TODO: Access the users data for (User user : users) {
-		 * HashMap<String,String> user_map = new HashMap<String,String>;
-		 * user_map.put("name", user.getUsername()); user_map.put("type",
-		 * user.getUserType().toString()); msg +=
-		 * HttpServerUtil.getTemplate(HttpHtmlTemplates
-		 * .edit_users_row,user_map); }
-		 */
-
+		
+		UserDB userDB = UserDB.instance();
+		HashMap<String,User> users = userDB.getUsers();
+		
+		for (String name : users.keySet()) {
+			User user = users.get(name);
+			HashMap<String,String> user_map = new HashMap<String,String>();
+			user_map.put("name", user.getUsername());
+			user_map.put("type", user.getUserType().toString());
+			msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.edit_users_row,user_map);
+		}
+		
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.edit_users_footer);
 		msg += HttpServerUtil.getFooter();
 		return msg;
@@ -40,24 +43,25 @@ public class HttpRequestParser {
 		msg += HttpServerUtil.getFooter();
 		return msg;
 	}
-
-	public static String login(String name) throws BadRequestException {
-		User user = new User();
-		if (name.equals("admin")) {
-			user.setUserType(UserType.ADMIN);
+	
+	public static String login(String name, String ip) throws BadRequestException {
+		UserDB userDB = UserDB.instance();
+		if (userDB.isUser(name)) {
+			User user = userDB.getUser(name);
+			
+			user.setUserIP(ip);
+			userDB.updateUser(user);
+			System.out.print(user.getUserIP());
+			HashMap<String,String> data = new HashMap<String,String>();
+			data.put("type", user.getUserType().toString().toLowerCase() + "/");
+			data.put("port",String.valueOf(NetworkConstants.LOCAL_CLIENT_PORT));
+			return HttpServerUtil.getTemplate(HttpHeaderTemplates.redirect,data);
+		} else {
+			HashMap<String,String> data = new HashMap<String,String>();
+			data.put("type", "");
+			data.put("port",String.valueOf(NetworkConstants.LOCAL_CLIENT_PORT));
+			return HttpServerUtil.getTemplate(HttpHeaderTemplates.redirect,data);
 		}
-		// TODO: Valid name
-
-		// if (validate(name)) {
-
-		// } else {
-		// throw new BadRequestException();
-		// }
-
-		HashMap<String, String> data = new HashMap<String, String>();
-		data.put("type", user.getUserType().toString().toLowerCase() + "/");
-		data.put("port", String.valueOf(NetworkConstants.LOCAL_CLIENT_PORT));
-		return HttpServerUtil.getTemplate(HttpHeaderTemplates.redirect, data);
 	}
 
 	public static String admin() throws BadRequestException {
@@ -119,6 +123,20 @@ public class HttpRequestParser {
 		msg += HttpServerUtil.getFooter();
 		return msg;
 	}
+	
+	public static String addUser(String name, String type) throws BadRequestException  {
+		UserDB userDB = UserDB.instance();
+		User user = new User();
+		
+		user.setUsername(name);
+		user.setUserType(UserType.valueOf(type));
+		userDB.addUser(user);
+		
+		HashMap<String,String> data = new HashMap<String,String>();
+		data.put("type", "admin/edit_users");
+		data.put("port",String.valueOf(NetworkConstants.LOCAL_CLIENT_PORT));
+		return HttpServerUtil.getTemplate(HttpHeaderTemplates.redirect,data);
+	}
 
 	public static String editUserAdmin(String name, String type)
 			throws BadRequestException {
@@ -135,7 +153,36 @@ public class HttpRequestParser {
 		msg += HttpServerUtil.getFooter();
 		return msg;
 	}
+	
+	public static String updateUser(String name, String type, String oldname) throws BadRequestException {
+		UserDB userDB = UserDB.instance();
+		User user = new User();
+		
+		if(userDB.isUser(oldname)) {
+			user = userDB.getUser(oldname);
+			user.setUsername(name);
+			user.setUserType(UserType.valueOf(type));
+		}
+		
+		HashMap<String,String> data = new HashMap<String,String>();
+		data.put("type", "admin/edit_users");
+		data.put("port",String.valueOf(NetworkConstants.LOCAL_CLIENT_PORT));
+		return HttpServerUtil.getTemplate(HttpHeaderTemplates.redirect,data);
+	}
+	
+	public static String removeUser(String name) throws BadRequestException {
+		UserDB userDB = UserDB.instance();
 
+		if(userDB.isUser(name)) {
+			userDB.removeUser(name);
+		}
+		
+		HashMap<String,String> data = new HashMap<String,String>();
+		data.put("type", "admin/edit_users");
+		data.put("port",String.valueOf(NetworkConstants.LOCAL_CLIENT_PORT));
+		return HttpServerUtil.getTemplate(HttpHeaderTemplates.redirect,data);
+	}
+	
 	public static String editUser() throws BadRequestException {
 		String msg = null;
 		msg = HttpServerUtil.getHttpOK();
@@ -145,14 +192,17 @@ public class HttpRequestParser {
 		msg += HttpServerUtil.getFooter();
 		return msg;
 	}
+	
+	public static String editUser(String ip, String name) throws BadRequestException  {
+		UserDB userDB = UserDB.instance();
+		userDB.updateNameByIp(ip, name);
+		User user = userDB.getUser(name);
+		System.out.print(user.getUserIP());
 
-	public static String editUser(String ip, String nome)
-			throws BadRequestException {
-		// TODO: Add user
-		HashMap<String, String> data = new HashMap<String, String>();
-		data.put("type", "");
-		data.put("port", String.valueOf(NetworkConstants.LOCAL_CLIENT_PORT));
-		return HttpServerUtil.getTemplate(HttpHeaderTemplates.redirect, data);
+		HashMap<String,String> data = new HashMap<String,String>();
+		data.put("type", "user/");
+		data.put("port",String.valueOf(NetworkConstants.LOCAL_CLIENT_PORT));
+		return HttpServerUtil.getTemplate(HttpHeaderTemplates.redirect,data);
 	}
 
 	public static String intervals(String type) throws BadRequestException {
@@ -222,5 +272,4 @@ public class HttpRequestParser {
 		msg += HttpServerUtil.getFooter();
 		return msg;
 	}
-
 }

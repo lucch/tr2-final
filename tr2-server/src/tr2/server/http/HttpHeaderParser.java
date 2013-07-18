@@ -13,7 +13,6 @@ public class HttpHeaderParser {
 	private ArrayList<String> pages = new ArrayList<String>();
 	private HashMap<String, String> data = new HashMap<String, String>();
 	
-	
 	public HttpHeaderParser(InputStream stream) throws BadRequestException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 		

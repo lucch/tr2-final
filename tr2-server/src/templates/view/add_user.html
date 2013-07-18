@@ -3,7 +3,10 @@
 <p>
 <form action="add_user" method="get">
 	Nome: <input type="text" name="name"><br />
-	Tipo: <input type="text" name="type"><br />
+	Tipo: <select name="type">
+			  <option value="USER">user</option>
+			  <option value="ADMIN">admin</option>
+			</select><br />
 	<input type="submit" value="Enviar">
 </form>
 </p>

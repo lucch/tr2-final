@@ -26,6 +26,7 @@ public class HttpServerInstance implements Runnable {
 			HttpHeaderParser header = new HttpHeaderParser(socket.getInputStream());
 			HashMap <String,String> data = header.getData();
 			ArrayList<String> pages = header.getPages();
+			String ip = socket.getInetAddress().getHostAddress();
 			String msg = null;
 			
 			try {
@@ -37,25 +38,30 @@ public class HttpServerInstance implements Runnable {
 					if (!data.containsKey("nome")) {
 						throw new BadRequestException();
 					}
-					msg = HttpRequestParser.login(data.get("nome"));
+					msg = HttpRequestParser.login(data.get("nome"), ip);
 				} else if (pages.get(0).equals("admin")) {
 					if(pages.size() == 1) {
 						msg = HttpRequestParser.admin();
 					} else if (pages.get(1).equals("add_user")) {
 						if (data.containsKey("name") && data.containsKey("type")) {
-							//TODO: add user
-							System.out.print(data.get("name") + "\n----------");
-							msg = HttpRequestParser.editUsers();
+							msg = HttpRequestParser.addUser(data.get("name"), data.get("type"));
 						} else {
 							msg = HttpRequestParser.addUser();
 						}
-					} else if (pages.get(1).equals("edit_user")) {
+					} else if (pages.get(1).equals("edit_user_admin")) {
 						if (data.containsKey("name") && data.containsKey("type")) {
-							//TODO: edit user
-							msg = HttpRequestParser.editUsers();
-						} else {
 							msg = HttpRequestParser.editUserAdmin(data.get("name"),data.get("type"));
+						} else {
+							throw new BadRequestException();
 						}
+					} else if (pages.get(1).equals("update_user")) {
+						if (data.containsKey("name") && data.containsKey("type") && data.containsKey("oldname")) {
+							msg = HttpRequestParser.updateUser(data.get("name"),data.get("type"),data.get("oldname"));
+						} else {
+							throw new BadRequestException();
+						}
+					} else if (pages.get(1).equals("remove_user")) {
+						msg = HttpRequestParser.removeUser(data.get("name"));
 					} else if (pages.get(1).equals("edit_users")) {
 						msg = HttpRequestParser.editUsers();
 					} else if (pages.get(1).equals("intervals")) {
@@ -72,8 +78,7 @@ public class HttpServerInstance implements Runnable {
 						msg = HttpRequestParser.user();
 					} else if (pages.get(1).equals("edit_user")) {
 						if (data.containsKey("name")) {
-							//TODO: send IP
-							//msg = HttpRequestParser.editUser(user.getUserIP(),data.containsKey("name"));
+							msg = HttpRequestParser.editUser(ip,data.get("name"));
 						} else {
 							msg = HttpRequestParser.editUser();
 						}
