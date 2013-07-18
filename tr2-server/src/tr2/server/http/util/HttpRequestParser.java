@@ -2,7 +2,6 @@ package tr2.server.http.util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 import tr2.server.common.entity.Interval;
