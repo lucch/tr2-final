@@ -83,6 +83,13 @@ public class P2PController implements MulticastController, TCPController,
 
 	// TODO if server becomes active, it has to set users from HTTP server
 	
+	private class WriterThread implements Runnable {		
+		public void run() {
+			System.out.println(label + " Starting to write to buffer...");
+			sendCalculatedIntervals();
+		}
+	}
+	
 	public void notifyTimeIsOver(int type) throws IOException {
 		if (type == timerWaitConnection) {
 			// when time is over
@@ -96,8 +103,9 @@ public class P2PController implements MulticastController, TCPController,
 			}
 		} else if (type == timerSendUpdates) {
 			if (p2p.getNumberOfConnections() > 0) {
-				System.out.println(label + " Sending updates to other servers");
-				sendCalculatedIntervals();
+				System.out.println(label + " Creating Thread to send updates to servers");
+				Thread thread = new Thread(new WriterThread());
+				thread.start();
 			}
 		}
 	}
@@ -115,7 +123,7 @@ public class P2PController implements MulticastController, TCPController,
 			e.printStackTrace();
 		}
 	}
-
+	
 	public void sendCalculatedIntervals() {
 		String message = data.intervalsToString();
 		try {

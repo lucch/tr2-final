@@ -26,7 +26,7 @@ public class Listener implements Runnable {
 				connection.parser(message);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			connection.connectionDown();
 		} catch (Exception e) {
 			connection.connectionDown();
 		}
