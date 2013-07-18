@@ -20,7 +20,7 @@ public class HttpRequestParser {
 		String msg = null;
 
 		msg = HttpServerUtil.getHttpOK();
-		msg += HttpServerUtil.getHeader("Lista de usu�rios");
+		msg += HttpServerUtil.getHeader("Lista de usuários");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu,"name",name1);
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.edit_users,"name",name1);
 		
@@ -70,7 +70,7 @@ public class HttpRequestParser {
 	public static String admin(String name) throws BadRequestException {
 		String msg = null;
 		msg = HttpServerUtil.getHttpOK();
-		msg += HttpServerUtil.getHeader("Administra��o");
+		msg += HttpServerUtil.getHeader("Administração");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu,"name",name);
 		msg += getIntervalBody("admin",name);
 		msg += HttpServerUtil.getFooter();
@@ -142,7 +142,7 @@ public class HttpRequestParser {
 
 	public static String addUser(String myname) throws BadRequestException {
 		String msg = HttpServerUtil.getHttpOK();
-		msg += HttpServerUtil.getHeader("Adicionar usu�rio");
+		msg += HttpServerUtil.getHeader("Adicionar usuário");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu);
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.add_user,"myname",myname);
 		msg += HttpServerUtil.getFooter();
@@ -167,7 +167,7 @@ public class HttpRequestParser {
 			throws BadRequestException {
 		String msg = null;
 		msg = HttpServerUtil.getHttpOK();
-		msg += HttpServerUtil.getHeader("Editar usu�rio");
+		msg += HttpServerUtil.getHeader("Editar usuário");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu,"name",myname);
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put("name", name);
@@ -303,7 +303,7 @@ public class HttpRequestParser {
 	public static String user(String name) throws BadRequestException {
 		String msg = null;
 		msg = HttpServerUtil.getHttpOK();
-		msg += HttpServerUtil.getHeader("Usu�rio");
+		msg += HttpServerUtil.getHeader("Usuário");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.user_menu,"name",name);
 		msg += getIntervalBody("user",name);
 		msg += HttpServerUtil.getFooter();
