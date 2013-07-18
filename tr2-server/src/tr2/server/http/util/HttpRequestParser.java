@@ -1,5 +1,6 @@
 package tr2.server.http.util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,6 +11,7 @@ import tr2.server.common.util.NetworkConstants;
 import tr2.server.http.UserDB;
 import tr2.server.http.exception.BadRequestException;
 import tr2.server.interval.data.Data;
+import tr2.server.sync.data.*;
 
 public class HttpRequestParser {
 	public static final String EOF = "EOF";
@@ -18,7 +20,7 @@ public class HttpRequestParser {
 		String msg = null;
 
 		msg = HttpServerUtil.getHttpOK();
-		msg += HttpServerUtil.getHeader("Lista de usu�rios");
+		msg += HttpServerUtil.getHeader("Lista de usuários");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu,"name",name1);
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.edit_users,"name",name1);
 		
@@ -68,7 +70,7 @@ public class HttpRequestParser {
 	public static String admin(String name) throws BadRequestException {
 		String msg = null;
 		msg = HttpServerUtil.getHttpOK();
-		msg += HttpServerUtil.getHeader("Administra��o");
+		msg += HttpServerUtil.getHeader("Administração");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu,"name",name);
 		msg += getIntervalBody("admin",name);
 		msg += HttpServerUtil.getFooter();
@@ -140,7 +142,7 @@ public class HttpRequestParser {
 
 	public static String addUser(String myname) throws BadRequestException {
 		String msg = HttpServerUtil.getHttpOK();
-		msg += HttpServerUtil.getHeader("Adicionar usu�rio");
+		msg += HttpServerUtil.getHeader("Adicionar usuário");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu);
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.add_user,"myname",myname);
 		msg += HttpServerUtil.getFooter();
@@ -165,7 +167,7 @@ public class HttpRequestParser {
 			throws BadRequestException {
 		String msg = null;
 		msg = HttpServerUtil.getHttpOK();
-		msg += HttpServerUtil.getHeader("Editar usu�rio");
+		msg += HttpServerUtil.getHeader("Editar usuário");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu,"name",myname);
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put("name", name);
@@ -258,15 +260,23 @@ public class HttpRequestParser {
 
 		msg += HttpServerUtil.getHeader("Servidores");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.servers);
-
-		/*
-		 * TODO: get servers for(Server server : servers) {
-		 * HashMap<String,String> data = new HashMap<String,String>();
-		 * data.put("server", server.getIndex().toString()); data.put("state",
-		 * server.getState().toString()); data.put("time",
-		 * server.getTime().toString()); msg +=
-		 * HttpServerUtil.getTemplate(HttpHtmlTemplates.servers_row,data); }
-		 */
+		
+		ArrayList<ServerInfo> servers = ServerData.getServers();
+		
+		for (int i = 0; i < servers.size(); i++) {
+			HashMap<String,String> data = new HashMap<String,String>();
+			data.put("server", servers.get(i).getAddress());
+			
+			String state;
+			if (i == servers.size()-1) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+				state = "MANAGER (" + dateFormat.format(ServerData.getStartTime()) + ")";
+			} else
+				state = "BACKUP";
+			
+			data.put("state",state);
+			msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.servers_row,data); 
+		}
 
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.servers_footer);
 		msg += HttpServerUtil.getFooter();
@@ -293,7 +303,7 @@ public class HttpRequestParser {
 	public static String user(String name) throws BadRequestException {
 		String msg = null;
 		msg = HttpServerUtil.getHttpOK();
-		msg += HttpServerUtil.getHeader("Usu�rio");
+		msg += HttpServerUtil.getHeader("Usuário");
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.user_menu,"name",name);
 		msg += getIntervalBody("user",name);
 		msg += HttpServerUtil.getFooter();
