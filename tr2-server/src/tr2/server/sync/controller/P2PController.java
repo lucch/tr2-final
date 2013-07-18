@@ -130,6 +130,7 @@ TimerController {
 	}
 
 	public void sendCalculatedIntervals() {
+		
 		String message = data.intervalsToString(Data.TYPE_INTERVALS);
 		try {
 			p2p.sendToAllConnections(NetworkConstants.INTERVALS_UPDATE_PREFIX
