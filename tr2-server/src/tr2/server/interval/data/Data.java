@@ -140,9 +140,12 @@ public class Data {
 		strIntervals = string.split(Messages.SEPARATOR);
 		
 		if (type == Data.TYPE_INTERVALS) {
+			// if index is the only content
+			if (strIntervals.length == 1) return;
+			
 			long indexReceived = Long.parseLong(strIntervals[0]);
 		
-			if (indexReceived == 0) return;
+//			if (indexReceived == 0) return;
 		
 			this.intervalIndex = indexReceived;
 		}

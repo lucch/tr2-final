@@ -2,10 +2,7 @@ package tr2.server.main;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 
-import tr2.server.common.entity.User;
-import tr2.server.common.entity.UserType;
 import tr2.server.http.HttpServerDispatcher;
 import tr2.server.http.UserDB;
 import tr2.server.sync.controller.Controller;
