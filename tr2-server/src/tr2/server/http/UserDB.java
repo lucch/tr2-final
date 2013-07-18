@@ -1,19 +1,23 @@
 package tr2.server.http;
 
-
 import java.util.HashMap;
 
 import tr2.server.common.entity.*;
 
 public class UserDB {
-	private HashMap<String,User> users = new HashMap<String,User>();
-	private static UserDB userdb;
-	
 
-	public HashMap<String,User> getUsers() {
+	private static HashMap<String, User> users = new HashMap<String, User>();
+
+	private static UserDB userdb;
+
+	public static HashMap<String, User> getUsers() {
 		return users;
 	}
 	
+	public static void setUsers(HashMap<String, User> users) {
+		UserDB.users = users;
+	}
+
 	public static UserDB instance() {
 		if (userdb == null) {
 			userdb = new UserDB();
@@ -28,19 +32,19 @@ public class UserDB {
 		}
 		return userdb;
 	}
-	
+
 	public boolean isUser(String name) {
 		return users.containsKey(name);
 	}
-	
+
 	public User getUser(String name) {
 		return users.get(name);
 	}
-	
+
 	public void updateUser(User user) {
-		users.put(user.getUsername(),user);
+		users.put(user.getUsername(), user);
 	}
-	
+
 	public void updateNameByIp(String ip, String name) {
 		User user = new User();
 		for (String n : users.keySet()) {
@@ -57,14 +61,13 @@ public class UserDB {
 	}
 
 	public void addUser(User user) {
-		users.put(user.getUsername(),user);
+		users.put(user.getUsername(), user);
 	}
-	
+
 	public void removeUser(String name) {
 		if (users.containsKey(name)) {
 			users.remove(name);
 		}
 	}
-	
-	
+
 }
