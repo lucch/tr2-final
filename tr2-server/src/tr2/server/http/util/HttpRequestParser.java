@@ -19,8 +19,7 @@ public class HttpRequestParser {
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.admin_menu);
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.edit_users);
 		
-		UserDB userDB = UserDB.instance();
-		HashMap<String,User> users = userDB.getUsers();
+		HashMap<String,User> users = UserDB.getUsers();
 		
 		for (String name : users.keySet()) {
 			User user = users.get(name);
