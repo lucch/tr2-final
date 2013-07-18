@@ -13,7 +13,7 @@ import tr2.server.common.series.protocol.Messages;
 
 public class ServerData {
 
-	private static ArrayList<ServerInfo> serversInfo;
+	private static volatile ArrayList<ServerInfo> serversInfo;
 
 	private boolean active;
 
@@ -39,7 +39,7 @@ public class ServerData {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return serversInfo;
+		return servers;
 	}
 
 	public static Date getStartTime() {
