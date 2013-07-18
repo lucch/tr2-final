@@ -6,10 +6,22 @@ import tr2.server.common.entity.*;
 
 public class UserDB {
 
-	private static HashMap<String, User> users = new HashMap<String, User>();
+	private static volatile HashMap<String, User> users = new HashMap<String, User>();
 
 	private static UserDB userdb;
 
+	static {
+		userdb = new UserDB();
+		User admin = new User();
+		admin.setUserType(UserType.ADMIN);
+		admin.setUsername("admin");
+		User user = new User();
+		user.setUsername("user");
+		user.setUserType(UserType.USER);
+		userdb.addUser(admin);
+		userdb.addUser(user);
+	}
+	
 	public static HashMap<String, User> getUsers() {
 		return users;
 	}
@@ -19,17 +31,17 @@ public class UserDB {
 	}
 
 	public static UserDB instance() {
-		if (userdb == null) {
-			userdb = new UserDB();
-			User admin = new User();
-			admin.setUserType(UserType.ADMIN);
-			admin.setUsername("admin");
-			User user = new User();
-			user.setUsername("user");
-			user.setUserType(UserType.USER);
-			userdb.addUser(admin);
-			userdb.addUser(user);
-		}
+//		if (userdb == null) {
+//			userdb = new UserDB();
+//			User admin = new User();
+//			admin.setUserType(UserType.ADMIN);
+//			admin.setUsername("admin");
+//			User user = new User();
+//			user.setUsername("user");
+//			user.setUserType(UserType.USER);
+//			userdb.addUser(admin);
+//			userdb.addUser(user);
+//		}
 		return userdb;
 	}
 
