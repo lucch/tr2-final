@@ -1,6 +1,8 @@
 package tr2.server.interval.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import tr2.server.common.entity.Interval;
 import tr2.server.common.series.protocol.Messages;
@@ -13,9 +15,9 @@ public class Data {
 	private static ArrayList<Interval> pendingIntervals;
 
 	private long intervalIndex;
-	
+
 	private static final String label = "[INTERVAL DATA]";
-	
+
 	public static final int TYPE_INTERVALS = 0;
 	public static final int TYPE_PENDING_INTERVALS = 1;
 
@@ -27,16 +29,26 @@ public class Data {
 
 	}
 
-	public static ArrayList<Interval> getCalculatedIntervals() {
+	private static ArrayList<Interval> sort(ArrayList<Interval> intervals) {		
+		Collections.sort(intervals, new Comparator<Interval>() {
+			@Override
+			public int compare(Interval i1, Interval i2) {
+				return i1.getIndex() <= i2.getIndex() ? -1 : 1;
+			}
+		});
 		return intervals;
+	}
+	
+	public static ArrayList<Interval> getCalculatedIntervals() {
+		return sort(intervals);
 	}
 
 	public static ArrayList<Interval> getRunningIntervals() {
-		return runningIntervals;
+		return sort(runningIntervals);
 	}
 
 	public static ArrayList<Interval> getPendingIntervals() {
-		return pendingIntervals;
+		return sort(pendingIntervals);
 	}
 
 	public static void removeIntervals(ArrayList<Interval> intervalsToBeRemoved) {
@@ -48,7 +60,7 @@ public class Data {
 				Interval intervalAux = intervals.get(j);
 				if (intervalsToBeRemoved.get(i).getIndex() == intervalAux
 						.getIndex()) {
-					
+
 					pendingIntervals.add(intervalAux);
 					intervals.remove(j);
 
@@ -60,14 +72,14 @@ public class Data {
 			}
 		}
 	}
-		
+
 	public static double intervalsSum() {
 		double sum = 0.0;
-		
-		for(int i = 0; i < intervals.size(); i++) {
+
+		for (int i = 0; i < intervals.size(); i++) {
 			sum += intervals.get(i).getResult();
 		}
-		
+
 		return sum;
 	}
 
