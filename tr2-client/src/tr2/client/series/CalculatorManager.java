@@ -20,12 +20,12 @@ public class CalculatorManager implements Runnable {
 			 */
 			Calculator c = new Calculator();
 			Interval i = c.calculate(getSeriesInterval());
-			sendResultsToServer(i);
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			sendResultsToServer(i);
 		}
 	}
 
