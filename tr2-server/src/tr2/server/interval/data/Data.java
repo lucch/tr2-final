@@ -13,9 +13,9 @@ public class Data {
 	private static ArrayList<Interval> pendingIntervals;
 
 	private long intervalIndex;
-
+	
 	private static final String label = "[INTERVAL DATA]";
-
+	
 	public static final int TYPE_INTERVALS = 0;
 	public static final int TYPE_PENDING_INTERVALS = 1;
 
@@ -48,6 +48,7 @@ public class Data {
 				Interval intervalAux = intervals.get(j);
 				if (intervalsToBeRemoved.get(i).getIndex() == intervalAux
 						.getIndex()) {
+					
 					pendingIntervals.add(intervalAux);
 					intervals.remove(j);
 
@@ -58,6 +59,16 @@ public class Data {
 				}
 			}
 		}
+	}
+		
+	public static double intervalsSum() {
+		double sum = 0.0;
+		
+		for(int i = 0; i < intervals.size(); i++) {
+			sum += intervals.get(i).getResult();
+		}
+		
+		return sum;
 	}
 
 	public Interval getInterval(String address) {
