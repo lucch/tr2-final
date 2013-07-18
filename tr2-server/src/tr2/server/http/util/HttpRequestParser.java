@@ -62,6 +62,7 @@ public class HttpRequestParser {
 			data.put("port",String.valueOf(NetworkConstants.LOCAL_CLIENT_PORT));
 			return HttpServerUtil.getTemplate(HttpHeaderTemplates.redirect,data);
 		}
+	}
 
 	public static String admin() throws BadRequestException {
 		String msg = null;
@@ -271,5 +272,4 @@ public class HttpRequestParser {
 		msg += HttpServerUtil.getFooter();
 		return msg;
 	}
-
 }
