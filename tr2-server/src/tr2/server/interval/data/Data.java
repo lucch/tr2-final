@@ -16,6 +16,9 @@ public class Data {
 	
 	private final String label = "[INTERVAL DATA]";
 
+	public static final int TYPE_INTERVALS = 0;
+	public static final int TYPE_PENDING_INTERVALS = 1;
+	
 	public Data() {
 		intervalIndex = 0;
 		intervals = new ArrayList<Interval>();
@@ -103,9 +106,17 @@ public class Data {
 		return interval;
 	}
 
-	public String intervalsToString() {
+	public String intervalsToString(int type) {
+		ArrayList<Interval> intervals = null;
+		
 		String str = "";
-		str += intervalIndex + Messages.SEPARATOR;
+		if (type == TYPE_INTERVALS) {
+			intervals = Data.intervals;
+			str += intervalIndex + Messages.SEPARATOR;
+		} else if (type == TYPE_PENDING_INTERVALS) {
+			intervals = Data.pendingIntervals;
+		}
+		
 		for (int i = 0; i < intervals.size(); i++) {
 			// append all intervals
 			Interval interval = intervals.get(i);
@@ -128,11 +139,13 @@ public class Data {
 		
 		strIntervals = string.split(Messages.SEPARATOR);
 		
-		long indexReceived = Long.parseLong(strIntervals[0]);
+		if (type == Data.TYPE_INTERVALS) {
+			long indexReceived = Long.parseLong(strIntervals[0]);
 		
-		if (indexReceived == 0) return;
+			if (indexReceived == 0) return;
 		
-		this.intervalIndex = indexReceived;
+			this.intervalIndex = indexReceived;
+		}
 		
 		for (int i = 1; i < strIntervals.length; i++) {
 			String[] attributes = strIntervals[i].split(Messages.SUBSEPARATOR);
@@ -145,19 +158,15 @@ public class Data {
 			newIntervals.add(interval);
 		}
 				
-		if (type == 0) {
+		if (type == TYPE_INTERVALS) {
 			System.out.println(label + "Old intervals list size is " + intervals.size());
-			this.intervals = newIntervals;
-		} else if (type == 1) {
+			Data.intervals = newIntervals;
+			System.out.println(label + "New intervals list size is " + newIntervals.size());
+		} else if (type == TYPE_PENDING_INTERVALS) {
 			System.out.println(label + "Old pending intervals list size is " + pendingIntervals.size());
-			this.pendingIntervals = newIntervals;
+			Data.pendingIntervals = newIntervals;
+			System.out.println(label + "New pending intervals list size is " + newIntervals.size());
 		}
-		
-		System.out.println(label + "New list size is " + newIntervals.size());
-	}
-
-	public void stringToPendingIntervals(String message) {
-		// TODO Auto-generated method stub
 		
 	}
 	

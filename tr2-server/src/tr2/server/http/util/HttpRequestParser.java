@@ -1,5 +1,6 @@
 package tr2.server.http.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import tr2.server.common.entity.Interval;
