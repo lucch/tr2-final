@@ -40,8 +40,7 @@ public class CalculatorManager implements Runnable {
 			String request = s.prepare(Messages.INTERVAL_CALCULATED,
 					interval.toJSON());
 			System.out
-					.println("[CALCULATOR MANAGER] Sending request to server: ");
-			System.out.println("\t" + request);
+					.println("[CALCULATOR MANAGER] Sending request to server: " + request);
 			proxy.request(request, RequestType.SERIES);
 
 		} catch (IOException e) {
