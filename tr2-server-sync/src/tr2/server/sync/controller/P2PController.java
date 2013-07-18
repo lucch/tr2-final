@@ -14,6 +14,7 @@ import tr2.server.common.series.protocol.Messages;
 import tr2.server.common.tcp.ConnectionsManager;
 import tr2.server.common.tcp.TCPController;
 import tr2.server.common.util.NetworkConstants;
+import tr2.server.http.UserDB;
 import tr2.server.interval.data.Data;
 import tr2.server.sync.data.ServerData;
 
@@ -139,8 +140,11 @@ TimerController {
 	public void sendUsers() {
 		if (serverData.isActive()) {
 			// TODO
+			System.out.println(label + " Sending Users...");
 			// pega data do servidor http
-			JSONObject obj = new JSONObject();
+			HashMap<String, User> users = UserDB.getUsers();
+			System.out.println(users.get(users.size()-1).getUsername());
+			JSONObject obj = new JSONObject(UserDB.getUsers());
 			String json = obj.toJSONString();
 			try {
 				p2p.sendToAllConnections(json);
@@ -178,6 +182,7 @@ TimerController {
 		// is connected
 		serverData.addServerInfo(address);
 		if (serverData.isActive()) {
+			sendUsers();
 			sendCalculatedIntervals();
 			sendServersInfoUpdate();
 		}
@@ -189,16 +194,19 @@ TimerController {
 		if (message.startsWith(NetworkConstants.USERS_UPDATE_PREFIX)) {
 			message = message.replace(NetworkConstants.USERS_UPDATE_PREFIX, "");
 
+			System.out.println(label + " Receiving Users...");
 			JSONParser parser = new JSONParser();
-			HashMap<String, User> users;
+			HashMap<String, User> users = null;
 			try {
 				users = (HashMap<String, User>) parser.parse(message);
+				System.out.println(users.get(users.size()-1).getUsername());
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 			
 			// TODO
 			// invoke static method to manipulate https server list
+			UserDB.setUsers(users);
 
 		} else if (message.startsWith(NetworkConstants.INTERVALS_UPDATE_PREFIX)) {
 			message = message.replace(NetworkConstants.INTERVALS_UPDATE_PREFIX,
