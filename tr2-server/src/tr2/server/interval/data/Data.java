@@ -51,7 +51,7 @@ public class Data {
 		return sort(pendingIntervals);
 	}
 
-	public static void removeIntervals(ArrayList<Interval> intervalsToBeRemoved) {
+	public static synchronized void removeIntervals(ArrayList<Interval> intervalsToBeRemoved) {
 		if (intervalsToBeRemoved == null)
 			return;
 
