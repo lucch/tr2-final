@@ -8,11 +8,11 @@ import tr2.server.common.entity.Interval;
 import tr2.server.common.series.protocol.Messages;
 
 public class Data {
-	private static ArrayList<Interval> intervals;
+	private static volatile ArrayList<Interval> intervals;
 
-	private static ArrayList<Interval> runningIntervals;
+	private static volatile ArrayList<Interval> runningIntervals;
 
-	private static ArrayList<Interval> pendingIntervals;
+	private static volatile ArrayList<Interval> pendingIntervals;
 
 	private long intervalIndex;
 
