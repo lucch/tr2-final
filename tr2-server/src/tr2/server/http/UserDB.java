@@ -31,7 +31,6 @@ public class UserDB {
 	
 	public static void setUsers(HashMap<String, User> users) {
 		UserDB.users = users;
-		System.out.println("!!!!SETTING USER!!!!");
 	}
 	
 	private UserDB() {}
