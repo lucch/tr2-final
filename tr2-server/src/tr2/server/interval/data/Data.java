@@ -1,6 +1,8 @@
 package tr2.server.interval.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import tr2.server.common.entity.Interval;
 import tr2.server.common.series.protocol.Messages;
@@ -13,9 +15,9 @@ public class Data {
 	private static ArrayList<Interval> pendingIntervals;
 
 	private long intervalIndex;
-	
+
 	private static final String label = "[INTERVAL DATA]";
-	
+
 	public static final int TYPE_INTERVALS = 0;
 	public static final int TYPE_PENDING_INTERVALS = 1;
 
@@ -28,6 +30,14 @@ public class Data {
 	}
 
 	public static ArrayList<Interval> getCalculatedIntervals() {
+		Collections.sort(intervals, new Comparator() {
+			public int compare(Object o1, Object o2) {
+				Interval i1 = (Interval) o1;
+				Interval i2 = (Interval) o2;
+				return i1.getIndex() < i2.getIndex() ? -1 : i1.getIndex() > i2
+						.getIndex() ? 1 : 0;
+			}
+		});
 		return intervals;
 	}
 
@@ -48,7 +58,7 @@ public class Data {
 				Interval intervalAux = intervals.get(j);
 				if (intervalsToBeRemoved.get(i).getIndex() == intervalAux
 						.getIndex()) {
-					
+
 					pendingIntervals.add(intervalAux);
 					intervals.remove(j);
 
@@ -60,14 +70,14 @@ public class Data {
 			}
 		}
 	}
-		
+
 	public static double intervalsSum() {
 		double sum = 0.0;
-		
-		for(int i = 0; i < intervals.size(); i++) {
+
+		for (int i = 0; i < intervals.size(); i++) {
 			sum += intervals.get(i).getResult();
 		}
-		
+
 		return sum;
 	}
 
