@@ -2,6 +2,7 @@ package tr2.server.http.util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import tr2.server.common.entity.Interval;
@@ -110,12 +111,12 @@ public class HttpRequestParser {
 		data.put("state",state); 
 		data.put("client",in.getClientIP()); 
 		data.put("name",name);
+		
 		if (state.equals("CALCULATED")) { 
 			data.put("result",String.valueOf(in.getResult())); 
 		} else { 
 			data.put("result", "-"); 
 		}
-		
 		
 		Integer index; 
 		if (in.getFirstDenominator() > 0) { 
@@ -202,8 +203,6 @@ public class HttpRequestParser {
 
 		if(userDB.isUser(name)) {
 			userDB.removeUser(name);
-		} else {
-			System.out.print("\n ----------- \n");
 		}
 		
 		HashMap<String,String> data = new HashMap<String,String>();
@@ -216,7 +215,7 @@ public class HttpRequestParser {
 		String msg = null;
 		msg = HttpServerUtil.getHttpOK();
 		msg += HttpServerUtil.getHeader("Editar conta");
-		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.user_menu);
+		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.user_menu,"name",name);
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.edit_user,"oldname",name);
 		msg += HttpServerUtil.getFooter();
 		return msg;
@@ -269,8 +268,9 @@ public class HttpRequestParser {
 			
 			String state;
 			if (i == servers.size()-1) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-				state = "MANAGER (" + dateFormat.format(ServerData.getStartTime()) + ")";
+				SimpleDateFormat dateFormat = new SimpleDateFormat("m");
+				Date now = new Date();
+				state = "MANAGER (" + dateFormat.format(now.getTime() - ServerData.getStartTime().getTime()) + "m)";
 			} else
 				state = "BACKUP";
 			
