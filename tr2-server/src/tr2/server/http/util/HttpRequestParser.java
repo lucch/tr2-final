@@ -1,5 +1,6 @@
 package tr2.server.http.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import tr2.server.common.entity.Interval;
@@ -8,6 +9,7 @@ import tr2.server.common.entity.UserType;
 import tr2.server.common.util.NetworkConstants;
 import tr2.server.http.UserDB;
 import tr2.server.http.exception.BadRequestException;
+import tr2.server.interval.data.Data;
 
 public class HttpRequestParser {
 	public static final String EOF = "EOF";
@@ -80,31 +82,51 @@ public class HttpRequestParser {
 		msg = HttpServerUtil.getTemplateDecider(
 				HttpServerUtil.getTemplate(HttpHtmlTemplates.intervals), type);
 
-		ArrayList<String> intervals_srt;
-		/*
-		 * TODO: get intervals data for (Interval in : intervals) {
-		 * HashMap<String,String> data = new HashMap<String,String>();
-		 * data.put("interval", in.getFirstDenominator() + " - " +
-		 * in.getLastDenominator()); data.put("state",
-		 * in.getIntervalState().toString()); data.put("client",
-		 * in.getClientIP()); if (in.getIntervalState() ==
-		 * IntervalState.FINISHED) { data.put("result",
-		 * String.valueOf(in.getResult())); } else { data.put("result", "-"); }
-		 * 
-		 * 
-		 * Integer index; if (in.getFirstDenominator() > 0) { index =
-		 * (int)in.getFirstDenominator()/10000; } else { index = 0; }
-		 * 
-		 * if (type == "admin") msg +=
-		 * HttpServerUtil.getTemplateDecider(HttpServerUtil
-		 * .getTemplate(HttpHtmlTemplates
-		 * .intervals_row,data),type,"index",index.toString()); else msg +=
-		 * HttpServerUtil
-		 * .getTemplateDecider(HttpServerUtil.getTemplate(HttpHtmlTemplates
-		 * .intervals_row,data),type); }
-		 */
+		ArrayList<Interval> intervals = Data.getCalculatedIntervals();
+		for (Interval in : intervals) {
+			msg += getIntervalRow(in, "CALCULATED", type);
+		}
+		ArrayList<Interval> runningIntervals = Data.getRunningIntervals();
+		for (Interval in : runningIntervals) {
+			msg += getIntervalRow(in, "RUNNING", type);
+		}
+		
+		ArrayList<Interval> pendingIntervals = Data.getPendingIntervals();
+		for (Interval in : pendingIntervals) {
+			msg += getIntervalRow(in, "PENDING", type);
+		}
+
+		
 		msg += HttpServerUtil.getTemplate(HttpHtmlTemplates.intervals_footer);
 
+		return msg;
+	}
+	
+	private static String getIntervalRow(Interval in, String state, String type) throws BadRequestException {
+		HashMap<String,String> data = new HashMap<String,String>();
+		data.put("interval", in.getFirstDenominator() + " - " + in.getLastDenominator()); 
+		data.put("state",state); 
+		data.put("client",in.getClientIP()); 
+		if (state.equals("CALCULATED")) { 
+			data.put("result",String.valueOf(in.getResult())); 
+		} else { 
+			data.put("result", "-"); 
+		}
+		
+		
+		Integer index; 
+		if (in.getFirstDenominator() > 0) { 
+			index =(int)in.getFirstDenominator()/10000; 
+		} else { 
+			index = 0; 
+		}
+		
+		String msg;
+		if (type == "admin") 
+			msg = HttpServerUtil.getTemplateDecider(HttpServerUtil.getTemplate(HttpHtmlTemplates.intervals_row,data),type,"index",index.toString());
+		else 
+			msg = HttpServerUtil.getTemplateDecider(HttpServerUtil.getTemplate(HttpHtmlTemplates.intervals_row,data),type); 
+		
 		return msg;
 	}
 
