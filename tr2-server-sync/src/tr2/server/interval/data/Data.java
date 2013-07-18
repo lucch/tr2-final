@@ -1,14 +1,9 @@
 package tr2.server.interval.data;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import tr2.server.common.entity.Interval;
 import tr2.server.common.series.protocol.Messages;
-import tr2.server.common.entity.*;
 
 public class Data {
 	private ArrayList<Interval> intervals;
@@ -19,8 +14,6 @@ public class Data {
 
 	private long intervalIndex;
 	
-	private HashMap<String, User> users;
-
 	private final String label = "[INTERVAL DATA]";
 
 	public Data() {
@@ -29,20 +22,6 @@ public class Data {
 		runningIntervals = new ArrayList<Interval>();
 		pendingIntervals = new ArrayList<Interval>();
 
-	}
-
-	public void updateUsers(HashMap<String, User> users) {
-		this.users = users;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void receiveUsers(String string) {
-		JSONParser parser = new JSONParser();
-		try {
-			users = (HashMap<String, User>) parser.parse(string);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public Interval getInterval(String address) {
@@ -160,4 +139,5 @@ public class Data {
 		
 		System.out.println(label + "New list size is " + newIntervals.size());
 	}
+	
 }

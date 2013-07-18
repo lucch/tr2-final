@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import tr2.server.common.entity.User;
 import tr2.server.common.multicast.Multicast;
@@ -16,7 +18,7 @@ import tr2.server.interval.data.Data;
 import tr2.server.sync.data.ServerData;
 
 public class P2PController implements MulticastController, TCPController,
-		TimerController {
+TimerController {
 
 	private ServerData serverData;
 
@@ -81,15 +83,15 @@ public class P2PController implements MulticastController, TCPController,
 		}
 	}
 
-	// TODO if server becomes active, it has to set users from HTTP server
-	
 	private class WriterThread implements Runnable {		
 		public void run() {
 			System.out.println(label + " Starting to write to buffer...");
+			// TODO send users
+			sendUsers();
 			sendCalculatedIntervals();
 		}
 	}
-	
+
 	public void notifyTimeIsOver(int type) throws IOException {
 		if (type == timerWaitConnection) {
 			// when time is over
@@ -123,7 +125,7 @@ public class P2PController implements MulticastController, TCPController,
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void sendCalculatedIntervals() {
 		String message = data.intervalsToString();
 		try {
@@ -134,10 +136,11 @@ public class P2PController implements MulticastController, TCPController,
 		}
 	}
 
-	public void notifyUpdateUsers(HashMap<String, User> users) {
+	public void sendUsers() {
 		if (serverData.isActive()) {
-			data.updateUsers(users);
-			JSONObject obj = new JSONObject(users);
+			// TODO
+			// pega data do servidor http
+			JSONObject obj = new JSONObject();
 			String json = obj.toJSONString();
 			try {
 				p2p.sendToAllConnections(json);
@@ -182,21 +185,20 @@ public class P2PController implements MulticastController, TCPController,
 
 	public void notifyMessageReceived(String message, String localAddress,
 			String address) {
-
-//		if (message.startsWith(NetworkConstants.INTERVAL_ADD_PREFIX)) {
-//			// TODO
-//		} else if (message.startsWith(NetworkConstants.PENDING_INTERVAL_ADD_PREFIX)) {
-//			// TODO
-//		} else if (message.startsWith(NetworkConstants.INTERVAL_REMOVE_PREFIX)) {
-//			// TODO
-//		} else if (message.startsWith(NetworkConstants.PENDING_INTERVAL_REMOVE_PREFIX)) {
-//			// TODO
-//		}
 		
-		 if (message.startsWith(NetworkConstants.USERS_UPDATE_PREFIX)) {
+		if (message.startsWith(NetworkConstants.USERS_UPDATE_PREFIX)) {
 			message = message.replace(NetworkConstants.USERS_UPDATE_PREFIX, "");
 
-			data.receiveUsers(message);
+			JSONParser parser = new JSONParser();
+			HashMap<String, User> users;
+			try {
+				users = (HashMap<String, User>) parser.parse(message);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			// TODO
+			// invoke static method to manipulate https server list
 
 		} else if (message.startsWith(NetworkConstants.INTERVALS_UPDATE_PREFIX)) {
 			message = message.replace(NetworkConstants.INTERVALS_UPDATE_PREFIX,
