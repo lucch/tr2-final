@@ -155,7 +155,7 @@ TimerController {
 			JSONObject obj = new JSONObject(usersJSON);
 			String json = obj.toJSONString();
 			try {
-				p2p.sendToAllConnections(json);
+				p2p.sendToAllConnections(NetworkConstants.USERS_UPDATE_PREFIX + json);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -220,7 +220,7 @@ TimerController {
 			
 			// TODO
 			// invoke static method to manipulate https server list
-			if(users != null)
+			if (users != null)
 				UserDB.setUsers(users);
 
 		} else if (message.startsWith(NetworkConstants.INTERVALS_UPDATE_PREFIX)) {

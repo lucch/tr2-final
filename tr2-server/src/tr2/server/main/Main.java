@@ -23,16 +23,16 @@ public class Main {
 			dispatcher.start();
 			System.out.println("Server started successfully!");
 			
-			try {
-				Thread.sleep(50000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+//			try {
+//				Thread.sleep(50000);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
 			
-			HashMap<String, User> users = new HashMap<String, User>();
-			users.put("jacopo", new User("jacopo", UserType.ADMIN));
-			users.put("alexandre", new User("alexandre", UserType.USER));
-			UserDB.setUsers(users);
+//			HashMap<String, User> users = new HashMap<String, User>();
+//			users.put("jacopo", new User("jacopo", UserType.ADMIN));
+//			users.put("alexandre", new User("alexandre", UserType.USER));
+//			UserDB.setUsers(users);
 			
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
