@@ -91,8 +91,6 @@ public class HttpServerInstance implements Runnable {
 						}
 					} else if (pages.get(1).equals("intervals")) {
 						msg = HttpRequestParser.intervals("user",data.get("name"));
-					} else if (pages.get(1).equals("remove_seq")) {
-						//TODO: remove sequence
 					} else if (pages.get(1).equals("servers")) {
 						msg = HttpRequestParser.servers("user",data.get("name"));
 					} else if (pages.get(1).equals("result")) {
