@@ -19,7 +19,7 @@ public class ServerData {
 
 	private int activeIndex;
 
-	private Date startTime;
+	private static Date startTime;
 
 	public ServerData() {
 		serversInfo = new ArrayList<ServerInfo>();
@@ -39,6 +39,10 @@ public class ServerData {
 		return serversInfo;
 	}
 
+	public static Date getStartTime() {
+		return startTime;
+	}
+	
 	public long getTime() {
 		return startTime.getTime();
 	}
