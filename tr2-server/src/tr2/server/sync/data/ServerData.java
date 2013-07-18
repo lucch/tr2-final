@@ -1,5 +1,5 @@
 /*
- * Controla a aplicação
+ * Controla a aplicaï¿½ï¿½o
  */
 
 package tr2.server.sync.data;
@@ -28,7 +28,10 @@ public class ServerData {
 	}
 
 	public static ArrayList<ServerInfo> getServers() {
-		ArrayList<ServerInfo> servers = new ArrayList<ServerInfo>(serversInfo);
+		ArrayList<ServerInfo> servers = new ArrayList<ServerInfo>();
+		for (ServerInfo s : serversInfo) {
+			servers.add(s);
+		}
 		try {
 			servers.add(new ServerInfo(InetAddress.getLocalHost()
 					.getHostAddress()));
