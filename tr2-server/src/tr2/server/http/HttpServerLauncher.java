@@ -2,8 +2,6 @@ package tr2.server.http;
 
 import java.io.IOException;
 
-import tr2.server.http.util.MulticastSender;
-
 public class HttpServerLauncher {
 
 	public static void main(String[] args) {
