@@ -1,8 +1,8 @@
 package tr2.server.interval.data;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 
 import tr2.server.common.entity.Interval;
 import tr2.server.common.series.protocol.Messages;
@@ -29,24 +29,26 @@ public class Data {
 
 	}
 
-	public static ArrayList<Interval> getCalculatedIntervals() {
-		Collections.sort(intervals, new Comparator() {
-			public int compare(Object o1, Object o2) {
-				Interval i1 = (Interval) o1;
-				Interval i2 = (Interval) o2;
-				return i1.getIndex() < i2.getIndex() ? -1 : i1.getIndex() > i2
-						.getIndex() ? 1 : 0;
+	private static ArrayList<Interval> sort(ArrayList<Interval> intervals) {		
+		Collections.sort(intervals, new Comparator<Interval>() {
+			@Override
+			public int compare(Interval i1, Interval i2) {
+				return i1.getIndex() <= i2.getIndex() ? -1 : 1;
 			}
 		});
 		return intervals;
 	}
+	
+	public static ArrayList<Interval> getCalculatedIntervals() {
+		return sort(intervals);
+	}
 
 	public static ArrayList<Interval> getRunningIntervals() {
-		return runningIntervals;
+		return sort(runningIntervals);
 	}
 
 	public static ArrayList<Interval> getPendingIntervals() {
-		return pendingIntervals;
+		return sort(pendingIntervals);
 	}
 
 	public static void removeIntervals(ArrayList<Interval> intervalsToBeRemoved) {
