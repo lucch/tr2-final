@@ -43,7 +43,7 @@ public class NetworkConstants {
 
 	public static final long PERIODIC_TIME = 2000;
 
-	public static final long SYNC_TIME = 60000;
+	public static final long SYNC_TIME = 7000;
 
 	/* Proxy/Remote Servers settings */
 	public final static int PROXY_PORT = 8081;

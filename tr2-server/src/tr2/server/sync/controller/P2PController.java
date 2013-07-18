@@ -13,6 +13,7 @@ import tr2.server.common.multicast.MulticastController;
 import tr2.server.common.series.protocol.Messages;
 import tr2.server.common.tcp.ConnectionsManager;
 import tr2.server.common.tcp.TCPController;
+import tr2.server.common.util.JSONHelper;
 import tr2.server.common.util.NetworkConstants;
 import tr2.server.http.UserDB;
 import tr2.server.interval.data.Data;
@@ -137,17 +138,24 @@ TimerController {
 		}
 	}
 
+	@SuppressWarnings("null")
 	public void sendUsers() {
 		if (serverData.isActive()) {
 			// TODO
 			System.out.println(label + " Sending Users...");
 			// pega data do servidor http
 			HashMap<String, User> users = UserDB.getUsers();
-			System.out.println(users.get(users.size()-1).getUsername());
-			JSONObject obj = new JSONObject(UserDB.getUsers());
+			HashMap<String, String> usersJSON = new HashMap<String, String>();
+	
+			for (String key : users.keySet()) {
+				User u = users.get(key);
+				usersJSON.put(key, u.toJSON());
+			}
+			
+			JSONObject obj = new JSONObject(usersJSON);
 			String json = obj.toJSONString();
 			try {
-				p2p.sendToAllConnections(json);
+				p2p.sendToAllConnections(NetworkConstants.USERS_UPDATE_PREFIX + json);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -188,6 +196,7 @@ TimerController {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void notifyMessageReceived(String message, String localAddress,
 			String address) {
 		
@@ -198,15 +207,21 @@ TimerController {
 			JSONParser parser = new JSONParser();
 			HashMap<String, User> users = null;
 			try {
-				users = (HashMap<String, User>) parser.parse(message);
-				System.out.println(users.get(users.size()-1).getUsername());
+				HashMap<String, String> usersJSON = (HashMap<String, String>) parser.parse(message);
+				users = new HashMap<String, User>();
+				for(String key : usersJSON.keySet()) {
+					String userJSON = usersJSON.get(key);
+					User u = JSONHelper.fromJSON(userJSON, User.class);
+					users.put(key, u);
+				}
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 			
 			// TODO
 			// invoke static method to manipulate https server list
-			UserDB.setUsers(users);
+			if (users != null)
+				UserDB.setUsers(users);
 
 		} else if (message.startsWith(NetworkConstants.INTERVALS_UPDATE_PREFIX)) {
 			message = message.replace(NetworkConstants.INTERVALS_UPDATE_PREFIX,
