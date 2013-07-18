@@ -54,17 +54,8 @@ public class UserDB {
 		users.put(user.getUsername(), user);
 	}
 
-	public void updateNameByIp(String ip, String name) {
-		for (String n : users.keySet()) {
-			User user = users.get(n);
-			String nip = user.getUserIP();
-			if (nip == null) continue;
-			if (nip.equals(ip)) {
-				user.setUsername(name);
-				updateUser(user);
-				return;
-			}
-		}
+	public void updateName(String name,User user) {
+		users.put(name, user);
 	}
 
 	public void addUser(User user) {
