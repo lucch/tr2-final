@@ -1,10 +1,14 @@
 package tr2.server.interval.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import tr2.server.common.entity.Interval;
-
 import tr2.server.common.series.protocol.Messages;
+import tr2.server.common.entity.*;
 
 public class Data {
 	private ArrayList<Interval> intervals;
@@ -13,18 +17,34 @@ public class Data {
 
 	private ArrayList<Interval> pendingIntervals;
 
-	private long index;
+	private long intervalIndex;
+	
+	private HashMap<String, User> users;
 
 	private final String label = "[INTERVAL DATA]";
 
 	public Data() {
-		index = 0;
+		intervalIndex = 0;
 		intervals = new ArrayList<Interval>();
 		runningIntervals = new ArrayList<Interval>();
 		pendingIntervals = new ArrayList<Interval>();
 
 	}
 
+	public void updateUsers(HashMap<String, User> users) {
+		this.users = users;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void receiveUsers(String string) {
+		JSONParser parser = new JSONParser();
+		try {
+			users = (HashMap<String, User>) parser.parse(string);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public Interval getInterval(String address) {
 		Interval i = null;
 
@@ -32,9 +52,9 @@ public class Data {
 			// if there are no pending intervals
 			i = new Interval();
 
-			i.setIndex(index);
+			i.setIndex(intervalIndex);
 
-			index++;
+			intervalIndex++;
 		} else {
 			i = pendingIntervals.get(0); // gets the first pending interval
 			pendingIntervals.remove(0);
@@ -94,7 +114,7 @@ public class Data {
 
 	public String intervalsToString() {
 		String str = "";
-		str += index + Messages.SEPARATOR;
+		str += intervalIndex + Messages.SEPARATOR;
 		for (int i = 0; i < intervals.size(); i++) {
 			// append all intervals
 			Interval interval = intervals.get(i);
@@ -121,7 +141,7 @@ public class Data {
 		
 		if (indexReceived == 0) return;
 		
-		this.index = indexReceived;
+		this.intervalIndex = indexReceived;
 		
 		for (int i = 1; i < strIntervals.length; i++) {
 			String[] attributes = strIntervals[i].split(Messages.SUBSEPARATOR);

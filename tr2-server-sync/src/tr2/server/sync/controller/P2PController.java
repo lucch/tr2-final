@@ -1,7 +1,11 @@
 package tr2.server.sync.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 
+import org.json.simple.JSONObject;
+
+import tr2.server.common.entity.User;
 import tr2.server.common.multicast.Multicast;
 import tr2.server.common.multicast.MulticastController;
 import tr2.server.common.series.protocol.Messages;
@@ -77,7 +81,8 @@ public class P2PController implements MulticastController, TCPController,
 		}
 	}
 
-	// multicast
+	// TODO if server becomes active, it has to set users from HTTP server
+	
 	public void notifyTimeIsOver(int type) throws IOException {
 		if (type == timerWaitConnection) {
 			// when time is over
@@ -101,7 +106,6 @@ public class P2PController implements MulticastController, TCPController,
 		connectAndAddServer(address);
 	}
 
-	// tcp
 	public void sendServersInfoUpdate() {
 		String message = serverData.serversInfoToString();
 		try {
@@ -119,6 +123,19 @@ public class P2PController implements MulticastController, TCPController,
 					+ message);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void notifyUpdateUsers(HashMap<String, User> users) {
+		if (serverData.isActive()) {
+			data.updateUsers(users);
+			JSONObject obj = new JSONObject(users);
+			String json = obj.toJSONString();
+			try {
+				p2p.sendToAllConnections(json);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -158,7 +175,22 @@ public class P2PController implements MulticastController, TCPController,
 	public void notifyMessageReceived(String message, String localAddress,
 			String address) {
 
-		if (message.startsWith(NetworkConstants.INTERVALS_UPDATE_PREFIX)) {
+//		if (message.startsWith(NetworkConstants.INTERVAL_ADD_PREFIX)) {
+//			// TODO
+//		} else if (message.startsWith(NetworkConstants.PENDING_INTERVAL_ADD_PREFIX)) {
+//			// TODO
+//		} else if (message.startsWith(NetworkConstants.INTERVAL_REMOVE_PREFIX)) {
+//			// TODO
+//		} else if (message.startsWith(NetworkConstants.PENDING_INTERVAL_REMOVE_PREFIX)) {
+//			// TODO
+//		}
+		
+		 if (message.startsWith(NetworkConstants.USERS_UPDATE_PREFIX)) {
+			message = message.replace(NetworkConstants.USERS_UPDATE_PREFIX, "");
+
+			data.receiveUsers(message);
+
+		} else if (message.startsWith(NetworkConstants.INTERVALS_UPDATE_PREFIX)) {
 			message = message.replace(NetworkConstants.INTERVALS_UPDATE_PREFIX,
 					"");
 			data.stringToIntervals(message);

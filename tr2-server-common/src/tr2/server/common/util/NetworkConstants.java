@@ -25,7 +25,9 @@ public class NetworkConstants {
 
 	public static final String INTERVALS_UPDATE_PREFIX = "INT"
 			+ Messages.SEPARATOR;
-
+	
+	public static final String USERS_UPDATE_PREFIX = "USERS" + Messages.SEPARATOR;
+	
 	public static final String MANAGER_PREFIX = "MNG" + Messages.SEPARATOR;
 
 	public static final String MANAGER_REQUEST = "MNG" + Messages.SEPARATOR
@@ -51,5 +53,13 @@ public class NetworkConstants {
 	public static final int REMOTE_HTTP_SERVER_PORT = 8082;
 
 	public static final int REMOTE_SERIES_SERVER_PORT = 8083;
+
+	public static final String INTERVAL_ADD_PREFIX = "IADD" + Messages.SEPARATOR;
+
+	public static final String PENDING_INTERVAL_ADD_PREFIX = "PIAD" + Messages.SEPARATOR;
+
+	public static final String INTERVAL_REMOVE_PREFIX = "IREM" + Messages.SEPARATOR;
+
+	public static final String PENDING_INTERVAL_REMOVE_PREFIX = "PIRE" + Messages.SEPARATOR;
 
 }

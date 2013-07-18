@@ -112,9 +112,9 @@ public class ConnectionsManager {
 		for (int i = 0; i < connections.size(); i++) {
 			Connection connection = connections.get(i);
 			connection.speak(message);
-//			System.out.println(label + " Sent to " + connection.getAddress()
-//					+ ": " + message);
-			System.out.println(label + " Message sent to all connections");
+			System.out.println(label + " Sent to " + connection.getAddress()
+					+ ": " + message);
+//			System.out.println(label + " Message sent to all connections");
 
 		}
 	}
@@ -128,8 +128,8 @@ public class ConnectionsManager {
 			System.out.println(label + " Invalid address");
 		} else {
 			connections.get(i).speak(message);
-			System.out.println(label + " Message sent");
-//			System.out.println(label + " Sent to " + address + ": " + message);
+//			System.out.println(label + " Message sent");
+			System.out.println(label + " Sent to " + address + ": " + message);
 
 		}
 	}
@@ -138,15 +138,11 @@ public class ConnectionsManager {
 		return connections;
 	}
 
-	private String getLocalAddress() {
-		return localAddress;
-	}
-
 	public void parser(String message, String address) {
 		System.out.println(label + " Message received");
-//		System.out
-//				.println(label + " Received from " + address + ": " + message);
-		controller.notifyMessageReceived(message, getLocalAddress(), address);
+		System.out
+				.println(label + " Received from " + address + ": " + message);
+		controller.notifyMessageReceived(message, localAddress, address);
 	}
 
 	public int getNumberOfConnections() {
