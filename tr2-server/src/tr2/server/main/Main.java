@@ -12,13 +12,13 @@ public class Main {
 	public static void main(String[] args) {
 		
 		try {
-			System.out.println("Starting server...");
+			System.out.println("[HTTP SERVER] Starting server...");
 			UserDB.instance();
 			new Controller();
 
 			Thread dispatcher = new Thread(HttpServerDispatcher.instance());
 			dispatcher.start();
-			System.out.println("Server started successfully!");
+			System.out.println("[HTTP SERVER] Server started successfully!");
 			
 //			try {
 //				Thread.sleep(50000);
