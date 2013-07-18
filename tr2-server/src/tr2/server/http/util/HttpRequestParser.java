@@ -2,6 +2,7 @@ package tr2.server.http.util;
 
 import java.util.HashMap;
 
+import tr2.server.common.entity.Interval;
 import tr2.server.common.entity.User;
 import tr2.server.common.entity.UserType;
 import tr2.server.common.util.NetworkConstants;
@@ -79,6 +80,7 @@ public class HttpRequestParser {
 		msg = HttpServerUtil.getTemplateDecider(
 				HttpServerUtil.getTemplate(HttpHtmlTemplates.intervals), type);
 
+		ArrayList<String> intervals_srt;
 		/*
 		 * TODO: get intervals data for (Interval in : intervals) {
 		 * HashMap<String,String> data = new HashMap<String,String>();
